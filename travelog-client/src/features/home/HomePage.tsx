@@ -1,4 +1,3 @@
-import React from 'react'
 import { userManager } from '../../auth/AuthServices'
 
 export const HomePage = () => {
@@ -11,7 +10,6 @@ export const HomePage = () => {
     return (
         <div>
             <button onClick={signIn}>Sign In</button>
-            
         </div>
     )
 }

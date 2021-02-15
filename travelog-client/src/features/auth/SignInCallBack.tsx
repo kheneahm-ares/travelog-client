@@ -1,18 +1,17 @@
-import React, { useEffect } from 'react'
-import { userManager } from '../../auth/AuthServices'
+import Oidc from 'oidc-client';
+import {useEffect } from 'react'
 
 export const SignInCallBack = () => {
-
+    const userManager = new Oidc.UserManager(
+        {
+            userStore: new Oidc.WebStorageStateStore({store: window.localStorage}),
+            response_mode: "query" // look for code in query
+        }
+    )
     useEffect(() => {
-        userManager.getUser().then(user =>
-            {
-                console.log(user);
-            });
         userManager.signinCallback().then(res => {
             console.log(res);
         });
-
-
 
     }, [])
     
