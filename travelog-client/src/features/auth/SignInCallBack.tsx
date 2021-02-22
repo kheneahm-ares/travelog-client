@@ -1,24 +1,25 @@
-import Oidc from 'oidc-client';
-import {useEffect } from 'react'
+import {useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { isLoggedIn, signInUserAsync } from './authSlice';
+import {history} from '../../index';
+import { useAppDispatch } from '../../app/customHooks';
 
 export const SignInCallBack = () => {
-    const userManager = new Oidc.UserManager(
-        {
-            userStore: new Oidc.WebStorageStateStore({store: window.localStorage}),
-            response_mode: "query" // look for code in query
-        }
-    )
-    useEffect(() => {
-        userManager.signinCallback().then(res => {
-            console.log(res);
-        });
+    const isUserLoggedIn = useSelector(isLoggedIn);
+    const dispatch = useAppDispatch();
 
-    }, [])
+    useEffect(() => {
+        dispatch(signInUserAsync())
+        if(isUserLoggedIn)
+        {
+            history.push('/travelplans');
+        }
+
+    }, [isUserLoggedIn])
     
     return (
         <div>
-            <h1>CallBack</h1>
-            
+            <h1>Redirecting...</h1>
         </div>
     )
 }

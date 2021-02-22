@@ -1,15 +1,12 @@
-import { userManager } from '../../auth/AuthServices'
+import { useDispatch } from 'react-redux';
+import { logIn } from '../auth/authSlice';
 
 export const HomePage = () => {
-
-    function signIn()
-    {
-        userManager.signinRedirect();
-    }
+    const dispatch = useDispatch();
 
     return (
         <div>
-            <button onClick={signIn}>Sign In</button>
+            <button onClick={() => dispatch(logIn())}>Sign In</button>
         </div>
     )
 }
