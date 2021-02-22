@@ -1,15 +1,9 @@
 import Oidc, { UserManager } from "oidc-client"
+import { history } from "../..";
+import { IUser } from "../common/interfaces/IUser";
+import { IUserManagerConfig } from "../common/interfaces/IUserManagerConfig";
 
-interface IUserManagerConfig 
-{
-    userStore: any,
-    authority: string,
-    client_id: string,
-    response_type: string,
-    redirect_uri: string,
-    scope: string
 
-}
 const userConfig: IUserManagerConfig =
 {
     userStore: new Oidc.WebStorageStateStore({ store: window.localStorage }),
@@ -20,5 +14,38 @@ const userConfig: IUserManagerConfig =
     scope: "openid profile TravelogApi extraprofile.scope"
 }
 
-export const userManager = new UserManager(userConfig);
+const userManager = new UserManager(userConfig);
 
+const signInRedirect = async () => 
+{
+    var oidcUser = await userManager.getUser();
+
+    //only redirect to auth server if no user in storage, else redirec to dashboard
+    if(!oidcUser)
+    {
+        await userManager.signinRedirect();
+    }
+    history.push('/travelplans');
+}
+
+const signInUserCallback = async (): Promise<IUser> => {
+    //piggy backs off existing user manager configs 
+    const callbackManager = new Oidc.UserManager(
+        {
+            userStore: new Oidc.WebStorageStateStore({store: window.localStorage}),
+            response_mode: "query" // look for code in query
+        }
+    );
+    const user = await callbackManager.signinCallback();
+    const appUser: IUser = {
+        userName: user.profile.name!,
+        token: user.access_token
+    }
+    return appUser;
+
+}
+
+export const AuthService = {
+    signInUserCallback,
+    signInRedirect
+}
