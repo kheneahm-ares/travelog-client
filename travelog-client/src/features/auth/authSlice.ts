@@ -1,12 +1,12 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Oidc from "oidc-client";
 import { userManager } from "../../app/auth/AuthServices";
-import { RootState } from "../../app/store";
+import { AppDispatch, RootState } from "../../app/store";
 
 //thunk comes out of the box with react toolkit, no need to add it as middleware
 export const signInUserAsync = createAsyncThunk( 
-    'auth/signingIn',
-    async (thunkApi) => {
+    'auth/signIn',
+    async (args, thunkAPI) => {
         const userManager = new Oidc.UserManager(
             {
                 userStore: new Oidc.WebStorageStateStore({store: window.localStorage}),
@@ -18,11 +18,11 @@ export const signInUserAsync = createAsyncThunk(
             userName: user.profile.name!,
             token: user.access_token
         }
-        console.log('ehll');
         return appUser;
-    }
-
+    } 
 )
+
+
 interface IUser {
     userName: string,
     token: string
@@ -40,22 +40,15 @@ const initialState: IAuthInitialState =
 const authSlice = createSlice({
     name: 'auth',
     initialState,
+    //case reducers, key names automagically generate actions via the toolkit
     reducers: {
-        signIn: (state, action) =>
-        {
-            state.isLoggedIn = true;
-            state.user = action.payload;
-        },
         logIn: () =>
         {
             userManager.signinRedirect();
-        },
-        
+        }
     },
     extraReducers: {
         [signInUserAsync.fulfilled as any]: (state, action) => {
-            console.log('fullfilled');
-
             state.user = action.payload;
             state.isLoggedIn = true;
         }
@@ -63,11 +56,10 @@ const authSlice = createSlice({
 })
 
 
-export const isLoggedIn = (state: RootState) => state.authReducer.isLoggedIn;
-export const user = (state: RootState) => {
-    console.log(state);
+export const IsLoggedIn = (state: RootState) => state.authReducer.isLoggedIn;
+export const getUser = (state: RootState) => {
     return state.authReducer.user;
 }
 
-export const { signIn, logIn} = authSlice.actions
+export const {logIn} = authSlice.actions
 export default authSlice.reducer;

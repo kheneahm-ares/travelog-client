@@ -20,5 +20,5 @@ const userConfig: IUserManagerConfig =
     scope: "openid profile TravelogApi extraprofile.scope"
 }
 
-export const userManager = new UserManager(userConfig)
+export const userManager = new UserManager(userConfig);
 
