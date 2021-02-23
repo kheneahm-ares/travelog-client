@@ -12,8 +12,6 @@ export const signInUserAsync = createAsyncThunk(
         return appUser;
     } 
 )
-
-
 interface IAuthInitialState{
     isLoggedIn: boolean,
     user: IUser | null,

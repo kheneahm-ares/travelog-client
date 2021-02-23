@@ -1,12 +1,28 @@
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../app/store';
+import { Fragment, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../app/customHooks";
+import { RootState } from "../../../app/store";
+import { getUserTravelPlansAsync } from "./dashboardSlice";
 
 export const TravelPlanDashboard = () => {
-    const {user: currentUser} = useSelector((state: RootState) => state.authReducer);
+  const { isTravelPlansLoading, travelPlans } = useSelector(
+    (state: RootState) => state.dashboardReducer
+  );
+  const dispatch = useAppDispatch();
 
-    return (
-        <div>
-            <h1>Hello {currentUser!.userName}</h1>
-        </div>
-    )
-}
+  useEffect(() => {
+      dispatch(getUserTravelPlansAsync());
+      
+  }, [dispatch]);
+
+  return (
+      <Fragment>
+          {isTravelPlansLoading ? (<h1>Loading...</h1>) : (travelPlans.map((tp) => (
+              <Fragment key={tp.id}>
+                  <h1>{tp.name}</h1>
+              </Fragment>
+          )))}
+      </Fragment>
+
+  );
+};

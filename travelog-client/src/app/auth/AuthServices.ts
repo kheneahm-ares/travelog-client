@@ -42,10 +42,13 @@ const signInUserCallback = async (): Promise<IUser> => {
         token: user.access_token
     }
     return appUser;
-
+}
+const getOidcUser = async (): Promise<Oidc.User | null> => {
+    return await userManager.getUser();
 }
 
 export const AuthService = {
     signInUserCallback,
-    signInRedirect
+    signInRedirect,
+    getOidcUser
 }

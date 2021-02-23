@@ -1,5 +1,6 @@
 import { combineReducers, configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
+import dashboardReducer from '../features/travelplans/dashboard/dashboardSlice';
 import {
     persistStore,
     persistReducer,
@@ -19,7 +20,7 @@ const persistConfig = {
     storage
 };
 
-const rootReducer = combineReducers({authReducer});
+const rootReducer = combineReducers({authReducer, dashboardReducer });
 const persistedReducer = persistReducer(persistConfig, rootReducer)
   
 const store = configureStore({
