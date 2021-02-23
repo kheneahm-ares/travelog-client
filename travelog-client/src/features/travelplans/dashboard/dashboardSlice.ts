@@ -2,11 +2,10 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { APIServices } from "../../../app/api/agent";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 
-export const getUserTravelPlansAsync = createAsyncThunk(
+export const loadUserTravelPlansAsync = createAsyncThunk(
     'dashboard/userTravelPlans',
     async (args, thunkAPI) => 
     {
-        console.log("getting travel plans");
         var travelPlans = await APIServices.TravelPlanService.list();
 
         return travelPlans;
@@ -32,11 +31,11 @@ const dashboardSlice = createSlice({
 
     },
     extraReducers: {
-        [getUserTravelPlansAsync.pending as any]: (state) => 
+        [loadUserTravelPlansAsync.pending as any]: (state) => 
         {
             state.isTravelPlansLoading = true;
         },
-        [getUserTravelPlansAsync.fulfilled as any]: (state, action: PayloadAction<ITravelPlan[]>) => 
+        [loadUserTravelPlansAsync.fulfilled as any]: (state, action: PayloadAction<ITravelPlan[]>) => 
         {
             state.travelPlans = action.payload;
             state.isTravelPlansLoading = false;
