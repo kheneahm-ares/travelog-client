@@ -1,8 +1,11 @@
-import { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { Grid } from "semantic-ui-react";
 import { useAppDispatch } from "../../../app/customHooks";
 import { RootState } from "../../../app/store";
-import { getUserTravelPlansAsync } from "./dashboardSlice";
+import { loadUserTravelPlansAsync } from "./dashboardSlice";
+import { TravelPlanList } from "./TravelPlanList";
+import { TravelPlanListPlaceholder } from "./TravelPlanListPlaceholder";
 
 export const TravelPlanDashboard = () => {
   const { isTravelPlansLoading, travelPlans } = useSelector(
@@ -11,18 +14,18 @@ export const TravelPlanDashboard = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-      dispatch(getUserTravelPlansAsync());
-      
+    dispatch(loadUserTravelPlansAsync());
   }, [dispatch]);
 
   return (
-      <Fragment>
-          {isTravelPlansLoading ? (<h1>Loading...</h1>) : (travelPlans.map((tp) => (
-              <Fragment key={tp.id}>
-                  <h1>{tp.name}</h1>
-              </Fragment>
-          )))}
-      </Fragment>
-
+    <Grid>
+      <Grid.Column width={10}>
+        {isTravelPlansLoading ? (
+          <TravelPlanListPlaceholder />
+        ) : (
+          <TravelPlanList />
+        )}
+      </Grid.Column>
+    </Grid>
   );
 };

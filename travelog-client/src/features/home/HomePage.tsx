@@ -8,6 +8,7 @@ export const HomePage = () => {
     const user = useSelector((state : RootState) => state.authReducer.user);
 
     return (
+        
         <Fragment>
             {user != null ? (<Fragment>
                 <Link to='/travelplans'>Dashboard</Link>

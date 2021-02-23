@@ -8,6 +8,8 @@ import { createBrowserHistory } from "history";
 import { Provider } from "react-redux";
 import storeConfigs from "./app/store";
 import { PersistGate } from "redux-persist/integration/react";
+import 'semantic-ui-css/semantic.min.css'
+
 
 export const history = createBrowserHistory();
 
