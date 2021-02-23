@@ -11,7 +11,8 @@ const userConfig: IUserManagerConfig =
     client_id: "travelog_react_client",
     redirect_uri: "http://localhost:3000/auth/signin-oidc",
     response_type: "code",
-    scope: "openid profile TravelogApi extraprofile.scope"
+    scope: "openid profile TravelogApi extraprofile.scope",
+    post_logout_redirect_uri: "http://localhost:3000/"
 }
 
 const userManager = new UserManager(userConfig);
@@ -36,19 +37,48 @@ const signInUserCallback = async (): Promise<IUser> => {
             response_mode: "query" // look for code in query
         }
     );
-    const user = await callbackManager.signinCallback();
-    const appUser: IUser = {
-        userName: user.profile.name!,
-        token: user.access_token
+    try
+    {
+        const user = await callbackManager.signinCallback();
+        const appUser: IUser = {
+            userName: user.profile.name!,
+            token: user.access_token
+        }
+        return appUser;
     }
-    return appUser;
+    catch(e)
+    {
+        return {
+            userName: '',
+            token: ''
+        }
+        
+
+    }
+
 }
 const getOidcUser = async (): Promise<Oidc.User | null> => {
     return await userManager.getUser();
 }
 
+const hasToken = (): boolean => 
+{
+    const token = window.localStorage.getItem(`oidc.user:${process.env.REACT_APP_AUTH_URL}:${process.env.REACT_APP_IDENTITY_CLIENT_ID}`);
+    if(token == null) return false;
+    
+    return true;
+
+}
+
+const signOut = async (): Promise<void> => 
+{
+    userManager.signoutRedirect();
+}
+
 export const AuthService = {
     signInUserCallback,
     signInRedirect,
-    getOidcUser
+    getOidcUser,
+    signOut,
+    hasToken
 }
