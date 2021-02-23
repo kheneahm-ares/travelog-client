@@ -1,25 +1,20 @@
-import {useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { IsLoggedIn, signInUserAsync } from './authSlice';
-import {history} from '../../index';
-import { useAppDispatch } from '../../app/customHooks';
+import { useEffect } from "react";
+import { signInUserAsync } from "./authSlice";
+import { useAppDispatch } from "../../app/customHooks";
+import { history } from "../../index";
 
 export const SignInCallBack = () => {
-    const isUserLoggedIn = useSelector(IsLoggedIn);
-    const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        dispatch(signInUserAsync())
-        if(isUserLoggedIn)
-        {
-            history.push('/travelplans');
-        }
+  useEffect(() => {
+    dispatch(signInUserAsync()).then(() => {
+      history.push("/travelplans");
+    });
+  }, [dispatch]);
 
-    }, [isUserLoggedIn, dispatch])
-    
-    return (
-        <div>
-            <h1>Redirecting...</h1>
-        </div>
-    )
-}
+  return (
+    <div>
+      <h1>Redirecting...</h1>
+    </div>
+  );
+};
