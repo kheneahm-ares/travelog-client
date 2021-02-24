@@ -1,6 +1,7 @@
 import { combineReducers, configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
 import dashboardReducer from '../features/travelplans/dashboard/dashboardSlice';
+import detailReducer from '../features/travelplans/details/detailSlice';
 import {
     persistStore,
     persistReducer,
@@ -17,10 +18,11 @@ import storage from 'redux-persist/lib/storage';
 const persistConfig = {
     key: 'root',
     version: 1,
-    storage
+    storage,
+    blacklist: ['dashboardReducer', 'detailReducer']
 };
 
-const rootReducer = combineReducers({authReducer, dashboardReducer });
+const rootReducer = combineReducers({authReducer, dashboardReducer, detailReducer});
 const persistedReducer = persistReducer(persistConfig, rootReducer)
   
 const store = configureStore({

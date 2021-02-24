@@ -2,6 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Redirect, Route, RouteComponentProps, RouteProps } from "react-router";
 import { getUser } from "../../features/auth/authSlice";
+import { AuthService } from "../auth/AuthServices";
+import { useAppDispatch } from "../customHooks";
 
 interface IProps extends RouteProps {
   component: React.ComponentType<RouteComponentProps<any>>;
@@ -13,12 +15,13 @@ export const PrivateRoute: React.FC<IProps> = ({
   ...rest
 }) => {
     const user = useSelector(getUser);
+    const doesAppHaveToken = AuthService.hasToken();
 
   return (
     <Route
       {...rest}
       render={(props: any) => {
-        if (user) {
+        if (user && doesAppHaveToken) {
           return <Component {...props} />;
         } else {
           return <Redirect to={"/"} />;

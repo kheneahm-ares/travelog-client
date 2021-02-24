@@ -8,6 +8,7 @@ import { SignInCallBack } from "./features/auth/SignInCallBack";
 import { HomePage } from "./features/home/HomePage";
 import { NavBar } from "./features/nav/NavBar";
 import { TravelPlanDashboard } from "./features/travelplans/dashboard/TravelPlanDashboard";
+import { TravelPlanDetails } from "./features/travelplans/details/TravelPlanDetails";
 
 function App() {
   return (
@@ -25,6 +26,11 @@ function App() {
                     exact
                     path="/travelplans"
                     component={TravelPlanDashboard}
+                  />
+                  <PrivateRoute
+                    exact
+                    path="/travelplans/:id"
+                    component={TravelPlanDetails}
                   />
                   <Route
                     exact
