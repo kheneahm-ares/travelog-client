@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { request } from "http";
 import { AuthService } from "../auth/AuthServices";
 import { ITravelPlan } from "../common/interfaces/ITravelPlan";
+import { ITravelPlanActivity } from "../common/interfaces/ITravelPlanActivity";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
@@ -42,8 +43,13 @@ const TravelPlanService = {
     details: (id: string): Promise<ITravelPlan> => requests.get<ITravelPlan>(`/TravelPlan/Details?id=${id}`)
 }
 
+const TravelPlanActivityService = {
+    list: (id: string): Promise<ITravelPlanActivity[]> => requests.get<ITravelPlanActivity[]>(`/TravelPlanActivity/List?id=${id}`),
+}
+
 export const APIServices = {
-    TravelPlanService
+    TravelPlanService,
+    TravelPlanActivityService
 }
 
 
