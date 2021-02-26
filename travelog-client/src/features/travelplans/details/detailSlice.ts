@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { APIServices } from "../../../app/api/agent";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 import { ITravelPlanActivity } from "../../../app/common/interfaces/ITravelPlanActivity";
+import { RootState } from "../../../app/store";
 
 export const loadTravelPlan = createAsyncThunk(
     'detail/loadTravelPlan',
@@ -26,7 +27,7 @@ export const loadTravelPlanActivities = createAsyncThunk(
 interface IDetailSliceState
 {
     travelPlan: ITravelPlan | null;
-    travelPlanActivities: ITravelPlanActivity[] | null;
+    travelPlanActivities: ITravelPlanActivity[];
     isLoading: boolean;
     isLoadingActivities: boolean;
 }
@@ -34,7 +35,7 @@ interface IDetailSliceState
 const initialState: IDetailSliceState = {
     travelPlan: null,
     isLoading: true,
-    travelPlanActivities: null,
+    travelPlanActivities: [],
     isLoadingActivities: true
 }
 
@@ -67,5 +68,29 @@ const detailSlice = createSlice(
         }
     }
 )
+
+export const getActivitiesByGroup = (propToGroupBy: string) => (state: RootState) => {
+    //we need to group activities by the property
+    const mapGroupedActivities = new Map<string, ITravelPlanActivity[]>();
+
+    state.detailReducer.travelPlanActivities?.forEach((a) => {
+        const formattedDate = a.startTime.toString().split('T')[0];
+
+        //key exists with array of activities, add to array
+        if(mapGroupedActivities.has(formattedDate))
+        {
+            var currentActivities = mapGroupedActivities.get(formattedDate);
+            currentActivities?.push(a); //no need to readd to map since array is ref type
+        }
+        else
+        {
+            mapGroupedActivities.set(formattedDate, [a])
+        }
+        
+    });
+
+    return mapGroupedActivities;
+    
+} 
 
 export default detailSlice.reducer;

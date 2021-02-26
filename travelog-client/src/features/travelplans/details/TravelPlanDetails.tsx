@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RouteComponentProps, RouteProps } from "react-router";
-import { Grid } from "semantic-ui-react";
+import { Container, Grid, Segment } from "semantic-ui-react";
 import { useAppDispatch } from "../../../app/customHooks";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { RootState } from "../../../app/store";
@@ -9,6 +9,10 @@ import { loadTravelPlan } from "./detailSlice";
 import { TravelPlanActivities } from "./TravelPlanActivities";
 
 interface IProps extends RouteComponentProps<{ id: string }> {}
+
+// const gridStyles = {
+//   overflow-x: ''
+// }
 
 export const TravelPlanDetails: React.FC<IProps> = ({ match, history }) => {
   const dispatch = useAppDispatch();
@@ -25,15 +29,16 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match, history }) => {
   }
 
   return (
-    <Grid>
-      <Grid.Column width={4}>
-        <div>{travelPlan?.name}!</div>
-        <div>{travelPlan?.id}!</div>
-        
-      </Grid.Column>
-      <Grid.Column width={12}>
-        <TravelPlanActivities travelPlanId={travelPlan!.id} />
-      </Grid.Column>
-    </Grid>
+    // <Grid>
+    //   <Grid.Row width={12}>
+    //     <div>{travelPlan?.name}!</div>
+    //     <div>{travelPlan?.id}!</div>
+    //   </Grid.Row>
+    //   <Grid.Row>
+    //   </Grid.Row>
+    // </Grid>
+    <Container style={{overflowX:"auto", whiteSpace:"nowrap", height:"800px"}}>
+      <TravelPlanActivities travelPlanId={travelPlan!.id} />
+    </Container>
   );
 };

@@ -1,8 +1,20 @@
 import React, { Fragment, useEffect } from "react";
+import { act } from "react-dom/test-utils";
 import { useSelector } from "react-redux";
+import {
+  Container,
+  Divider,
+  Grid,
+  Header,
+  List,
+  Segment,
+  Tab,
+  Table,
+} from "semantic-ui-react";
 import { useAppDispatch } from "../../../app/customHooks";
 import { RootState } from "../../../app/store";
-import { loadTravelPlanActivities } from "./detailSlice";
+import { ActivityCard } from "./ActivityCard";
+import { getActivitiesByGroup, loadTravelPlanActivities } from "./detailSlice";
 
 interface IProps {
   travelPlanId: string;
@@ -10,19 +22,31 @@ interface IProps {
 
 export const TravelPlanActivities: React.FC<IProps> = ({ travelPlanId }) => {
   const dispatch = useAppDispatch();
-  const { travelPlanActivities } = useSelector(
-    (state: RootState) => state.detailReducer
-  );
+  const groupedActivities = useSelector(getActivitiesByGroup(""));
 
   useEffect(() => {
     dispatch(loadTravelPlanActivities(travelPlanId));
   }, [dispatch, travelPlanId]);
   return (
     <Fragment>
-      {travelPlanActivities?.map((a) => (
-        <Fragment key={a.id}>
-          <h1>{a.name}</h1>
-        </Fragment>
+      {Array.from(groupedActivities).map?.(([key, activities]) => (
+        <Container
+          key={key}
+          style={{
+            display: "inline-block",
+            verticalAlign: "top",
+            width: "auto",
+            padding: "5px"
+          }}
+        >
+          <Segment>
+            <Header content={key}/>
+          </Segment>
+          <Divider/>
+          {activities.map((a) => (
+            <ActivityCard key={a.id} activity={a} />
+          ))}
+        </Container>
       ))}
     </Fragment>
   );
