@@ -12,6 +12,7 @@ import {
   Table,
 } from "semantic-ui-react";
 import { useAppDispatch } from "../../../app/customHooks";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { RootState } from "../../../app/store";
 import { ActivityCard } from "./ActivityCard";
 import { getActivitiesByGroup, loadTravelPlanActivities } from "./detailSlice";
@@ -23,10 +24,13 @@ interface IProps {
 export const TravelPlanActivities: React.FC<IProps> = ({ travelPlanId }) => {
   const dispatch = useAppDispatch();
   const groupedActivities = useSelector(getActivitiesByGroup(""));
+  const {isLoadingActivities} = useSelector((state: RootState) => state.detailReducer);
 
   useEffect(() => {
     dispatch(loadTravelPlanActivities(travelPlanId));
   }, [dispatch, travelPlanId]);
+
+
   return (
     <Fragment>
       {Array.from(groupedActivities).map?.(([key, activities]) => (

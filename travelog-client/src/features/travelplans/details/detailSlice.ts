@@ -20,6 +20,13 @@ export const loadTravelPlanActivities = createAsyncThunk(
     {
         const activities = await APIServices.TravelPlanActivityService.list(id);
         return activities;
+    }
+)
+
+export const submitActivityEdit = createAsyncThunk(
+    'detail/editActivity',
+    async(args, thunkAPI) =>
+    {
 
     }
 )
@@ -30,13 +37,17 @@ interface IDetailSliceState
     travelPlanActivities: ITravelPlanActivity[];
     isLoading: boolean;
     isLoadingActivities: boolean;
+    selectedActivity: ITravelPlanActivity | null;
+    isModalOpen: boolean;
 }
 
 const initialState: IDetailSliceState = {
     travelPlan: null,
     isLoading: true,
     travelPlanActivities: [],
-    isLoadingActivities: true
+    isLoadingActivities: true,
+    selectedActivity: null,
+    isModalOpen: false
 }
 
 const detailSlice = createSlice(
@@ -44,6 +55,16 @@ const detailSlice = createSlice(
         name: 'details',
         initialState: initialState,
         reducers: {
+            openModal: (state, action) => {
+                console.log('hello')
+                state.selectedActivity = action.payload;
+                state.isModalOpen = true;
+            },
+            closeModal: (state) => {
+                console.log('hello');
+                state.selectedActivity = null;
+                state.isModalOpen = false;
+            }
 
         },
         extraReducers: {
@@ -64,6 +85,10 @@ const detailSlice = createSlice(
             {
                 state.travelPlanActivities = action.payload;
                 state.isLoadingActivities = false;
+            },
+            [submitActivityEdit.fulfilled as any]: (state, action) =>
+            {
+                state.isModalOpen = false;
             }
         }
     }
@@ -92,5 +117,7 @@ export const getActivitiesByGroup = (propToGroupBy: string) => (state: RootState
     return mapGroupedActivities;
     
 } 
+
+export const {closeModal, openModal} = detailSlice.actions;
 
 export default detailSlice.reducer;

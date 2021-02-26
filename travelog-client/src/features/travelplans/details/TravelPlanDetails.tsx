@@ -5,6 +5,7 @@ import { Container, Grid, Segment } from "semantic-ui-react";
 import { useAppDispatch } from "../../../app/customHooks";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { RootState } from "../../../app/store";
+import { ActivityModal } from "./ActivityModal";
 import { loadTravelPlan } from "./detailSlice";
 import { TravelPlanActivities } from "./TravelPlanActivities";
 
@@ -29,16 +30,18 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match, history }) => {
   }
 
   return (
-    // <Grid>
-    //   <Grid.Row width={12}>
-    //     <div>{travelPlan?.name}!</div>
-    //     <div>{travelPlan?.id}!</div>
-    //   </Grid.Row>
-    //   <Grid.Row>
-    //   </Grid.Row>
-    // </Grid>
-    <Container style={{overflowX:"auto", whiteSpace:"nowrap", height:"800px"}}>
-      <TravelPlanActivities travelPlanId={travelPlan!.id} />
-    </Container>
+    <Grid>
+    <ActivityModal/>
+
+      <Grid.Row width={12}>
+        <div>{travelPlan?.name}!</div>
+        <div>{travelPlan?.id}!</div>
+      </Grid.Row>
+      <Grid.Row style={{ overflowX: "auto", whiteSpace: "nowrap", height: "800px" }}> 
+        <Container>
+          <TravelPlanActivities travelPlanId={travelPlan!.id} />
+        </Container>
+      </Grid.Row>
+    </Grid>
   );
 };
