@@ -25,9 +25,10 @@ export const loadTravelPlanActivities = createAsyncThunk(
 
 export const submitActivityEdit = createAsyncThunk(
     'detail/editActivity',
-    async(args, thunkAPI) =>
+    async(activity: any, thunkAPI) =>
     {
-
+        console.log(activity);
+        await APIServices.TravelPlanActivityService.update(activity);
     }
 )
 
@@ -56,12 +57,10 @@ const detailSlice = createSlice(
         initialState: initialState,
         reducers: {
             openModal: (state, action) => {
-                console.log('hello')
                 state.selectedActivity = action.payload;
                 state.isModalOpen = true;
             },
             closeModal: (state) => {
-                console.log('hello');
                 state.selectedActivity = null;
                 state.isModalOpen = false;
             }

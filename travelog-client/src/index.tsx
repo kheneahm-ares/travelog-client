@@ -9,11 +9,6 @@ import { Provider } from "react-redux";
 import storeConfigs from "./app/store";
 import { PersistGate } from "redux-persist/integration/react";
 import 'semantic-ui-css/semantic.min.css'
-import dateFnsLocalizer from 'react-widgets-date-fns';
-import 'react-widgets/dist/css/react-widgets.css';
-
-
-dateFnsLocalizer();
 
 export const history = createBrowserHistory();
 

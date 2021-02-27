@@ -6,7 +6,11 @@ import { Button, Form } from "semantic-ui-react";
 import { TextInput } from "../../../app/common/form/TextInput";
 import { DateInput } from "../../../app/common/form/DateInput";
 import { useAppDispatch } from "../../../app/customHooks";
-import { closeModal, submitActivityEdit } from "./detailSlice";
+import {
+  closeModal,
+  loadTravelPlanActivities,
+  submitActivityEdit,
+} from "./detailSlice";
 
 export const ActivityForm = () => {
   const { selectedActivity } = useSelector(
@@ -14,17 +18,19 @@ export const ActivityForm = () => {
   );
   const dispatch = useAppDispatch();
 
-  function handleActivitySubmit(values: any)
-  {
-      console.log(values)
-      dispatch(submitActivityEdit())
+  function handleActivitySubmit(values: any) {
+    dispatch(submitActivityEdit(values!)).then(() => {
+      dispatch(loadTravelPlanActivities(selectedActivity?.travelPlanId!));
+    });
   }
   return (
     <Fragment>
       <FinalForm
         initialValues={selectedActivity!}
-        onSubmit={(values) => handleActivitySubmit(values)}
-        render={({ pristine,handleSubmit}) => (
+        onSubmit={(values: any) =>
+          handleActivitySubmit(values)
+        }
+        render={({  handleSubmit}) => (
           <Form onSubmit={handleSubmit}>
             <FinalField name="name" placeholder="Name" component={TextInput} />
             <Form.Group>
@@ -54,8 +60,13 @@ export const ActivityForm = () => {
               label="End Time"
             />
             <Button content="Close" onClick={() => dispatch(closeModal())} />
-            <Button floated="right" positive type="submit" content="Save" disabled={pristine} />
-
+            <Button
+              floated="right"
+              positive
+              type="submit"
+              content="Save"
+              // disabled={pristine}
+            />
           </Form>
         )}
       ></FinalForm>

@@ -1,8 +1,6 @@
 import React from 'react';
 import { FieldRenderProps } from 'react-final-form';
 import { FormFieldProps, Form, Label } from 'semantic-ui-react';
-import { DateTimePicker } from 'react-widgets';
-
 interface IProps extends FieldRenderProps<Date>, FormFieldProps {
   //all properties needed are inside the inherited classes
 }
@@ -12,8 +10,6 @@ export const DateInput: React.FC<IProps> = ({
   width,
   placeholder,
   meta,
-  date = false,
-  time = false,
   id = null,
   label,
   ...rest
@@ -21,14 +17,13 @@ export const DateInput: React.FC<IProps> = ({
   return (
     <Form.Field error={meta.touched && !!meta.error} width={width}>
         <label>{label}</label>
-      <DateTimePicker
-        placeholder={placeholder}
-        value={new Date(input.value)}
+      <Datetime
+        // placeholder={placeholder}
+        value={input.value}
         onChange={input.onChange}
-        onBlur={input.onBlur}
-        onKeyDown={e => e.preventDefault()}
-        date={date}
-        time={time}
+        // onBlur={input.onBlur}
+        // onKeyDown={e => e.preventDefault()}
+        initialViewMode='time'
         {...rest}
       />
       {meta.touched && meta.error && (
