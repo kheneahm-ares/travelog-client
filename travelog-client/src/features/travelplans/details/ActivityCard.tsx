@@ -4,14 +4,17 @@ import { Button, Card, Container, Item, Segment } from "semantic-ui-react";
 import { ITravelPlanActivity } from "../../../app/common/interfaces/ITravelPlanActivity";
 import { useAppDispatch } from "../../../app/customHooks";
 import { openModal } from './detailSlice';
+import moment from 'moment'
 
 interface IProps {
   activity: ITravelPlanActivity;
 }
 
 export const ActivityCard: React.FC<IProps> = ({ activity }) => {
-  const formattedStart = `${activity.startTime.split("T")[1].split(".")[0]}`;
-  const formattedEnd = `${activity.endTime.split("T")[1].split(".")[0]}`;
+  const mStart = moment(new Date(activity.startTime));
+  const mEnd = moment(new Date(activity.endTime));
+  const formattedStart = `${mStart.format('hh:mm a')}`;
+  const formattedEnd = `${mEnd.format('hh:mm a')}`;
   const dispatch = useAppDispatch();
 
   const timeRange = `${formattedStart} - ${formattedEnd}`;

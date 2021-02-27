@@ -15,7 +15,6 @@ export const ActivityModal = () => {
     <Modal open={isModalOpen} onClose={dispatch(closeModal)} size="mini">
       <Modal.Content>
           <ActivityForm />
-        {/* <h1>{selectedActivity?.name}</h1> */}
       </Modal.Content>
     </Modal>
   );

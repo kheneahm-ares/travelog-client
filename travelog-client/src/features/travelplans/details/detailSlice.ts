@@ -9,7 +9,6 @@ export const loadTravelPlan = createAsyncThunk(
     async (id: string, thunkAPI) =>
     {
         const travelPlan = await APIServices.TravelPlanService.details(id);
-        console.log(travelPlan);
         return travelPlan;
 
     }
@@ -25,10 +24,10 @@ export const loadTravelPlanActivities = createAsyncThunk(
 
 export const submitActivityEdit = createAsyncThunk(
     'detail/editActivity',
-    async(activity: any, thunkAPI) =>
+    async(formActivity: ITravelPlanActivity, thunkAPI) =>
     {
-        console.log(activity);
-        await APIServices.TravelPlanActivityService.update(activity);
+        //in terms of dates, we expect the dates are already switched from locale to ISO strings
+        await APIServices.TravelPlanActivityService.update(formActivity);
     }
 )
 
@@ -64,7 +63,6 @@ const detailSlice = createSlice(
                 state.selectedActivity = null;
                 state.isModalOpen = false;
             }
-
         },
         extraReducers: {
             [loadTravelPlan.pending as any]: (state) =>
@@ -94,11 +92,11 @@ const detailSlice = createSlice(
 )
 
 export const getActivitiesByGroup = (propToGroupBy: string) => (state: RootState) => {
-    //we need to group activities by the property
+    //we need to group activities by the property, in our case we are defaulting to date initially
     const mapGroupedActivities = new Map<string, ITravelPlanActivity[]>();
 
     state.detailReducer.travelPlanActivities?.forEach((a) => {
-        const formattedDate = a.startTime.toString().split('T')[0];
+        const formattedDate = a.startTime.split('T')[0];
 
         //key exists with array of activities, add to array
         if(mapGroupedActivities.has(formattedDate))

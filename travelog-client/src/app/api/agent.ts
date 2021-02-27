@@ -1,6 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import { request } from "http";
-import { act } from "react-dom/test-utils";
 import { AuthService } from "../auth/AuthServices";
 import { ITravelPlan } from "../common/interfaces/ITravelPlan";
 import { ITravelPlanActivity } from "../common/interfaces/ITravelPlanActivity";
@@ -32,12 +30,6 @@ const responseBody = <T>(response: AxiosResponse): Promise<T> =>
     });
 }
 
-const transformDate = (gmtDate: Date): Date =>
-{
-    const localizedDate = new Date(gmtDate);
-    return localizedDate;
-}
-
 const requests = {
     get: <T>(url: string) => axios.get(url).then<T>(responseBody),
     post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
@@ -51,20 +43,7 @@ const TravelPlanService = {
 }
 
 const TravelPlanActivityService = {
-    list: (id: string): Promise<ITravelPlanActivity[]> => requests.get<ITravelPlanActivity[]>(`/TravelPlanActivity/List?id=${id}`).then((activities) => {
-        // console.log(activities);
-        
-        // activities.forEach((a) =>
-        // {
-        //     console.log(a.endTime);
-        //     a.endTime = transformDate(a.endTime);
-        //     console.log(a.endTime);
-
-        //     a.startTime = transformDate(a.startTime);
-        // });
-        console.log(activities);
-        return Promise.resolve(activities);
-    }),
+    list: (id: string): Promise<ITravelPlanActivity[]> => requests.get<ITravelPlanActivity[]>(`/TravelPlanActivity/List?id=${id}`),
     update: (activity: ITravelPlanActivity) => {
         requests.put(`/TravelPlanActivity/Edit`, activity)},
 }

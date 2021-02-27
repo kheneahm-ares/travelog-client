@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 import storeConfigs from "./app/store";
 import { PersistGate } from "redux-persist/integration/react";
 import 'semantic-ui-css/semantic.min.css'
+import "react-datetime/css/react-datetime.css";
 
 export const history = createBrowserHistory();
 

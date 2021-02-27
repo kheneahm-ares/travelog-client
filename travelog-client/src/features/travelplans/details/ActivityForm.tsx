@@ -18,19 +18,22 @@ export const ActivityForm = () => {
   );
   const dispatch = useAppDispatch();
 
-  function handleActivitySubmit(values: any) {
-    dispatch(submitActivityEdit(values!)).then(() => {
+  function handleActivitySubmit(formActivity: any) {
+    //before sending to API, turn the dates back to ISO strings as we expect it from the API
+    //since they were transformed on the UI to show localized date
+    formActivity.startTime = new Date(formActivity.startTime).toISOString();
+    formActivity.endTime = new Date(formActivity.endTime).toISOString();
+
+    dispatch(submitActivityEdit(formActivity!)).then(() => {
       dispatch(loadTravelPlanActivities(selectedActivity?.travelPlanId!));
     });
   }
   return (
     <Fragment>
       <FinalForm
-        initialValues={selectedActivity!}
-        onSubmit={(values: any) =>
-          handleActivitySubmit(values)
-        }
-        render={({  handleSubmit}) => (
+        initialValues={selectedActivity}
+        onSubmit={(values) => handleActivitySubmit(values)}
+        render={({ handleSubmit, pristine }) => (
           <Form onSubmit={handleSubmit}>
             <FinalField name="name" placeholder="Name" component={TextInput} />
             <Form.Group>
@@ -49,14 +52,14 @@ export const ActivityForm = () => {
               name="startTime"
               placeholder="Start Time"
               component={DateInput}
-              time={true}
+              viewMode="time"
               label="Start Time"
             />
             <FinalField
               name="endTime"
               placeholder="End Time"
               component={DateInput}
-              time={true}
+              viewMode="time"
               label="End Time"
             />
             <Button content="Close" onClick={() => dispatch(closeModal())} />
@@ -65,7 +68,7 @@ export const ActivityForm = () => {
               positive
               type="submit"
               content="Save"
-              // disabled={pristine}
+              disabled={pristine}
             />
           </Form>
         )}
