@@ -14,7 +14,7 @@ export const ActivityModal = () => {
   return (
     <Modal open={isModalOpen} onClose={dispatch(closeModal)} size="mini">
       <Modal.Content>
-          <ActivityForm />
+          <ActivityForm initialActivity={selectedActivity!} travelPlanId={selectedActivity?.travelPlanId!}/>
       </Modal.Content>
     </Modal>
   );

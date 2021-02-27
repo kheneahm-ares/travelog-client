@@ -19,16 +19,16 @@ axios.interceptors.request.use(async (config) =>
     return Promise.reject(error);
 });
 
-const responseBody = <T>(response: AxiosResponse): Promise<T> => 
-{
-    return new Promise(resolve =>
-    {
-        setTimeout(() =>
-        {
-            resolve(response.data)
-        }, 500)
-    });
-}
+const responseBody = <T>(response: AxiosResponse): Promise<T> => response.data;
+// {
+//     return new Promise(resolve =>
+//     {
+//         setTimeout(() =>
+//         {
+//             resolve(response.data)
+//         }, 500)
+//     });
+// }
 
 const requests = {
     get: <T>(url: string) => axios.get(url).then<T>(responseBody),

@@ -11,11 +11,16 @@ import {
   loadTravelPlanActivities,
   submitActivityEdit,
 } from "./detailSlice";
+import { ITravelPlanActivity } from "../../../app/common/interfaces/ITravelPlanActivity";
 
-export const ActivityForm = () => {
-  const { selectedActivity } = useSelector(
-    (state: RootState) => state.detailReducer
-  );
+interface IProps
+{
+  initialActivity: ITravelPlanActivity | null;
+  travelPlanId: string;
+}
+
+export const ActivityForm: React.FC<IProps> = ({initialActivity, travelPlanId}) => {
+
   const dispatch = useAppDispatch();
 
   function handleActivitySubmit(formActivity: any) {
@@ -24,14 +29,16 @@ export const ActivityForm = () => {
     formActivity.startTime = new Date(formActivity.startTime).toISOString();
     formActivity.endTime = new Date(formActivity.endTime).toISOString();
 
-    dispatch(submitActivityEdit(formActivity!)).then(() => {
-      dispatch(loadTravelPlanActivities(selectedActivity?.travelPlanId!));
+    dispatch(submitActivityEdit(formActivity)).then(() => {
+
+      //reload travel plan activities
+      dispatch(loadTravelPlanActivities(formActivity.travelPlanId));
     });
   }
   return (
     <Fragment>
       <FinalForm
-        initialValues={selectedActivity}
+        initialValues={initialActivity}
         onSubmit={(values) => handleActivitySubmit(values)}
         render={({ handleSubmit, pristine }) => (
           <Form onSubmit={handleSubmit}>

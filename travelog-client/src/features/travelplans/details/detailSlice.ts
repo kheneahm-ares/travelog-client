@@ -4,6 +4,7 @@ import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 import { ITravelPlanActivity } from "../../../app/common/interfaces/ITravelPlanActivity";
 import { RootState } from "../../../app/store";
 
+//async thunks
 export const loadTravelPlan = createAsyncThunk(
     'detail/loadTravelPlan',
     async (id: string, thunkAPI) =>
@@ -26,8 +27,10 @@ export const submitActivityEdit = createAsyncThunk(
     'detail/editActivity',
     async(formActivity: ITravelPlanActivity, thunkAPI) =>
     {
-        //in terms of dates, we expect the dates are already switched from locale to ISO strings
         await APIServices.TravelPlanActivityService.update(formActivity);
+
+        //always return so that the promise resolves expectedly
+        return;
     }
 )
 
@@ -50,6 +53,8 @@ const initialState: IDetailSliceState = {
     isModalOpen: false
 }
 
+
+//slice
 const detailSlice = createSlice(
     {
         name: 'details',
@@ -85,12 +90,14 @@ const detailSlice = createSlice(
             },
             [submitActivityEdit.fulfilled as any]: (state, action) =>
             {
+                state.selectedActivity = null;
                 state.isModalOpen = false;
             }
         }
     }
 )
 
+//selectors
 export const getActivitiesByGroup = (propToGroupBy: string) => (state: RootState) => {
     //we need to group activities by the property, in our case we are defaulting to date initially
     const mapGroupedActivities = new Map<string, ITravelPlanActivity[]>();
@@ -115,6 +122,7 @@ export const getActivitiesByGroup = (propToGroupBy: string) => (state: RootState
     
 } 
 
+//etc
 export const {closeModal, openModal} = detailSlice.actions;
 
 export default detailSlice.reducer;
