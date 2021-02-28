@@ -12,7 +12,6 @@ export const loadTravelPlan = createAsyncThunk(
     {
         const travelPlan = await APIServices.TravelPlanService.details(id);
         return travelPlan;
-
     }
 )
 export const loadTravelPlanActivities = createAsyncThunk(
@@ -26,7 +25,7 @@ export const loadTravelPlanActivities = createAsyncThunk(
 
 export const submitActivityEdit = createAsyncThunk(
     'detail/editActivity',
-    async(formActivity: ITravelPlanActivity, thunkAPI) =>
+    async (formActivity: ITravelPlanActivity, thunkAPI) =>
     {
         const editedActivity = await APIServices.TravelPlanActivityService.update(formActivity);
         //always return so that the promise resolves expectedly
@@ -36,24 +35,17 @@ export const submitActivityEdit = createAsyncThunk(
 
 export const deleteActivity = createAsyncThunk(
     'detail/deleteActivity',
-    async(activityId: string, thunkAPI) =>
+    async (activityId: string, thunkAPI) =>
     {
-        try
+        const responseStatus = await APIServices.TravelPlanActivityService.delete(activityId);
+        if (responseStatus === 200)
         {
-            const responseStatus = await APIServices.TravelPlanActivityService.delete(activityId);
-            if(responseStatus === 200){
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return true;
         }
-        catch(e)
+        else
         {
-
+            return false;
         }
-
     }
 )
 
@@ -90,11 +82,13 @@ const detailSlice = createSlice(
         name: 'details',
         initialState: initialState,
         reducers: {
-            openModal: (state, action) => {
+            openModal: (state, action) =>
+            {
                 state.selectedActivity = action.payload;
                 state.isModalOpen = true;
             },
-            closeModal: (state) => {
+            closeModal: (state) =>
+            {
                 state.selectedActivity = null;
                 state.isModalOpen = false;
             }
@@ -131,7 +125,7 @@ const detailSlice = createSlice(
             [deleteActivity.pending as any]: (state, action) =>
             {
                 state.deletingActivity = true;
-                state.activityTarget = action.payload.arg;
+                state.activityTarget = action.meta.arg;
             },
             [deleteActivity.fulfilled as any]: (state, action) =>
             {
@@ -144,17 +138,19 @@ const detailSlice = createSlice(
 )
 
 //selectors
-export const getActivitiesByDate = () => (state: RootState) => {
+export const getActivitiesByDate = () => (state: RootState) =>
+{
     //no need to sort, API returns sorted activities via sql
 
     //we need to group activities by the property, in our case we are defaulting to date initially
     const mapGroupedActivities = new Map<string, ITravelPlanActivity[]>();
 
-    state.detailReducer.travelPlanActivities?.forEach((a) => {
+    state.detailReducer.travelPlanActivities?.forEach((a) =>
+    {
         const formattedDate = a.startTime.split('T')[0];
 
         //key exists with array of activities, add to array
-        if(mapGroupedActivities.has(formattedDate))
+        if (mapGroupedActivities.has(formattedDate))
         {
             var currentActivities = mapGroupedActivities.get(formattedDate);
             currentActivities?.push(a); //no need to readd to map since array is ref type
@@ -166,10 +162,10 @@ export const getActivitiesByDate = () => (state: RootState) => {
     });
 
     return mapGroupedActivities;
-    
-} 
+
+}
 
 //etc
-export const {closeModal, openModal} = detailSlice.actions;
+export const { closeModal, openModal } = detailSlice.actions;
 
 export default detailSlice.reducer;
