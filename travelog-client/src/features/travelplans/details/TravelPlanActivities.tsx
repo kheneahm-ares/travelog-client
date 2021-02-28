@@ -10,7 +10,7 @@ import { useAppDispatch } from "../../../app/customHooks";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { RootState } from "../../../app/store";
 import { ActivityCard } from "./ActivityCard";
-import { getActivitiesByGroup, loadTravelPlanActivities } from "./detailSlice";
+import { getActivitiesByDate, loadTravelPlanActivities } from "./detailSlice";
 
 interface IProps {
   travelPlanId: string;
@@ -18,7 +18,7 @@ interface IProps {
 
 export const TravelPlanActivities: React.FC<IProps> = ({ travelPlanId }) => {
   const dispatch = useAppDispatch();
-  const groupedActivities = useSelector(getActivitiesByGroup(""));
+  const groupedActivities = useSelector(getActivitiesByDate());
   const { isLoadingActivities } = useSelector(
     (state: RootState) => state.detailReducer
   );
@@ -47,7 +47,7 @@ export const TravelPlanActivities: React.FC<IProps> = ({ travelPlanId }) => {
             </Segment>
             <Divider />
             {activities.map((a) => (
-              <ActivityCard key={a.id} activity={a} />
+              <ActivityCard key={a.id} activity={a} travelPlanId={travelPlanId} />
             ))}
           </Container>
         ))

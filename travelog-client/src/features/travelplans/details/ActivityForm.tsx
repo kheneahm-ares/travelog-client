@@ -5,7 +5,7 @@ import { Form as FinalForm, Field as FinalField } from "react-final-form";
 import { Button, Form } from "semantic-ui-react";
 import { TextInput } from "../../../app/common/form/TextInput";
 import { DateInput } from "../../../app/common/form/DateInput";
-import { useAppDispatch } from "../../../app/customHooks";
+import { useAppDispatch, useAppSelector } from "../../../app/customHooks";
 import {
   closeModal,
   loadTravelPlanActivities,
@@ -13,7 +13,7 @@ import {
 } from "./detailSlice";
 import { ITravelPlanActivity } from "../../../app/common/interfaces/ITravelPlanActivity";
 
-interface IProps
+interface IProps 
 {
   initialActivity: ITravelPlanActivity | null;
   travelPlanId: string;
@@ -22,6 +22,7 @@ interface IProps
 export const ActivityForm: React.FC<IProps> = ({initialActivity, travelPlanId}) => {
 
   const dispatch = useAppDispatch();
+  const {editingActivity} = useAppSelector((state: RootState) => state.detailReducer);
 
   function handleActivitySubmit(formActivity: any) {
     //before sending to API, turn the dates back to ISO strings as we expect it from the API
@@ -30,9 +31,7 @@ export const ActivityForm: React.FC<IProps> = ({initialActivity, travelPlanId}) 
     formActivity.endTime = new Date(formActivity.endTime).toISOString();
 
     dispatch(submitActivityEdit(formActivity)).then(() => {
-
-      //reload travel plan activities
-      dispatch(loadTravelPlanActivities(formActivity.travelPlanId));
+      dispatch(loadTravelPlanActivities(travelPlanId));
     });
   }
   return (
@@ -76,6 +75,7 @@ export const ActivityForm: React.FC<IProps> = ({initialActivity, travelPlanId}) 
               type="submit"
               content="Save"
               disabled={pristine}
+              loading={editingActivity}
             />
           </Form>
         )}

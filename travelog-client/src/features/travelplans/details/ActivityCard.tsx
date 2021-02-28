@@ -1,23 +1,36 @@
-import React, { Fragment } from "react";
+import React, { Fragment, SyntheticEvent, useState } from "react";
 import { act } from "react-dom/test-utils";
 import { Button, Card, Container, Item, Segment } from "semantic-ui-react";
 import { ITravelPlanActivity } from "../../../app/common/interfaces/ITravelPlanActivity";
-import { useAppDispatch } from "../../../app/customHooks";
-import { openModal } from "./detailSlice";
+import { useAppDispatch, useAppSelector } from "../../../app/customHooks";
+import { deleteActivity, loadTravelPlanActivities, openModal } from "./detailSlice";
 import moment from "moment";
+import { RootState } from "../../../app/store";
 
 interface IProps {
   activity: ITravelPlanActivity;
+  travelPlanId: string;
 }
 
-export const ActivityCard: React.FC<IProps> = ({ activity }) => {
+export const ActivityCard: React.FC<IProps> = ({ activity, travelPlanId}) => {
+  const { deletingActivity, activityTarget} = useAppSelector(
+    (state: RootState) => state.detailReducer
+  );
+  const dispatch = useAppDispatch();
+
   const mStart = moment(new Date(activity.startTime));
   const mEnd = moment(new Date(activity.endTime));
   const formattedStart = `${mStart.format("hh:mm a")}`;
   const formattedEnd = `${mEnd.format("hh:mm a")}`;
-  const dispatch = useAppDispatch();
 
   const timeRange = `${formattedStart} - ${formattedEnd}`;
+
+  function handleDelete(id: string) {
+    dispatch(deleteActivity(id)).then(() => {
+      //reload
+      dispatch(loadTravelPlanActivities(travelPlanId));
+    })
+  }
 
   return (
     <Card>
@@ -26,15 +39,21 @@ export const ActivityCard: React.FC<IProps> = ({ activity }) => {
         <Card.Meta>{activity.location}</Card.Meta>
         <Card.Description>{timeRange}</Card.Description>
       </Card.Content>
-      <Card.Content extra>
-        <Button
-          basic
-          color="yellow"
-          floated="right"
-          onClick={() => dispatch(openModal(activity))}
-        >
-          Quick Edit
-        </Button>
+      <Card.Content extra textAlign="center">
+        <Button.Group widths="8">
+          <Button
+            basic
+            negative
+            onClick={() => handleDelete(activity.id)}
+            loading={deletingActivity && activityTarget === activity.id}
+            name={activity.id}
+          >
+            Delete
+          </Button>
+          <Button basic positive onClick={() => dispatch(openModal(activity))}>
+            View
+          </Button>
+        </Button.Group>
       </Card.Content>
     </Card>
   );

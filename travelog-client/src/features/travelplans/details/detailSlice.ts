@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { exception } from "console";
 import { APIServices } from "../../../app/api/agent";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 import { ITravelPlanActivity } from "../../../app/common/interfaces/ITravelPlanActivity";
@@ -27,10 +28,32 @@ export const submitActivityEdit = createAsyncThunk(
     'detail/editActivity',
     async(formActivity: ITravelPlanActivity, thunkAPI) =>
     {
-        await APIServices.TravelPlanActivityService.update(formActivity);
-
+        const editedActivity = await APIServices.TravelPlanActivityService.update(formActivity);
         //always return so that the promise resolves expectedly
-        return;
+        return editedActivity;
+    }
+)
+
+export const deleteActivity = createAsyncThunk(
+    'detail/deleteActivity',
+    async(activityId: string, thunkAPI) =>
+    {
+        try
+        {
+            const responseStatus = await APIServices.TravelPlanActivityService.delete(activityId);
+            if(responseStatus === 200){
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch(e)
+        {
+
+        }
+
     }
 )
 
@@ -42,6 +65,9 @@ interface IDetailSliceState
     isLoadingActivities: boolean;
     selectedActivity: ITravelPlanActivity | null;
     isModalOpen: boolean;
+    deletingActivity: boolean;
+    activityTarget: string;
+    editingActivity: boolean;
 }
 
 const initialState: IDetailSliceState = {
@@ -50,7 +76,11 @@ const initialState: IDetailSliceState = {
     travelPlanActivities: [],
     isLoadingActivities: true,
     selectedActivity: null,
-    isModalOpen: false
+    isModalOpen: false,
+    deletingActivity: false,
+    editingActivity: false,
+    activityTarget: ""
+
 }
 
 
@@ -88,8 +118,24 @@ const detailSlice = createSlice(
                 state.travelPlanActivities = action.payload;
                 state.isLoadingActivities = false;
             },
+            [submitActivityEdit.pending as any]: (state, action) =>
+            {
+                state.editingActivity = true;
+            },
             [submitActivityEdit.fulfilled as any]: (state, action) =>
             {
+                state.editingActivity = false;
+                state.selectedActivity = null;
+                state.isModalOpen = false;
+            },
+            [deleteActivity.pending as any]: (state, action) =>
+            {
+                state.deletingActivity = true;
+                state.activityTarget = action.payload.arg;
+            },
+            [deleteActivity.fulfilled as any]: (state, action) =>
+            {
+                state.deletingActivity = false;
                 state.selectedActivity = null;
                 state.isModalOpen = false;
             }
@@ -98,7 +144,9 @@ const detailSlice = createSlice(
 )
 
 //selectors
-export const getActivitiesByGroup = (propToGroupBy: string) => (state: RootState) => {
+export const getActivitiesByDate = () => (state: RootState) => {
+    //no need to sort, API returns sorted activities via sql
+
     //we need to group activities by the property, in our case we are defaulting to date initially
     const mapGroupedActivities = new Map<string, ITravelPlanActivity[]>();
 
@@ -115,7 +163,6 @@ export const getActivitiesByGroup = (propToGroupBy: string) => (state: RootState
         {
             mapGroupedActivities.set(formattedDate, [a])
         }
-        
     });
 
     return mapGroupedActivities;

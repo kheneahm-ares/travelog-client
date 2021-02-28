@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { request } from "http";
 import { AuthService } from "../auth/AuthServices";
 import { ITravelPlan } from "../common/interfaces/ITravelPlan";
 import { ITravelPlanActivity } from "../common/interfaces/ITravelPlanActivity";
@@ -20,6 +21,8 @@ axios.interceptors.request.use(async (config) =>
 });
 
 const responseBody = <T>(response: AxiosResponse): Promise<T> => response.data;
+
+const responseStatus = (response: AxiosResponse) => response.status;
 // {
 //     return new Promise(resolve =>
 //     {
@@ -33,8 +36,8 @@ const responseBody = <T>(response: AxiosResponse): Promise<T> => response.data;
 const requests = {
     get: <T>(url: string) => axios.get(url).then<T>(responseBody),
     post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
-    put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
-    delete: (url: string) => axios.delete(url).then(responseBody),
+    put: <T>(url: string, body: {}) => axios.put(url, body).then<T>(responseBody),
+    delete: (url: string) => axios.delete(url).then(responseStatus),
 }
 
 const TravelPlanService = {
@@ -44,8 +47,9 @@ const TravelPlanService = {
 
 const TravelPlanActivityService = {
     list: (id: string): Promise<ITravelPlanActivity[]> => requests.get<ITravelPlanActivity[]>(`/TravelPlanActivity/List?id=${id}`),
-    update: (activity: ITravelPlanActivity) => {
-        requests.put(`/TravelPlanActivity/Edit`, activity)},
+    update: (activity: ITravelPlanActivity): Promise<ITravelPlanActivity> =>
+        requests.put<ITravelPlanActivity>(`/TravelPlanActivity/Edit`, activity),
+    delete: (id: string): Promise<number> => requests.delete(`/TravelPlanActivity/Delete?id=${id}`),
 }
 
 export const APIServices = {
