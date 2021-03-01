@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { exception } from "console";
+import moment from "moment";
 import { APIServices } from "../../../app/api/agent";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 import { ITravelPlanActivity } from "../../../app/common/interfaces/ITravelPlanActivity";
@@ -171,7 +172,10 @@ export const getActivitiesByDate = () => (state: RootState) =>
 
     state.detailReducer.travelPlanActivities?.forEach((a) =>
     {
-        const formattedDate = a.startTime.split('T')[0];
+        //need to localized date
+        //ex: 03/01 1AM GMT will be 02/28 date in central
+        const localizedDate = new Date(a.startTime);
+        const formattedDate = moment(localizedDate).format('yyyy-MM-DD');
 
         //key exists with array of activities, add to array
         if (mapGroupedActivities.has(formattedDate))
