@@ -35,7 +35,7 @@ const responseStatus = (response: AxiosResponse) => response.status;
 
 const requests = {
     get: <T>(url: string) => axios.get(url).then<T>(responseBody),
-    post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
+    post: (url: string, body: {}) => axios.post(url, body).then(responseStatus),
     put: <T>(url: string, body: {}) => axios.put(url, body).then<T>(responseBody),
     delete: (url: string) => axios.delete(url).then(responseStatus),
 }
@@ -50,6 +50,7 @@ const TravelPlanActivityService = {
     update: (activity: ITravelPlanActivity): Promise<ITravelPlanActivity> =>
         requests.put<ITravelPlanActivity>(`/TravelPlanActivity/Edit`, activity),
     delete: (id: string): Promise<number> => requests.delete(`/TravelPlanActivity/Delete?id=${id}`),
+    create: (activity: ITravelPlanActivity): Promise<number> => requests.post('/TravelPlanActivity/Create', activity)
 }
 
 export const APIServices = {

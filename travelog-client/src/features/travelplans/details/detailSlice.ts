@@ -49,6 +49,22 @@ export const deleteActivity = createAsyncThunk(
     }
 )
 
+export const createActivity = createAsyncThunk(
+    'detail/createActivity',
+    async (newActivity: ITravelPlanActivity, thunkAPI) =>
+    {
+        const responseStatus = await APIServices.TravelPlanActivityService.create(newActivity);
+        if (responseStatus === 200)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+)
+
 interface IDetailSliceState
 {
     travelPlan: ITravelPlan | null;
@@ -59,7 +75,7 @@ interface IDetailSliceState
     isModalOpen: boolean;
     deletingActivity: boolean;
     activityTarget: string;
-    editingActivity: boolean;
+    formLoading: boolean;
 }
 
 const initialState: IDetailSliceState = {
@@ -70,9 +86,8 @@ const initialState: IDetailSliceState = {
     selectedActivity: null,
     isModalOpen: false,
     deletingActivity: false,
-    editingActivity: false,
+    formLoading: false,
     activityTarget: ""
-
 }
 
 
@@ -114,11 +129,11 @@ const detailSlice = createSlice(
             },
             [submitActivityEdit.pending as any]: (state, action) =>
             {
-                state.editingActivity = true;
+                state.formLoading = true;
             },
             [submitActivityEdit.fulfilled as any]: (state, action) =>
             {
-                state.editingActivity = false;
+                state.formLoading = false;
                 state.selectedActivity = null;
                 state.isModalOpen = false;
             },
@@ -131,6 +146,15 @@ const detailSlice = createSlice(
             {
                 state.deletingActivity = false;
                 state.selectedActivity = null;
+                state.isModalOpen = false;
+            },
+            [createActivity.pending as any] : (state, action) => 
+            {
+                state.formLoading = true;
+            },
+            [createActivity.fulfilled as any] : (state, action) => 
+            {
+                state.formLoading = false;
                 state.isModalOpen = false;
             }
         }

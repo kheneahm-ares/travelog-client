@@ -89,6 +89,7 @@ export const ActivityCard: React.FC<IProps> = ({ activity, travelPlanId }) => {
         open={confirmDelete.open}
         onConfirm={handleDelete}
         onCancel={handleCancel}
+        confirmButton="Delete Activity"
       />
     </Fragment>
   );

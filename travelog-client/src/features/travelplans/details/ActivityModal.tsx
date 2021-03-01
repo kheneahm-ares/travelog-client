@@ -8,13 +8,13 @@ import { closeModal } from "./detailSlice";
 
 export const ActivityModal = () => {
   const dispatch = useAppDispatch();
-  const { isModalOpen, selectedActivity } = useSelector(
+  const { isModalOpen, selectedActivity, travelPlan} = useSelector(
     (state: RootState) => state.detailReducer
   );
   return (
     <Modal open={isModalOpen} onClose={dispatch(closeModal)} size="mini">
       <Modal.Content>
-          <ActivityForm initialActivity={selectedActivity!} travelPlanId={selectedActivity?.travelPlanId!}/>
+          <ActivityForm initialActivity={selectedActivity!} travelPlanId={travelPlan?.id!}/>
       </Modal.Content>
     </Modal>
   );
