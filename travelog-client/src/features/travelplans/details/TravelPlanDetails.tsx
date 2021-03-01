@@ -18,9 +18,11 @@ import { RootState } from "../../../app/store";
 import { ActivityModal } from "./ActivityModal";
 import { loadTravelPlan, openModal } from "./detailSlice";
 import { TravelPlanActivities } from "./TravelPlanActivities";
+import { TravelPlanDetailHeader } from "./TravelPlanDetailHeader";
+import { TravelPlanDetailInfo } from "./TravelPlanDetailInfo";
+import { TravelPlanDetailSidebar } from "./TravelPlanDetailSidebar";
 
 interface IProps extends RouteComponentProps<{ id: string }> {}
-
 
 export const TravelPlanDetails: React.FC<IProps> = ({ match, history }) => {
   const dispatch = useAppDispatch();
@@ -41,12 +43,21 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match, history }) => {
     <Grid>
       <ActivityModal />
 
-      <Grid.Row width={12}>
-        <div>{travelPlan?.name}!</div>
-        <div>{travelPlan?.id}!</div>
-      </Grid.Row>
       <Grid.Row>
-        <Container>
+        <Grid.Column width={10}>
+          <TravelPlanDetailHeader travelPlan={travelPlan!} />
+          <TravelPlanDetailInfo travelPlan={travelPlan!} />
+        </Grid.Column>
+        <Grid.Column width={6}>
+          <TravelPlanDetailSidebar
+            travelers={travelPlan?.travelers!}
+            creatorId={travelPlan?.createdById!}
+          />
+        </Grid.Column>
+      </Grid.Row>
+
+      <Grid.Column width={16}>
+        <Segment basic>
           <h1 style={{ display: "inline", verticalAlign: "middle" }}>
             Activities
           </h1>
@@ -57,15 +68,20 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match, history }) => {
             icon="plus"
             onClick={() => dispatch(openModal(null))}
           />
-        </Container>
-      </Grid.Row>
-      <Grid.Row width={12}>
+        </Segment>
+      </Grid.Column>
+      <Grid.Column width={16}>
         <Container
-          style={{ overflowX: "auto", whiteSpace: "nowrap", height: "800px" }}
+          style={{
+            overflowX: "auto",
+            whiteSpace: "nowrap",
+            height: "auto",
+            paddingBottom: "10px",
+          }}
         >
           <TravelPlanActivities travelPlanId={travelPlan!.id} />
         </Container>
-      </Grid.Row>
+      </Grid.Column>
     </Grid>
   );
 };

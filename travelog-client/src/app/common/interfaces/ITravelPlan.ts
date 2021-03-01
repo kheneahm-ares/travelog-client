@@ -1,3 +1,5 @@
+import { ITravelPlanTraveler } from "./ITravelPlanTraveler";
+
 export interface ITravelPlan
 {
     id: string;
@@ -6,5 +8,5 @@ export interface ITravelPlan
     endDate: string;
     description: string;
     createdById: string;
-    travelers: {};
+    travelers: ITravelPlanTraveler[];
 }
