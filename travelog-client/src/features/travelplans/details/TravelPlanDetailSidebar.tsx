@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
 import { Segment, List, Item, Label, Image } from "semantic-ui-react";
 import { ITravelPlanTraveler } from "../../../app/common/interfaces/ITravelPlanTraveler";
 

@@ -1,15 +1,10 @@
-import React, { Fragment, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { RouteComponentProps, RouteProps } from "react-router";
+import { RouteComponentProps } from "react-router";
 import {
   Button,
   Container,
-  Divider,
   Grid,
-  Header,
-  Icon,
-  Item,
-  Label,
   Segment,
 } from "semantic-ui-react";
 import { useAppDispatch } from "../../../app/customHooks";
@@ -24,7 +19,7 @@ import { TravelPlanDetailSidebar } from "./TravelPlanDetailSidebar";
 
 interface IProps extends RouteComponentProps<{ id: string }> {}
 
-export const TravelPlanDetails: React.FC<IProps> = ({ match, history }) => {
+export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
   const dispatch = useAppDispatch();
   const { travelPlan, isLoading } = useSelector(
     (state: RootState) => state.detailReducer

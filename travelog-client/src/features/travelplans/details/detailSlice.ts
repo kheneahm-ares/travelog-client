@@ -54,15 +54,8 @@ export const createActivity = createAsyncThunk(
     'detail/createActivity',
     async (newActivity: ITravelPlanActivity, thunkAPI) =>
     {
-        const responseStatus = await APIServices.TravelPlanActivityService.create(newActivity);
-        if (responseStatus === 200)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        const createdActivity = await APIServices.TravelPlanActivityService.create(newActivity);
+        return createdActivity;
     }
 )
 

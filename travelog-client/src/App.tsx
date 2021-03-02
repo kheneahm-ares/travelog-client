@@ -1,5 +1,10 @@
 import React, { Fragment } from "react";
-import { Route, Switch, withRouter } from "react-router-dom";
+import {
+  Route,
+  RouteComponentProps,
+  Switch,
+  withRouter,
+} from "react-router-dom";
 import { Container } from "semantic-ui-react";
 
 import "./App.css";
@@ -9,8 +14,9 @@ import { HomePage } from "./features/home/HomePage";
 import { NavBar } from "./features/nav/NavBar";
 import { TravelPlanDashboard } from "./features/travelplans/dashboard/TravelPlanDashboard";
 import { TravelPlanDetails } from "./features/travelplans/details/TravelPlanDetails";
+import { TravelPlanManage } from "./features/travelplans/manage/TravelPlanManage";
 
-function App() {
+const App: React.FC<RouteComponentProps> = ({ location }) => {
   return (
     <Fragment>
       <Route exact path="/" component={HomePage} />
@@ -28,10 +34,16 @@ function App() {
                     component={TravelPlanDashboard}
                   />
                   <PrivateRoute
+                    key={location.key}
+                    path={["/travelplans/edit/:id", "/create/travelplan"]}
+                    component={TravelPlanManage}
+                  />
+                  <PrivateRoute
                     exact
                     path="/travelplans/:id"
                     component={TravelPlanDetails}
                   />
+
                   <Route
                     exact
                     path="/auth/signin-oidc"
@@ -45,6 +57,6 @@ function App() {
       />
     </Fragment>
   );
-}
+};
 
 export default withRouter(App);

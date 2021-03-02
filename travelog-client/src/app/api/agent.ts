@@ -35,14 +35,18 @@ const responseStatus = (response: AxiosResponse) => response.status;
 
 const requests = {
     get: <T>(url: string) => axios.get(url).then<T>(responseBody),
-    post: (url: string, body: {}) => axios.post(url, body).then(responseStatus),
+    post: <T>(url: string, body: {}) => axios.post(url, body).then<T>(responseBody),
     put: <T>(url: string, body: {}) => axios.put(url, body).then<T>(responseBody),
     delete: (url: string) => axios.delete(url).then(responseStatus),
 }
 
 const TravelPlanService = {
     list: (): Promise<ITravelPlan[]> => requests.get<ITravelPlan[]>('/TravelPlan/List'),
-    details: (id: string): Promise<ITravelPlan> => requests.get<ITravelPlan>(`/TravelPlan/Details?id=${id}`)
+    update: (travelPlan: ITravelPlan): Promise<ITravelPlan> =>
+        requests.put<ITravelPlan>(`/TravelPlan/Edit`, travelPlan),
+    details: (id: string): Promise<ITravelPlan> => requests.get<ITravelPlan>(`/TravelPlan/Details?id=${id}`),
+    create: (travelPlan: ITravelPlan): Promise<number> => requests.post('/TravelPlan/Create', travelPlan)
+
 }
 
 const TravelPlanActivityService = {
@@ -50,7 +54,7 @@ const TravelPlanActivityService = {
     update: (activity: ITravelPlanActivity): Promise<ITravelPlanActivity> =>
         requests.put<ITravelPlanActivity>(`/TravelPlanActivity/Edit`, activity),
     delete: (id: string): Promise<number> => requests.delete(`/TravelPlanActivity/Delete?id=${id}`),
-    create: (activity: ITravelPlanActivity): Promise<number> => requests.post('/TravelPlanActivity/Create', activity)
+    create: (activity: ITravelPlanActivity): Promise<ITravelPlanActivity> => requests.post('/TravelPlanActivity/Create', activity)
 }
 
 export const APIServices = {

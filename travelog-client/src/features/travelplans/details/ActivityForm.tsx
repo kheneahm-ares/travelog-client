@@ -35,12 +35,12 @@ export const ActivityForm: React.FC<IProps> = ({
   );
 
   function handleActivitySubmit(formActivity: any) {
-    console.log(formActivity);
     //before sending to API, turn the dates back to ISO strings as we expect it from the API
     //since they were transformed on the UI to show localized date
     formActivity.startTime = new Date(formActivity.startTime).toISOString();
     formActivity.endTime = new Date(formActivity.endTime).toISOString();
 
+    //if there was an initial, it was an edit
     if (initialActivity) {
       dispatch(submitActivityEdit(formActivity)).then(() => {
         dispatch(loadTravelPlanActivities(travelPlanId));
@@ -85,14 +85,16 @@ export const ActivityForm: React.FC<IProps> = ({
               name="startTime"
               placeholder="Start Time"
               component={DateInput}
-              viewMode="time"
+              time={true}
+              date={true}
               label="Start Time"
             />
             <FinalField
               name="endTime"
               placeholder="End Time"
               component={DateInput}
-              viewMode="time"
+              time={true}
+              date={true}
               label="End Time"
             />
             <Button
