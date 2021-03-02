@@ -1,3 +1,4 @@
+import moment from "moment";
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Item, Segment } from "semantic-ui-react";
@@ -16,7 +17,8 @@ export const TravelPlanListItem: React.FC<IProps> = ({ travelPlan }) => {
             <Item.Content>
               <Item.Header>{travelPlan.name}</Item.Header>
               <Item.Meta>
-                {travelPlan.startDate}, {travelPlan.endDate}
+                {moment(travelPlan.startDate).format("MMM Do YYYY")} - 
+                {moment(travelPlan.endDate).format("MMM Do YYYY")}
               </Item.Meta>
               <Item.Description>{travelPlan.description}</Item.Description>
             </Item.Content>
@@ -29,7 +31,7 @@ export const TravelPlanListItem: React.FC<IProps> = ({ travelPlan }) => {
           to={`/travelplans/${travelPlan.id}`}
           floated="right"
           content="Details"
-          color='purple'
+          color="purple"
         />
       </Segment>
     </Segment.Group>

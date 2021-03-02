@@ -28,13 +28,13 @@ export const TravelPlanDetailInfo: React.FC<IProps> = ({ travelPlan }) => {
               <Grid.Column width={8}>
                 <p>
                   Start Date:{" "}
-                  {moment(new Date(travelPlan.startDate)).format("yyyy/MM/DD")}
+                  {moment(travelPlan.startDate).format("MMM Do YYYY")}
                 </p>
               </Grid.Column>
               <Grid.Column floated='right' width={6}>
                 <p>
                   End Date:{" "}
-                  {moment(new Date(travelPlan.endDate)).format("yyyy/MM/DD")}
+                  {moment(travelPlan.endDate).format("MMM Do YYYY")}
                 </p>
               </Grid.Column>
             </Grid>

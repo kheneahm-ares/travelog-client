@@ -33,8 +33,8 @@ export const ActivityCard: React.FC<IProps> = ({ activity, travelPlanId }) => {
     confirmed: false,
   });
 
-  const mStart = moment(new Date(activity.startTime));
-  const mEnd = moment(new Date(activity.endTime));
+  const mStart = moment(activity.startTime);
+  const mEnd = moment(activity.endTime);
   const formattedStart = `${mStart.format("hh:mm a")}`;
   const formattedEnd = `${mEnd.format("hh:mm a")}`;
 

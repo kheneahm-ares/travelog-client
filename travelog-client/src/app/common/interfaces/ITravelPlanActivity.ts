@@ -4,8 +4,8 @@ export interface ITravelPlanActivity
     travelPlanId: string;
     hostId: string;
     name: string;
-    startTime: string;
-    endTime: string;
+    startTime: Date;
+    endTime: Date;
     category: string;
     location: string;
 }
