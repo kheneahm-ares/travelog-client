@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "../../../app/customHooks";
 import { RootState } from "../../../app/store";
 import { history } from "../../../";
 import { createTravelPlan, submitTravelPlanEdit } from "./manageSlice";
+import { Link } from "react-router-dom";
 
 interface IProps {
   initialTravelPlan: ITravelPlan | null;
@@ -29,6 +30,7 @@ export const TravelPlanForm: React.FC<IProps> = ({ initialTravelPlan }) => {
   );
 
   function handleTravelPlanSubmit(formPlan: any) {
+    console.log('submitting');
     //change dates back to isos
     formPlan.startDate = new Date(formPlan.startDate).toISOString();
     formPlan.endDate = new Date(formPlan.endDate).toISOString();
@@ -47,6 +49,7 @@ export const TravelPlanForm: React.FC<IProps> = ({ initialTravelPlan }) => {
   }
 
   useEffect(() => {
+    console.log(initialTravelPlan);
     //set form
     if (initialTravelPlan) {
       setFormTravelPlan(new TravelPlanFormValues(initialTravelPlan!));
@@ -96,7 +99,10 @@ export const TravelPlanForm: React.FC<IProps> = ({ initialTravelPlan }) => {
                 <Button
                   content="Cancel"
                   disabled={isSubmitting}
-                  onClick={() => history.goBack()}
+                  as={Link}
+                  to={
+                    initialTravelPlan ? `/travelplans/${travelPlan?.id}` : '/travelplans'
+                  }
                 />
                 <Button
                   floated="right"
