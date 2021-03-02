@@ -4,7 +4,7 @@ import { RouteComponentProps } from "react-router";
 import { useAppDispatch } from "../../../app/customHooks";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { RootState } from "../../../app/store";
-import { loadTravelPlan } from "./manageSlice";
+import { loadTravelPlan, resetState } from "./manageSlice";
 import { TravelPlanForm } from "./TravelPlanForm";
 
 interface IProps extends RouteComponentProps<{ id: string }> {}
@@ -20,6 +20,11 @@ export const TravelPlanManage: React.FC<IProps> = ({ match }) => {
     if (match.params.id) {
       dispatch(loadTravelPlan(match.params.id));
     }
+    return () => {
+      //since edit and create share same travelplan state,
+      //we need to reset upon unmount
+      dispatch(resetState());
+    };
   }, [dispatch, match.params.id]);
 
   if (isLoading) {

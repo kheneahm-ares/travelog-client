@@ -49,7 +49,6 @@ export const TravelPlanForm: React.FC<IProps> = ({ initialTravelPlan }) => {
   }
 
   useEffect(() => {
-    console.log(initialTravelPlan);
     //set form
     if (initialTravelPlan) {
       setFormTravelPlan(new TravelPlanFormValues(initialTravelPlan!));

@@ -50,6 +50,11 @@ const manage = createSlice({
     name: 'manage',
     initialState: initialState,
     reducers: {
+        resetState: (state) => {
+            state.travelPlan = null;
+            state.isLoading = false;
+            state.isSubmitting = false;
+        }
     },
     extraReducers: {
         [loadTravelPlan.pending as any]: (state) =>
@@ -81,5 +86,7 @@ const manage = createSlice({
         },
     }
 })
+
+export const {resetState} = manage.actions; 
 
 export default manage.reducer;
