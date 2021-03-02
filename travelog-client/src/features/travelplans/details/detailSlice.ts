@@ -15,6 +15,16 @@ export const loadTravelPlan = createAsyncThunk(
         return travelPlan;
     }
 )
+
+export const deleteTravelPlan = createAsyncThunk(
+    'detail/deleteTravelPlan',
+    async (id: string, thunkAPI) =>
+    {
+        const response = await APIServices.TravelPlanService.delete(id);
+        return response;
+    }
+)
+
 export const loadTravelPlanActivities = createAsyncThunk(
     'detail/loadActivities',
     async (id: string, thunkAPI) =>
@@ -70,6 +80,7 @@ interface IDetailSliceState
     deletingActivity: boolean;
     activityTarget: string;
     formLoading: boolean;
+    deletingTravelPlan: boolean;
 }
 
 const initialState: IDetailSliceState = {
@@ -81,7 +92,8 @@ const initialState: IDetailSliceState = {
     isModalOpen: false,
     deletingActivity: false,
     formLoading: false,
-    activityTarget: ""
+    activityTarget: "",
+    deletingTravelPlan: false,
 }
 
 
@@ -111,6 +123,12 @@ const detailSlice = createSlice(
             {
                 state.travelPlan = action.payload;
                 state.isLoading = false;
+            },
+            [deleteTravelPlan.pending as any]: (state) => {
+                state.deletingTravelPlan = true;
+            },
+            [deleteTravelPlan.fulfilled as any]: (state) => {
+                state.deletingTravelPlan = false;
             },
             [loadTravelPlanActivities.pending as any]: (state) =>
             {

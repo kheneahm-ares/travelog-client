@@ -21,7 +21,7 @@ interface IProps extends RouteComponentProps<{ id: string }> {}
 
 export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
   const dispatch = useAppDispatch();
-  const { travelPlan, isLoading } = useSelector(
+  const { travelPlan, isLoading, deletingTravelPlan} = useSelector(
     (state: RootState) => state.detailReducer
   );
   const travelPlanId = match.params.id;
@@ -33,11 +33,14 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
   if (isLoading) {
     return <LoadingComponent content="Loading Travel Plan" />;
   }
+  else if(deletingTravelPlan)
+  {
+    return <LoadingComponent content="Deleting Travel Plan" />;
+  }
 
   return (
     <Grid>
       <ActivityModal />
-
       <Grid.Row>
         <Grid.Column width={10}>
           <TravelPlanDetailHeader travelPlan={travelPlan!} />
