@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import { Container } from "semantic-ui-react";
 
-import "./App.css";
 import { PrivateRoute } from "./app/layout/PrivateRoute";
 import { SignInCallBack } from "./features/auth/SignInCallBack";
 import { HomePage } from "./features/home/HomePage";
