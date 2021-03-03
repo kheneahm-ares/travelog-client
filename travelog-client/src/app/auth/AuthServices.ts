@@ -54,7 +54,7 @@ const signInRedirect = async () =>
     {
         //signInRedirect calls createSignInrequest which adds to store
         //remove keys before adding new one
-        removeStateKeys();
+        await removeStateKeys();
 
         await userManager.signinRedirect();
     }
@@ -62,6 +62,8 @@ const signInRedirect = async () =>
 }
 const registerUser = async () =>
 {
+    await removeStateKeys();
+
     //signInRequest will add to userstore
     //si:r indicates that our sign in is a redirect callback
     const signInRequest = await userManager.createSigninRequest({ request_type: "si:r" });
@@ -121,7 +123,7 @@ const signInUserCallback = async (): Promise<IUser> =>
     finally
     {
         //for every callback, remove the state keys
-        removeStateKeys();
+        await removeStateKeys();
     }
 
 }
@@ -142,7 +144,7 @@ const hasToken = (): boolean =>
 const signOut = async (): Promise<void> => 
 {
     //remove state keys upon sign out
-    removeStateKeys();
+    await removeStateKeys();
     await userManager.signoutRedirect();
 }
 
