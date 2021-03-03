@@ -9,20 +9,41 @@ const REDIRECT_URI = "http://localhost:3000/auth/signin-oidc";
 const POST_LOGOUT_REDIRECT_URI = "http://localhost:3000/"; //redirect back to our home page
 const RESPONSE_TYPE = "code"; // using code flow so we expect some code
 const SCOPE = "openid profile TravelogApi extraprofile.scope";
-
+const OIDC_REQUEST_PREFIX = "travelog.";
 
 const userConfig: IUserManagerConfig =
 {
-    userStore: new Oidc.WebStorageStateStore({ store: window.localStorage }),
+    userStore: new Oidc.WebStorageStateStore({ store: window.localStorage}),
     authority: process.env.REACT_APP_AUTH_URL as string,
     client_id: process.env.REACT_APP_IDENTITY_CLIENT_ID as string,
     redirect_uri: REDIRECT_URI,
     response_type: RESPONSE_TYPE,
     scope: SCOPE,
     post_logout_redirect_uri: POST_LOGOUT_REDIRECT_URI,
+    stateStore: new Oidc.WebStorageStateStore({prefix: OIDC_REQUEST_PREFIX}) //change prefix to use app
 }
 
 const userManager = new UserManager(userConfig);
+
+
+const removeStateKeys = async () =>
+{
+    //see if the keys are just stale
+    await userManager.clearStaleState();
+
+    //if there are more, remove them
+    const oidcKeys = await userManager.settings.stateStore?.getAllKeys();
+    if (oidcKeys?.length! > 0)
+    {
+        oidcKeys?.forEach((k) =>
+        {
+            if (!k.startsWith(OIDC_REQUEST_PREFIX))
+            {
+                userManager.settings.stateStore?.remove(k);
+            }
+        });
+    }
+}
 
 const signInRedirect = async () => 
 {
@@ -31,6 +52,10 @@ const signInRedirect = async () =>
     //only redirect to auth server if no user in storage, else redirec to dashboard
     if (!oidcUser)
     {
+        //signInRedirect calls createSignInrequest which adds to store
+        //remove keys before adding new one
+        removeStateKeys();
+
         await userManager.signinRedirect();
     }
     history.push('/travelplans');
@@ -67,10 +92,13 @@ const registerUser = async () =>
 const signInUserCallback = async (): Promise<IUser> =>
 {
     //piggy backs off existing user manager configs 
+    //this callback will use the state store to verify the callback state and
+    //the state we have in our store
     const callbackManager = new Oidc.UserManager(
         {
             userStore: new Oidc.WebStorageStateStore({ store: window.localStorage }),
             response_mode: "query", // look for code in query,
+            stateStore: new Oidc.WebStorageStateStore({prefix: OIDC_REQUEST_PREFIX})
         }
     );
     try
@@ -90,6 +118,11 @@ const signInUserCallback = async (): Promise<IUser> =>
             token: ''
         }
     }
+    finally
+    {
+        //for every callback, remove the state keys
+        removeStateKeys();
+    }
 
 }
 const getOidcUser = async (): Promise<Oidc.User | null> =>
@@ -108,7 +141,9 @@ const hasToken = (): boolean =>
 
 const signOut = async (): Promise<void> => 
 {
-    userManager.signoutRedirect();
+    //remove state keys upon sign out
+    removeStateKeys();
+    await userManager.signoutRedirect();
 }
 
 export const AuthService = {

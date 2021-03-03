@@ -7,4 +7,5 @@ export interface IUserManagerConfig
     redirect_uri: string,
     scope: string,
     post_logout_redirect_uri: string,
+    stateStore: any
 }
