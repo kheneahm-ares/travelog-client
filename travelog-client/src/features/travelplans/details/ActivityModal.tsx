@@ -1,18 +1,15 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Button, Modal } from "semantic-ui-react";
-import { useAppDispatch } from "../../../app/customHooks";
+import { Modal } from "semantic-ui-react";
 import { RootState } from "../../../app/store";
 import { ActivityForm } from "./ActivityForm";
-import { closeModal } from "./detailSlice";
 
 export const ActivityModal = () => {
-  const dispatch = useAppDispatch();
   const { isModalOpen, selectedActivity, travelPlan} = useSelector(
     (state: RootState) => state.detailReducer
   );
   return (
-    <Modal open={isModalOpen} onClose={dispatch(closeModal)} size="mini">
+    <Modal open={isModalOpen} size="mini">
       <Modal.Content>
           <ActivityForm initialActivity={selectedActivity!} travelPlanId={travelPlan?.id!}/>
       </Modal.Content>

@@ -19,6 +19,7 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
   return (
     <Fragment>
       <Route exact path="/" component={HomePage} />
+      <Route exact path="/auth/signin-oidc" component={SignInCallBack} />
       <Route
         path={"/(.+)"}
         render={() => {
@@ -41,12 +42,6 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                     exact
                     path="/travelplans/:id"
                     component={TravelPlanDetails}
-                  />
-
-                  <Route
-                    exact
-                    path="/auth/signin-oidc"
-                    component={SignInCallBack}
                   />
                 </Switch>
               </Container>

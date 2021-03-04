@@ -5,12 +5,22 @@ import { Button, Container, Dropdown, Icon, Menu, Image} from "semantic-ui-react
 import { AuthService } from "../../app/auth/AuthServices";
 import { useAppDispatch } from "../../app/customHooks";
 import { RootState } from "../../app/store";
-import { signOutUserAsync } from "../auth/authSlice";
+import { signOutRedirectAsync, signOutUser } from "../auth/authSlice";
 
 export const NavBar = () => {
   const dispatch = useAppDispatch();
   const user = useSelector((state: RootState) => state.authReducer.user);
   const doesAppHaveToken = AuthService.hasToken();
+
+  function handleSignOut()
+  {
+    //signoutredirect handles redirecting to our logout page
+    //signoutuser handles setting user state 
+    dispatch(signOutRedirectAsync()).then(() => {
+        dispatch(signOutUser());
+    })
+
+  }
   return (
     <Menu fixed="top" inverted>
       <Container>
@@ -39,7 +49,7 @@ export const NavBar = () => {
             <Dropdown pointing="top left" text={user.userName}>
               <Dropdown.Menu>
                 <Dropdown.Item
-                  onClick={() => dispatch(signOutUserAsync())}
+                  onClick={() => handleSignOut()}
                   text="Logout"
                   icon="power"
                 />
