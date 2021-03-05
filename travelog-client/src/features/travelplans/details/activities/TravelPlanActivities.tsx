@@ -1,11 +1,11 @@
 import React, { Fragment, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Button, Container, Divider, Header, Segment } from "semantic-ui-react";
-import { useAppDispatch } from "../../../app/customHooks";
-import LoadingComponent from "../../../app/layout/LoadingComponent";
-import { RootState } from "../../../app/store";
+import { useAppDispatch } from "../../../../app/customHooks";
+import LoadingComponent from "../../../../app/layout/LoadingComponent";
+import { RootState } from "../../../../app/store";
 import { ActivityCard } from "./ActivityCard";
-import { getActivitiesByDate, loadTravelPlanActivities } from "./detailSlice";
+import { getActivitiesByDate, loadTravelPlanActivities } from "./activitySlice";
 
 interface IProps {
   travelPlanId: string;
@@ -14,8 +14,8 @@ interface IProps {
 export const TravelPlanActivities: React.FC<IProps> = ({ travelPlanId }) => {
   const dispatch = useAppDispatch();
   const groupedActivities = useSelector(getActivitiesByDate());
-  const { isLoadingActivities } = useSelector(
-    (state: RootState) => state.detailReducer
+  const { loadingActivities } = useSelector(
+    (state: RootState) => state.activityReducer
   );
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export const TravelPlanActivities: React.FC<IProps> = ({ travelPlanId }) => {
 
   return (
     <Fragment>
-      {isLoadingActivities ? (
+      {loadingActivities ? (
         <LoadingComponent content="Loading Activities" />
       ) : (
         <Fragment>

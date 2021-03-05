@@ -8,15 +8,15 @@ import {
   Item,
   Segment,
 } from "semantic-ui-react";
-import { ITravelPlanActivity } from "../../../app/common/interfaces/ITravelPlanActivity";
-import { useAppDispatch, useAppSelector } from "../../../app/customHooks";
+import { ITravelPlanActivity } from "../../../../app/common/interfaces/ITravelPlanActivity";
+import { useAppDispatch, useAppSelector } from "../../../../app/customHooks";
 import {
   deleteActivity,
   loadTravelPlanActivities,
   openModal,
-} from "./detailSlice";
+} from "./activitySlice";
 import moment from "moment";
-import { RootState } from "../../../app/store";
+import { RootState } from "../../../../app/store";
 
 interface IProps {
   activity: ITravelPlanActivity;
@@ -25,7 +25,7 @@ interface IProps {
 
 export const ActivityCard: React.FC<IProps> = ({ activity, travelPlanId }) => {
   const { deletingActivity, activityTarget } = useAppSelector(
-    (state: RootState) => state.detailReducer
+    (state: RootState) => state.activityReducer
   );
   const dispatch = useAppDispatch();
   const [confirmDelete, setConfirmDelete] = useState({

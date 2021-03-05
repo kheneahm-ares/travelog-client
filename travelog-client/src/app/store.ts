@@ -3,17 +3,18 @@ import authReducer from '../features/auth/authSlice';
 import dashboardReducer from '../features/travelplans/dashboard/dashboardSlice';
 import detailReducer from '../features/travelplans/details/detailSlice';
 import manageReducer from '../features/travelplans/manage/manageSlice';
+import activityReducer from '../features/travelplans/details/activities/activitySlice';
 import
-  {
-    persistStore,
-    persistReducer,
-    FLUSH,
-    REHYDRATE,
-    PAUSE,
-    PERSIST,
-    PURGE,
-    REGISTER
-  } from 'redux-persist'
+{
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER
+} from 'redux-persist'
 import storage from 'redux-persist/lib/storage';
 
 
@@ -21,10 +22,10 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  blacklist: ['dashboardReducer', 'detailReducer', 'manageReducer']
+  blacklist: ['dashboardReducer', 'detailReducer', 'manageReducer', 'activityReducer']
 };
 
-const rootReducer = combineReducers({ authReducer, dashboardReducer, detailReducer, manageReducer });
+const rootReducer = combineReducers({ authReducer, dashboardReducer, detailReducer, manageReducer, activityReducer });
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 const store = configureStore({

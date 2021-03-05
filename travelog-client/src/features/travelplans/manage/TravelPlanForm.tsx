@@ -1,11 +1,10 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, Grid, Segment } from "semantic-ui-react";
 import { TravelPlanFormValues } from "../../../app/common/classes/TravelPlanFormValues";
 import { DateInput } from "../../../app/common/form/DateInput";
 import { TextInput } from "../../../app/common/form/TextInput";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 import { ITravelPlanForm } from "../../../app/common/interfaces/ITravelPlanForm";
-import { closeModal } from "../details/detailSlice";
 import { Form as FinalForm, Field as FinalField } from "react-final-form";
 import { TextAreaInput } from "../../../app/common/form/TextAreaInput";
 import { useAppDispatch, useAppSelector } from "../../../app/customHooks";

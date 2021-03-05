@@ -4,7 +4,7 @@ import { AuthService } from "../../app/auth/AuthServices";
 import { RootState } from "../../app/store";
 import React, { Fragment } from "react";
 import { Button, Container, Header, Segment, Image } from "semantic-ui-react";
-import { openModal } from "../travelplans/details/detailSlice";
+import { openModal } from "../travelplans/details/activities/activitySlice";
 
 export const HomePage = () => {
   const user = useSelector((state: RootState) => state.authReducer.user);
