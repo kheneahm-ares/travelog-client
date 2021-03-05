@@ -24,7 +24,6 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
   const travelPlanId = match.params.id;
 
   useEffect(() => {
-    console.log('details')
     dispatch(loadTravelPlan(travelPlanId)).then(() => {
       setLoading(false);
     })
@@ -40,7 +39,6 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
   } else if (deletingTravelPlan) {
     return <LoadingComponent content="Deleting Travel Plan" />;
   } else {
-    console.log("yp");
     return (
       <Grid>
         <ActivityModal />
