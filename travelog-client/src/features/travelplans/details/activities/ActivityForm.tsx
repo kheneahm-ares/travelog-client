@@ -65,13 +65,14 @@ export const ActivityForm: React.FC<IProps> = ({
     };
   }, [initialActivity]);
 
-
-  //bc a form can have a lot of fields, only load form when useEffect is done
+  console.log("form");
   return (
     <Fragment>
       {formLoading ? (
         <LoadingComponent />
       ) : (
+        //tell FinalForm to only re-render as a whole if it's submitting
+        //tell its fields to only render when the field itself has been interacted with
         <FinalForm
           subscription={{ submitting: true }}
           initialValues={activity}
@@ -98,6 +99,12 @@ export const ActivityForm: React.FC<IProps> = ({
                   subscription={{ touched: true, error: true, value: true }}
                 />
               </Form.Group>
+              <FinalField
+                name="googleapi"
+                placeholder="Location"
+                component={LocationInput}
+                subscription={{ touched: true, error: true, value: true }}
+              />
               <FinalField
                 name="startTime"
                 placeholder="Start Time"

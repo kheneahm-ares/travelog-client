@@ -1,15 +1,11 @@
-import { Action, createAsyncThunk, createSlice, PayloadAction, ThunkAction } from "@reduxjs/toolkit";
-import { exception } from "console";
-import moment from "moment";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { APIServices } from "../../../app/api/agent";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
-import { ITravelPlanActivity } from "../../../app/common/interfaces/ITravelPlanActivity";
-import { RootState } from "../../../app/store";
 
 //async thunks
 export const loadTravelPlan = createAsyncThunk(
     'detail/loadTravelPlan',
-    async (id: string, thunkAPI) =>
+    async (id: string) =>
     {
         const travelPlan = await APIServices.TravelPlanService.details(id);
         return travelPlan;
@@ -18,7 +14,7 @@ export const loadTravelPlan = createAsyncThunk(
 
 export const deleteTravelPlan = createAsyncThunk(
     'detail/deleteTravelPlan',
-    async (id: string, thunkAPI) =>
+    async (id: string) =>
     {
         const response = await APIServices.TravelPlanService.delete(id);
         return response;
