@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import moment from "moment";
 import { APIServices } from "../../../../app/api/agent";
+import { ActivityHelper } from "../../../../app/common/helpers/ActivityHelper";
 import { ITravelPlanActivity } from "../../../../app/common/interfaces/ITravelPlanActivity";
 import { RootState } from "../../../../app/store";
+
 export const loadTravelPlanActivities = createAsyncThunk(
     'detail/loadActivities',
     async (id: string, thunkAPI) =>
@@ -139,29 +141,9 @@ export const getActivitiesByDate = () => (state: RootState) =>
     //no need to sort, API returns sorted activities via sql
 
     //we need to group activities by the property, in our case we are defaulting to date initially
-    const mapGroupedActivities = new Map<string, ITravelPlanActivity[]>();
-
-    state.activityReducer.travelPlanActivities?.forEach((a) =>
-    {
-        //need to localized date
-        //ex: 03/01 1AM GMT will be 02/28 date in central
-        const localizedDate = new Date(a.startTime);
-        const formattedDate = moment(localizedDate).format('yyyy-MM-DD');
-
-        //key exists with array of activities, add to array
-        if (mapGroupedActivities.has(formattedDate))
-        {
-            var currentActivities = mapGroupedActivities.get(formattedDate);
-            currentActivities?.push(a); //no need to readd to map since array is ref type
-        }
-        else
-        {
-            mapGroupedActivities.set(formattedDate, [a])
-        }
-    });
+    const mapGroupedActivities = ActivityHelper.getActivitiesByDate(state.activityReducer.travelPlanActivities);
 
     return mapGroupedActivities;
-
 }
 export const { closeModal, openModal} = activitySlice.actions;
 
