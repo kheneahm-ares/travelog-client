@@ -13,7 +13,6 @@ export const TextAreaInput: React.FC<IProps> = ({
   meta,
   rows
 }) => {
-  console.log('hi');
   return (
     <Form.Field error={meta.touched && !!meta.error} width={width}>
       <textarea rows={rows} {...input} placeholder={placeholder} />

@@ -85,24 +85,10 @@ export const ActivityForm: React.FC<IProps> = ({
                 component={TextInput}
                 subscription={{ touched: true, error: true, value: true }}
               />
-              <Form.Group>
-                <FinalField
-                  name="category"
-                  placeholder="Category"
-                  component={TextInput}
-                  subscription={{ touched: true, error: true, value: true }}
-                />
-                <FinalField
-                  name="location"
-                  placeholder="Location"
-                  component={TextInput}
-                  subscription={{ touched: true, error: true, value: true }}
-                />
-              </Form.Group>
               <FinalField
-                name="googleapi"
-                placeholder="Location"
-                component={LocationInput}
+                name="category"
+                placeholder="Category"
+                component={TextInput}
                 subscription={{ touched: true, error: true, value: true }}
               />
               <FinalField
@@ -120,6 +106,12 @@ export const ActivityForm: React.FC<IProps> = ({
                 time={true}
                 date={true}
                 label="End Time"
+              />
+              <FinalField
+                name="location"
+                placeholder="Location"
+                component={LocationInput}
+                subscription={{ touched: true, error: true, value: true }}
               />
               <Button
                 content="Close"
