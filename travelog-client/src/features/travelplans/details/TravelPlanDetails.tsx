@@ -41,7 +41,7 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
   } else {
     return (
       <Grid>
-        <ActivityModal />
+        <ActivityModal travelPlanId={travelPlan?.id!}/>
         <Grid.Row>
           <Grid.Column width={10}>
             <TravelPlanDetailHeader travelPlan={travelPlan!} />
