@@ -60,7 +60,7 @@ export const ActivityCard: React.FC<IProps> = ({ activity, travelPlanId }) => {
       <Card>
         <Card.Content>
           <Card.Header>{activity.name}</Card.Header>
-          <Card.Meta>{activity.location}</Card.Meta>
+          <Card.Meta>{activity.location.address}</Card.Meta>
           <Card.Description>{timeRange}</Card.Description>
         </Card.Content>
         <Card.Content extra textAlign="center">

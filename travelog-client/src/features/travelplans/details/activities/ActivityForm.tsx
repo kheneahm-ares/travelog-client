@@ -17,6 +17,7 @@ import { ITravelPlanActivityForm } from "../../../../app/common/interfaces/ITrav
 import { ActivityFormValues } from "../../../../app/common/classes/ActivityFormValues";
 import { LocationInput } from "../../../../app/common/form/LocationInput";
 import LoadingComponent from "../../../../app/layout/LoadingComponent";
+import { geocodeByAddress, geocodeByPlaceId } from "react-google-places-autocomplete";
 
 interface IProps {
   initialActivity: ITravelPlanActivity | null;
@@ -37,11 +38,17 @@ export const ActivityForm: React.FC<IProps> = ({
   );
   const [formLoading, setFormLoading] = useState(true);
 
-  function handleActivitySubmit(formActivity: any) {
+  async function handleActivitySubmit(formActivity: any) {
+    console.log(formActivity);
     //before sending to API, turn the dates back to ISO strings as we expect it from the API
     //since they were transformed on the UI to show localized date
     formActivity.startTime = new Date(formActivity.startTime).toISOString();
     formActivity.endTime = new Date(formActivity.endTime).toISOString();
+
+    var results = await geocodeByAddress(formActivity.location.address)
+
+    formActivity.location.latitude = results[0].geometry.location.lat();
+    formActivity.location.longitude = results[0].geometry.location.lng();
 
     //if there was an initial, it was an edit
     if (initialActivity) {
@@ -65,7 +72,6 @@ export const ActivityForm: React.FC<IProps> = ({
     };
   }, [initialActivity]);
 
-  console.log("form");
   return (
     <Fragment>
       {formLoading ? (
@@ -74,7 +80,7 @@ export const ActivityForm: React.FC<IProps> = ({
         //tell FinalForm to only re-render as a whole if it's submitting
         //tell its fields to only render when the field itself has been interacted with
         <FinalForm
-          subscription={{ submitting: true }}
+          subscription={{ submitting: true, pristine: true}}
           initialValues={activity}
           onSubmit={(values) => handleActivitySubmit(values)}
           render={({ handleSubmit, pristine }) => (
@@ -92,6 +98,12 @@ export const ActivityForm: React.FC<IProps> = ({
                 subscription={{ touched: true, error: true, value: true }}
               />
               <FinalField
+                name="location.address"
+                placeholder="Location"
+                component={LocationInput}
+                subscription={{ touched: true, error: true, value: true }}
+              />
+              <FinalField
                 name="startTime"
                 placeholder="Start Time"
                 component={DateInput}
@@ -106,12 +118,6 @@ export const ActivityForm: React.FC<IProps> = ({
                 time={true}
                 date={true}
                 label="End Time"
-              />
-              <FinalField
-                name="location"
-                placeholder="Location"
-                component={LocationInput}
-                subscription={{ touched: true, error: true, value: true }}
               />
               <Button
                 content="Close"

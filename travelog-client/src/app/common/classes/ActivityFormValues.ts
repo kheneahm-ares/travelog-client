@@ -1,4 +1,5 @@
 import { act } from "react-dom/test-utils";
+import { ILocation } from "../interfaces/ILocation";
 import { ITravelPlanActivity } from "../interfaces/ITravelPlanActivity";
 import { ITravelPlanActivityForm } from "../interfaces/ITravelPlanActivityForm";
 
@@ -10,7 +11,7 @@ export class ActivityFormValues implements ITravelPlanActivityForm
     startTime: Date = new Date();
     endTime: Date = new Date();
     category: string = '';
-    location: string = '';
+    location: ILocation | null= null;
 
     constructor(activity?: ITravelPlanActivity)
     {        

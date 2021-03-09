@@ -1,3 +1,5 @@
+import { ILocation } from "./ILocation";
+
 export interface ITravelPlanActivity
 {
     id: string;
@@ -7,5 +9,5 @@ export interface ITravelPlanActivity
     startTime: Date;
     endTime: Date;
     category: string;
-    location: string;
+    location: ILocation;
 }

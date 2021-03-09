@@ -19,8 +19,9 @@ export const LocationInput: React.FC<IProps> = ({
   const [inputValue, setInputValue] = useState(input.value); //initial value of location input
   const [location, setLocation] = useState(null); //googleplaces lib needs the whole location obj
 
+  //only gets called when you click a prediction
   function handleOnChange(e: any) {
-    input.onChange(e.label);
+    input.onChange(e.value.description);
     setLocation(e);
   }
 
