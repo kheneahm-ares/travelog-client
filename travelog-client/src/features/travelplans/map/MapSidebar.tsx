@@ -15,13 +15,6 @@ export const MapSidebar: React.FC<IProps> = ({
 }) => {
   const dispatch = useAppDispatch();
 
-  function handleOnMouseOver(e: any) {
-    e.target.style.backgroundColor = "lightGray";
-  }
-  function handleOnMouseLeave(e: any) {
-    e.target.style.backgroundColor = "";
-  }
-
   function handleOnClick(id: string, e: any) {
     const clickedActivity = mapActivities.get(id);
     const activityLoc = clickedActivity?.location;
@@ -36,23 +29,13 @@ export const MapSidebar: React.FC<IProps> = ({
       {Array.from(groupedActivities).map(([key, activities]) =>
         activities.map((a) => (
           <Segment
-            onMouseLeave={handleOnMouseLeave}
-            onMouseOver={handleOnMouseOver}
             onClick={handleOnClick.bind(this, a.id)}
             key={a.id}
+            className="map-segment"
           >
-            <Header
-              onMouseLeave={handleOnMouseLeave}
-              onMouseOver={handleOnMouseOver}
-            >
-              {a.name}
-            </Header>
-            <Label
-              onMouseLeave={handleOnMouseLeave}
-              onMouseOver={handleOnMouseOver}
-            >
-              {a.location.address}
-            </Label>
+            
+            <h3>{a.name}</h3>
+            <label>{a.location.address}</label>
           </Segment>
         ))
       )}

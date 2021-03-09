@@ -16,6 +16,9 @@ body {
   ) !important;
 }
 
+.ui.segment.map-segment:hover {
+  background-color: lightcyan;
+}
 
 /*home page styles*/
 

@@ -75,13 +75,13 @@ export const ActivityForm: React.FC<IProps> = ({
       setActivity(new ActivityFormValues());
     };
   }, [initialActivity]);
-
   return (
     <Fragment>
       {formLoading ? (
         <LoadingComponent />
       ) : (
-        //tell FinalForm to only re-render as a whole if it's submitting
+        //using subscription, tell FinalForm to only re-render as a whole if it's submitting
+        //or if the pristine value is changed
         //tell its fields to only render when the field itself has been interacted with
         <FinalForm
           subscription={{ submitting: true, pristine: true }}

@@ -5,6 +5,7 @@ import {
   Button,
   Confirm,
   Dropdown,
+  DropdownItem,
   Header,
   Item,
   Menu,
@@ -20,7 +21,6 @@ interface IProps {
 }
 
 export const TravelPlanDetailHeader: React.FC<IProps> = ({ travelPlan }) => {
-
   const dispatch = useAppDispatch();
   const [confirmDelete, setConfirmDelete] = useState({
     open: false,
@@ -30,7 +30,7 @@ export const TravelPlanDetailHeader: React.FC<IProps> = ({ travelPlan }) => {
   function handleDelete() {
     dispatch(deleteTravelPlan(travelPlan.id)).then(() => {
       //go back to dashboard
-      history.push('/travelplans');
+      history.push("/travelplans");
     });
   }
 
@@ -41,18 +41,6 @@ export const TravelPlanDetailHeader: React.FC<IProps> = ({ travelPlan }) => {
   function openConfirmDelete() {
     setConfirmDelete({ open: true, confirmed: false });
   }
-
-  const dropdownOptions = [
-    {
-      key: "edit",
-      text: "Edit",
-      icon: "edit",
-      as: Link,
-      to: `/travelplans/edit/${travelPlan.id}`,
-    },
-    { key: "delete", text: "Delete", icon: "trash", onClick: () => openConfirmDelete()},
-  ];
-
 
   return (
     <Fragment>
@@ -78,8 +66,22 @@ export const TravelPlanDetailHeader: React.FC<IProps> = ({ travelPlan }) => {
             float: "right",
             top: "10px",
           }}
-          options={dropdownOptions}
-        ></Dropdown>
+          // options={dropdownOptions}
+        >
+          <Dropdown.Menu>
+            <DropdownItem
+              icon="edit"
+              as={Link}
+              text="Edit"
+              to={`/travelplans/edit/${travelPlan.id}`}
+            />
+            <DropdownItem
+              icon="trash"
+              text="Delete"
+              onClick={openConfirmDelete}
+            />
+          </Dropdown.Menu>
+        </Dropdown>
       </Segment>
     </Fragment>
   );
