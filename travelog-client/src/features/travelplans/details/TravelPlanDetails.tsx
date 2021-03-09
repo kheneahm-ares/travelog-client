@@ -12,6 +12,7 @@ import { TravelPlanDetailHeader } from "./TravelPlanDetailHeader";
 import { TravelPlanDetailInfo } from "./TravelPlanDetailInfo";
 import { TravelPlanDetailSidebar } from "./TravelPlanDetailSidebar";
 import { openModal } from "./activities/activitySlice";
+import { Link } from "react-router-dom";
 
 interface IProps extends RouteComponentProps<{ id: string }> {}
 
@@ -26,12 +27,11 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
   useEffect(() => {
     dispatch(loadTravelPlan(travelPlanId)).then(() => {
       setLoading(false);
-    })
-    
-    return(() => {
+    });
+
+    return () => {
       setLoading(true);
-    })
-    ;
+    };
   }, [dispatch, travelPlanId]);
 
   if (loadingPlan || loading) {
@@ -41,7 +41,7 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
   } else {
     return (
       <Grid>
-        <ActivityModal travelPlanId={travelPlan?.id!}/>
+        <ActivityModal travelPlanId={travelPlan?.id!} />
         <Grid.Row>
           <Grid.Column width={10}>
             <TravelPlanDetailHeader travelPlan={travelPlan!} />
@@ -67,6 +67,13 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
               icon="plus"
               onClick={() => dispatch(openModal(null))}
             />
+            <Button
+              as={Link}
+              to={`/travelplans/map/${travelPlanId}`}
+              floated="right"
+              content="Map"
+              color="twitter"
+            />
           </Segment>
         </Grid.Column>
         <Grid.Column width={16}>
@@ -78,7 +85,7 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
               paddingBottom: "10px",
             }}
           >
-            <TravelPlanActivities travelPlanId={travelPlan?.id!}/>
+            <TravelPlanActivities travelPlanId={travelPlan?.id!} />
           </Container>
         </Grid.Column>
       </Grid>

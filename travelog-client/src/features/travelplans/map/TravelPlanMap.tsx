@@ -1,12 +1,17 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RouteComponentProps } from "react-router";
-import { Grid } from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import { Button, Grid, Segment } from "semantic-ui-react";
 import { useAppDispatch } from "../../../app/customHooks";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { RootState } from "../../../app/store";
 import { MapSidebar } from "./MapSidebar";
-import { getActivitiesByDate, getActivitiesMappedById, loadTravelPlanActivities } from "./mapSlice";
+import {
+  getActivitiesByDate,
+  getActivitiesMappedById,
+  loadTravelPlanActivities,
+} from "./mapSlice";
 import MapView from "./MapView";
 
 interface IProps extends RouteComponentProps<{ id: string }> {}
@@ -15,7 +20,7 @@ export const TravelPlanMap: React.FC<IProps> = ({ match }) => {
   const dispatch = useAppDispatch();
   const groupedActivities = useSelector(getActivitiesByDate());
   const mapActivities = useSelector(getActivitiesMappedById());
-  
+
   const { loadingActivities } = useSelector(
     (state: RootState) => state.mapReducer
   );
@@ -29,8 +34,22 @@ export const TravelPlanMap: React.FC<IProps> = ({ match }) => {
 
   return (
     <Grid style={{ height: "800px" }}>
+      <Grid.Row>
+        <Grid.Column>
+          <Button
+            as={Link}
+            to={`/travelplans/${match.params.id}`}
+            floated="left"
+            content="Go To Travel Plan"
+            color="twitter"
+          />
+        </Grid.Column>
+      </Grid.Row>
       <Grid.Column width={4}>
-        <MapSidebar groupedActivities={groupedActivities} mapActivities={mapActivities} />
+        <MapSidebar
+          groupedActivities={groupedActivities}
+          mapActivities={mapActivities}
+        />
       </Grid.Column>
       <Grid.Column width={12}>
         <MapView groupedActivities={groupedActivities} />
