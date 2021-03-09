@@ -14,6 +14,7 @@ import { NavBar } from "./features/nav/NavBar";
 import { TravelPlanDashboard } from "./features/travelplans/dashboard/TravelPlanDashboard";
 import { TravelPlanDetails } from "./features/travelplans/details/TravelPlanDetails";
 import { TravelPlanManage } from "./features/travelplans/manage/TravelPlanManage";
+import { TravelPlanMap } from "./features/travelplans/map/TravelPlanMap";
 
 const App: React.FC<RouteComponentProps> = ({ location }) => {
   return (
@@ -42,6 +43,11 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                     exact
                     path="/travelplans/:id"
                     component={TravelPlanDetails}
+                  />
+                  <PrivateRoute
+                    exact
+                    path="/travelplans/map/:id"
+                    component={TravelPlanMap}
                   />
                 </Switch>
               </Container>

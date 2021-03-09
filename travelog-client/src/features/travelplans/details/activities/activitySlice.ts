@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import moment from "moment";
-import { APIServices } from "../../../../app/api/agent";
+import { APIServices } from "../../../../app/api/travelog/agent";
 import { ActivityHelper } from "../../../../app/common/helpers/ActivityHelper";
 import { ITravelPlanActivity } from "../../../../app/common/interfaces/ITravelPlanActivity";
 import { RootState } from "../../../../app/store";

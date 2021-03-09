@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { APIServices } from "../../../app/api/agent";
+import { APIServices } from "../../../app/api/travelog/agent";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 
 export const loadUserTravelPlansAsync = createAsyncThunk(

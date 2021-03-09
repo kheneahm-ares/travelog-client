@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from "axios";
 import { request } from "http";
-import { AuthService } from "../auth/AuthServices";
-import { ITravelPlan } from "../common/interfaces/ITravelPlan";
-import { ITravelPlanActivity } from "../common/interfaces/ITravelPlanActivity";
+import { AuthService } from "../../auth/AuthServices";
+import { ITravelPlan } from "../../common/interfaces/ITravelPlan";
+import { ITravelPlanActivity } from "../../common/interfaces/ITravelPlanActivity";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
