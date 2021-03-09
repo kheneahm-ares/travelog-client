@@ -1,3 +1,4 @@
+import { ActivityLocation } from "../classes/ActivityLocation";
 import { ILocation } from "./ILocation";
 
 export interface ITravelPlanActivity

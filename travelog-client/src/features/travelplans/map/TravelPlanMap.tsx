@@ -42,6 +42,7 @@ export const TravelPlanMap: React.FC<IProps> = ({ match }) => {
             floated="left"
             content="Go To Travel Plan"
             color="twitter"
+            icon="calendar alternate outline"
           />
         </Grid.Column>
       </Grid.Row>

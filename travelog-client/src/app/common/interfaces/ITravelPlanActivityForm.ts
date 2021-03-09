@@ -1,3 +1,4 @@
+import { ActivityLocation } from "../classes/ActivityLocation";
 import { ILocation } from "./ILocation";
 
 export interface ITravelPlanActivityForm
@@ -8,5 +9,5 @@ export interface ITravelPlanActivityForm
     startTime: Date;
     endTime: Date;
     category: string;
-    location: ILocation | null;
+    location: ILocation;
 }

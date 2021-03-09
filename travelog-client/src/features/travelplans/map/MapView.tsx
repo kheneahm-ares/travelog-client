@@ -18,8 +18,8 @@ export const MapView: React.FC<IProps> = ({ groupedActivities, google }) => {
   const defaultCenterLoc: ILocation = groupedActivities.values().next().value[0]
     .location;
   const initialCenter = {
-    lat: parseFloat(defaultCenterLoc.latitude),
-    lng: parseFloat(defaultCenterLoc.longitude),
+    lat: defaultCenterLoc.latitude,
+    lng: defaultCenterLoc.longitude,
   };
 
   const { mapCenter } = useAppSelector((state: RootState) => state.mapReducer);
@@ -31,8 +31,8 @@ export const MapView: React.FC<IProps> = ({ groupedActivities, google }) => {
           <Marker
             title={"The marker`s title will appear as a tooltip."}
             position={{
-              lat: parseFloat(a.location.latitude),
-              lng: parseFloat(a.location.longitude),
+              lat: a.location.latitude,
+              lng: a.location.longitude,
             }}
           />
         ));

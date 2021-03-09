@@ -73,6 +73,7 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
               floated="right"
               content="Map"
               color="twitter"
+              icon="world"
             />
           </Segment>
         </Grid.Column>
