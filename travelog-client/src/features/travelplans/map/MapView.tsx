@@ -12,11 +12,10 @@ import { useAppSelector } from "../../../app/customHooks";
 import { RootState } from "../../../app/store";
 
 interface IProps extends IProvidedProps {
-  groupedActivities: Map<string, ITravelPlanActivity[]>;
+  travelPlanActivities: ITravelPlanActivity[];
 }
-export const MapView: React.FC<IProps> = ({ groupedActivities, google }) => {
-  const defaultCenterLoc: ILocation = groupedActivities.values().next().value[0]
-    .location;
+export const MapView: React.FC<IProps> = ({ travelPlanActivities, google }) => {
+  const defaultCenterLoc: ILocation = travelPlanActivities[0].location;
   const initialCenter = {
     lat: defaultCenterLoc.latitude,
     lng: defaultCenterLoc.longitude,
@@ -25,18 +24,21 @@ export const MapView: React.FC<IProps> = ({ groupedActivities, google }) => {
   const { mapCenter } = useAppSelector((state: RootState) => state.mapReducer);
 
   return (
-    <GoogleMap google={google} zoom={5} initialCenter={initialCenter} center={mapCenter}>
-      {Array.from(groupedActivities).map(([key, activities]) => {
-        return activities.map((a) => (
-          <Marker
-            title={"The marker`s title will appear as a tooltip."}
-            position={{
-              lat: a.location.latitude,
-              lng: a.location.longitude,
-            }}
-          />
-        ));
-      })}
+    <GoogleMap
+      google={google}
+      zoom={5}
+      initialCenter={initialCenter}
+      center={mapCenter}
+    >
+      {travelPlanActivities.map((a) => (
+        <Marker
+          title={"The marker`s title will appear as a tooltip."}
+          position={{
+            lat: a.location.latitude,
+            lng: a.location.longitude,
+          }}
+        />
+      ))}
     </GoogleMap>
   );
 };

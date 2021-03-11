@@ -18,7 +18,7 @@ interface IProps extends RouteComponentProps<{ id: string }> {}
 
 export const TravelPlanMap: React.FC<IProps> = ({ match }) => {
   const dispatch = useAppDispatch();
-  const groupedActivities = useSelector(getActivitiesByDate());
+  const {travelPlanActivities} = useSelector((state: RootState) => state.mapReducer);
   const mapActivities = useSelector(getActivitiesMappedById());
 
   const { loadingActivities } = useSelector(
@@ -33,7 +33,7 @@ export const TravelPlanMap: React.FC<IProps> = ({ match }) => {
   }
 
   return (
-    <Grid style={{ height: "800px" }}>
+    <Grid>
       <Grid.Row>
         <Grid.Column>
           <Button
@@ -46,14 +46,14 @@ export const TravelPlanMap: React.FC<IProps> = ({ match }) => {
           />
         </Grid.Column>
       </Grid.Row>
-      <Grid.Column width={4}>
+      <Grid.Column width={5} style={{ minWidth: "320px" }} >
         <MapSidebar
-          groupedActivities={groupedActivities}
+          travelPlanActivities={travelPlanActivities}
           mapActivities={mapActivities}
         />
       </Grid.Column>
-      <Grid.Column width={12}>
-        <MapView groupedActivities={groupedActivities} />
+      <Grid.Column width={11} style={{ height: "650px" }}>
+        <MapView travelPlanActivities={travelPlanActivities} />
       </Grid.Column>
     </Grid>
   );
