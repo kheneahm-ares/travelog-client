@@ -66,6 +66,10 @@ export const ActivityForm: React.FC<IProps> = ({
       });
     }
   }
+  function handleFormClose()
+  {
+    dispatch(closeModal())
+  }
   useEffect(() => {
     if (initialActivity) {
       setActivity(new ActivityFormValues(initialActivity));
@@ -126,7 +130,7 @@ export const ActivityForm: React.FC<IProps> = ({
               <Button
                 content="Close"
                 disabled={formSubmitting}
-                onClick={() => dispatch(closeModal())}
+                onClick={handleFormClose}
               />
               <Button
                 floated="right"

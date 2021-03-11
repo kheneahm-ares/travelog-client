@@ -32,7 +32,7 @@ export const HomePage = () => {
           <Fragment>
             <Header as="h2" inverted content={`Welcome to Travelog`} />
             <Button
-              onClick={() => AuthService.signInRedirect()}
+              onClick={AuthService.signInRedirect}
               size="huge"
               inverted
             >
@@ -41,7 +41,7 @@ export const HomePage = () => {
             <Button
               size="huge"
               inverted
-              onClick={() => AuthService.registerUser()}
+              onClick={AuthService.registerUser}
             >
               Register
             </Button>

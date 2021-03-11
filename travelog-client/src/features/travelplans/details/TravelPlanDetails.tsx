@@ -34,6 +34,12 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
     };
   }, [dispatch, travelPlanId]);
 
+
+  function handleAdd()
+  {
+    dispatch(openModal(null))
+  }
+
   if (loadingPlan || loading) {
     return <LoadingComponent content="Loading Travel Plan" />;
   } else if (deletingTravelPlan) {
@@ -65,7 +71,7 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
               positive
               style={{ display: "inline" }}
               icon="plus"
-              onClick={() => dispatch(openModal(null))}
+              onClick={handleAdd}
             />
             <Button
               as={Link}

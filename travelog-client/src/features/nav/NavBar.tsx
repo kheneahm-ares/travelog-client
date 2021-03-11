@@ -49,7 +49,7 @@ export const NavBar = () => {
             <Dropdown pointing="top left" text={user.userName}>
               <Dropdown.Menu>
                 <Dropdown.Item
-                  onClick={() => handleSignOut()}
+                  onClick={handleSignOut}
                   text="Logout"
                   icon="power"
                 />

@@ -54,6 +54,10 @@ export const ActivityCard: React.FC<IProps> = ({ activity, travelPlanId }) => {
   function openConfirmDelete() {
     setConfirmDelete({ open: true, confirmed: false });
   }
+  function handleView()
+  {
+    dispatch(openModal(activity))
+  }
 
   return (
     <Fragment>
@@ -68,7 +72,7 @@ export const ActivityCard: React.FC<IProps> = ({ activity, travelPlanId }) => {
             <Button
               basic
               negative
-              onClick={() => openConfirmDelete()}
+              onClick={openConfirmDelete}
               loading={deletingActivity && activityTarget === activity.id}
               name={activity.id}
             >
@@ -77,7 +81,7 @@ export const ActivityCard: React.FC<IProps> = ({ activity, travelPlanId }) => {
             <Button
               basic
               positive
-              onClick={() => dispatch(openModal(activity))}
+              onClick={handleView}
             >
               View
             </Button>
