@@ -27,10 +27,16 @@ const userConfig: IUserManagerConfig =
 
 const userManager = new UserManager(userConfig);
 
+//events
 userManager.events.addAccessTokenExpiring(() =>
 {
     userManager.signinSilent();
-})
+});
+
+userManager.events.addAccessTokenExpired(() =>
+{
+    userManager.signinRedirect();
+});
 
 
 const removeStateKeys = async () =>
@@ -155,7 +161,7 @@ const signInSilentCallback = async () =>
     }
     catch (e)
     {
-        console.log('problem signing in silently'); 
+        console.log('problem signing in silently');
     }
 
     try
