@@ -32,6 +32,7 @@ export const MapView: React.FC<IProps> = ({ travelPlanActivities, google }) => {
     >
       {travelPlanActivities.map((a) => (
         <Marker
+          key={a.id}
           title={"The marker`s title will appear as a tooltip."}
           position={{
             lat: a.location.latitude,

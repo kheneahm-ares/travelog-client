@@ -33,13 +33,18 @@ const mapSlice = createSlice({
         {
             state.mapCenter.lat = action.payload.lat;
             state.mapCenter.lng = action.payload.lng;
+        },
+        resetState: (state) => 
+        {
+            state.travelPlanActivities = [];
+            state.loadingActivities = true;
+            state.mapCenter = { lat: 0, lng: 0 };
         }
-
-
     },
     extraReducers: {
         [loadTravelPlanActivities.pending as any]: (state) =>
         {
+            console.log('pending');
             state.loadingActivities = true;
         },
         [loadTravelPlanActivities.fulfilled as any]: (state, action: PayloadAction<ITravelPlanActivity[]>) =>
@@ -71,5 +76,5 @@ export const getActivitiesMappedById = () => (state: RootState) =>
 
     return activitiesMap;
 }
-export const { centerMap } = mapSlice.actions;
+export const { centerMap, resetState} = mapSlice.actions;
 export default mapSlice.reducer;

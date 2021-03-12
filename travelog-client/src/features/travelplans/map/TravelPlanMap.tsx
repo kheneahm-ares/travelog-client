@@ -11,14 +11,18 @@ import {
   getActivitiesByDate,
   getActivitiesMappedById,
   loadTravelPlanActivities,
+  resetState,
 } from "./mapSlice";
 import MapView from "./MapView";
 
 interface IProps extends RouteComponentProps<{ id: string }> {}
 
 export const TravelPlanMap: React.FC<IProps> = ({ match }) => {
+  console.log("main");
   const dispatch = useAppDispatch();
-  const {travelPlanActivities} = useSelector((state: RootState) => state.mapReducer);
+  const { travelPlanActivities } = useSelector(
+    (state: RootState) => state.mapReducer
+  );
   const mapActivities = useSelector(getActivitiesMappedById());
 
   const { loadingActivities } = useSelector(
@@ -26,9 +30,12 @@ export const TravelPlanMap: React.FC<IProps> = ({ match }) => {
   );
   useEffect(() => {
     dispatch(loadTravelPlanActivities(match.params.id));
+    return function cleanup() {
+      dispatch(resetState());
+    };
   }, [dispatch, match.params.id]);
 
-  if (loadingActivities) {
+  if (loadingActivities || travelPlanActivities.length === 0) {
     return <LoadingComponent content="Loading Map" />;
   }
 
@@ -46,7 +53,7 @@ export const TravelPlanMap: React.FC<IProps> = ({ match }) => {
           />
         </Grid.Column>
       </Grid.Row>
-      <Grid.Column width={5} style={{ minWidth: "320px" }} >
+      <Grid.Column width={5} style={{ minWidth: "320px" }}>
         <MapSidebar
           travelPlanActivities={travelPlanActivities}
           mapActivities={mapActivities}
