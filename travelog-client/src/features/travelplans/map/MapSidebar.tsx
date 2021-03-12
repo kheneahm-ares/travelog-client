@@ -25,8 +25,7 @@ export const MapSidebar: React.FC<IProps> = ({
   const dispatch = useAppDispatch();
   const LIMIT = 5;
   const TOTAL_PAGES = Math.ceil(travelPlanActivities.length / LIMIT);
-  const [page, setPage] = useState(1);
-  const [pagActivities, setPagActivities] = useState<ITravelPlanActivity[]>([]);
+  const [pagActivities, setPagActivities] = useState(travelPlanActivities.slice(0, LIMIT));
 
   function handleOnClick(id: string, e: any) {
     const clickedActivity = mapActivities.get(id);
@@ -37,17 +36,23 @@ export const MapSidebar: React.FC<IProps> = ({
     );
   }
 
+  //react batches state changes that occur in event handlers and lifecycle methods
+  //so the state changes below won't end up in multiple re-renders
   function handlePageChange(e: any, { activePage }: any) {
-    setPage(activePage);
-  }
-
-  useEffect(() => {
-    const start = (page - 1) * LIMIT;
+    const start = (activePage - 1) * LIMIT;
     const end = start + LIMIT;
-    const paginatedActs = travelPlanActivities.slice(start, end);
-    setPagActivities(paginatedActs);
-    return () => {};
-  }, [page, travelPlanActivities]);
+    const newPagActs = travelPlanActivities.slice(start, end);
+    setPagActivities(newPagActs);
+
+    if(newPagActs != null || newPagActs!.length > 0)
+    {
+      const firstAct = newPagActs[0];
+      dispatch(
+        centerMap({ lat: firstAct.location.latitude, lng: firstAct.location.longitude })
+      );
+
+    }
+  }
 
   return (
     <Fragment>

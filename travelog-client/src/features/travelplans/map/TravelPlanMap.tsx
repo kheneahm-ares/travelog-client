@@ -18,7 +18,6 @@ import MapView from "./MapView";
 interface IProps extends RouteComponentProps<{ id: string }> {}
 
 export const TravelPlanMap: React.FC<IProps> = ({ match }) => {
-  console.log("main");
   const dispatch = useAppDispatch();
   const { travelPlanActivities } = useSelector(
     (state: RootState) => state.mapReducer
