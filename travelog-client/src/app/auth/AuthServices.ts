@@ -6,6 +6,7 @@ import { IUserManagerConfig } from "../common/interfaces/IUserManagerConfig";
 
 //where we will redirect after successful sign in from IDP
 const REDIRECT_URI = "http://localhost:3000/auth/signin-oidc";
+const SILENT_REDIRECT_URI = "http://localhost:3000/auth/signin-silent-oidc";
 const POST_LOGOUT_REDIRECT_URI = "http://localhost:3000/"; //redirect back to our home page
 const RESPONSE_TYPE = "code"; // using code flow so we expect some code
 const SCOPE = "openid profile TravelogApi extraprofile.scope";
@@ -13,17 +14,23 @@ const OIDC_REQUEST_PREFIX = "travelog.";
 
 const userConfig: IUserManagerConfig =
 {
-    userStore: new Oidc.WebStorageStateStore({ store: window.localStorage}),
+    userStore: new Oidc.WebStorageStateStore({ store: window.localStorage }),
     authority: process.env.REACT_APP_AUTH_URL as string,
     client_id: process.env.REACT_APP_IDENTITY_CLIENT_ID as string,
     redirect_uri: REDIRECT_URI,
+    silent_redirect_uri: SILENT_REDIRECT_URI,
     response_type: RESPONSE_TYPE,
     scope: SCOPE,
     post_logout_redirect_uri: POST_LOGOUT_REDIRECT_URI,
-    stateStore: new Oidc.WebStorageStateStore({prefix: OIDC_REQUEST_PREFIX}) //change prefix to use app
+    stateStore: new Oidc.WebStorageStateStore({ prefix: OIDC_REQUEST_PREFIX }) //change prefix to use app
 }
 
 const userManager = new UserManager(userConfig);
+
+userManager.events.addAccessTokenExpiring(() =>
+{
+    userManager.signinSilent();
+})
 
 
 const removeStateKeys = async () =>
@@ -100,7 +107,7 @@ const signInUserCallback = async (): Promise<IUser> =>
         {
             userStore: new Oidc.WebStorageStateStore({ store: window.localStorage }),
             response_mode: "query", // look for code in query,
-            stateStore: new Oidc.WebStorageStateStore({prefix: OIDC_REQUEST_PREFIX})
+            stateStore: new Oidc.WebStorageStateStore({ prefix: OIDC_REQUEST_PREFIX })
         }
     );
     try
@@ -124,6 +131,49 @@ const signInUserCallback = async (): Promise<IUser> =>
     {
         //for every callback, remove the state keys
         await removeStateKeys();
+    }
+
+}
+
+const signInSilentCallback = async () =>
+{
+    //piggy backs off existing user manager configs 
+    //this callback will use the state store to verify the callback state and
+    //the state we have in our store
+    const callbackManager = new Oidc.UserManager(
+        {
+            userStore: new Oidc.WebStorageStateStore({ store: window.localStorage }),
+            response_mode: "query", // look for code in query,
+            stateStore: new Oidc.WebStorageStateStore({ prefix: OIDC_REQUEST_PREFIX })
+        }
+    );
+
+    try
+    {
+        //this will automatically update our user in storage
+        await callbackManager.signinSilentCallback();
+    }
+    catch (e)
+    {
+        console.log('problem signing in silently'); 
+    }
+
+    try
+    {
+        const user = await userManager.getUser();
+        const appUser: IUser = {
+            userName: user!.profile.name!,
+            token: user!.access_token
+        }
+        return appUser;
+    }
+    catch (e)
+    {
+        console.log('problem getting user from storage');
+        return {
+            userName: '',
+            token: ''
+        }
     }
 
 }
@@ -154,5 +204,6 @@ export const AuthService = {
     registerUser,
     getOidcUser,
     signOut,
-    hasToken
+    hasToken,
+    signInSilentCallback
 }

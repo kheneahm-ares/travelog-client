@@ -9,6 +9,7 @@ import { Container } from "semantic-ui-react";
 
 import { PrivateRoute } from "./app/layout/PrivateRoute";
 import { SignInCallBack } from "./features/auth/SignInCallBack";
+import { SignInSilentCallback } from "./features/auth/SignInSilentCallback";
 import { HomePage } from "./features/home/HomePage";
 import { NavBar } from "./features/nav/NavBar";
 import { TravelPlanDashboard } from "./features/travelplans/dashboard/TravelPlanDashboard";
@@ -21,6 +22,7 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
     <Fragment>
       <Route exact path="/" component={HomePage} />
       <Route exact path="/auth/signin-oidc" component={SignInCallBack} />
+      <Route exact path="/auth/signin-silent-oidc" component={SignInSilentCallback} />
       <Route
         path={"/(.+)"}
         render={() => {

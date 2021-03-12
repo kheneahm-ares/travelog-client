@@ -16,6 +16,15 @@ export const signInUserAsync = createAsyncThunk(
     }
 )
 
+export const signInSilentAsync = createAsyncThunk(
+    'auth/signInSilent',
+    async (args, thunkAPI) =>
+    {
+        const appUser = await AuthService.signInSilentCallback();
+        return appUser;
+    }
+)
+
 export const signOutRedirectAsync = createAsyncThunk(
     'auth/signOutRedirect',
     async (args, thunkAPI) =>
@@ -57,6 +66,17 @@ const authSlice = createSlice({
             state.loading = true;
         },
         [signInUserAsync.fulfilled as any]: (state, action) =>
+        {
+            state.user = action.payload;
+            state.isLoggedIn = true;
+            state.loading = false;
+            state.isUserAuthenticated = true;
+        },
+        [signInSilentAsync.pending as any]: (state, action) =>
+        {
+            state.loading = true;
+        },
+        [signInSilentAsync.fulfilled as any]: (state, action) =>
         {
             state.user = action.payload;
             state.isLoggedIn = true;
