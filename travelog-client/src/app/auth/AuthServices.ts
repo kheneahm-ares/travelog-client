@@ -33,8 +33,9 @@ userManager.events.addAccessTokenExpiring(() =>
     userManager.signinSilent();
 });
 
-userManager.events.addAccessTokenExpired(() =>
+userManager.events.addAccessTokenExpired(async () =>
 {
+    await removeStateKeys();
     userManager.signinRedirect();
 });
 
