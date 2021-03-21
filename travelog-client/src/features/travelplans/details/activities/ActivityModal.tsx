@@ -13,7 +13,6 @@ export const ActivityModal: React.FC<IProps> = ({travelPlanId}) => {
   const { isModalOpen, selectedActivity } = useSelector(
     (state: RootState) => state.activityReducer
   );
-  const dispatch = useAppDispatch();
   return (
     <Modal open={isModalOpen} size="mini">
       <Modal.Content>
