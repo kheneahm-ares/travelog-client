@@ -1,0 +1,16 @@
+#base image
+FROM node:alpine
+
+#create working dir
+WORKDIR /app
+
+#be smart about npm install as to not 
+#invalidated the flow to make use of cache
+COPY travelog-client/package.json . 
+RUN npm install --legacy-peer-deps
+
+#copy the rest of our files
+#force a copy if there's a change
+COPY travelog-client .
+
+CMD [ "npm", "run", "start" ]
