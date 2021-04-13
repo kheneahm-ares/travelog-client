@@ -35,7 +35,7 @@ export const LocationInput: React.FC<IProps> = ({
           inputValue: inputValue,
           onInputChange: setInputValue,
           onChange: (e: any) => handleOnChange(e),
-          isDisabled: {isDisabled}
+          isDisabled: isDisabled
         }}
       />
       {meta.touched && meta.error && (
