@@ -1,10 +1,7 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { create } from "domain";
-import Oidc from "oidc-client";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AuthService } from "../../app/auth/AuthServices";
 import { IUser } from "../../app/common/interfaces/IUser";
-import { AppDispatch, RootState } from "../../app/store";
-import { history } from "../../index";
+import { RootState } from "../../app/store";
 
 //thunk comes out of the box with react toolkit, no need to add it as middleware
 export const signInUserAsync = createAsyncThunk(

@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { RootState } from "../../../../app/store";
 import { Form as FinalForm, Field as FinalField } from "react-final-form";
 import { Button, Form } from "semantic-ui-react";
@@ -19,7 +18,6 @@ import { LocationInput } from "../../../../app/common/form/LocationInput";
 import LoadingComponent from "../../../../app/layout/LoadingComponent";
 import {
   geocodeByAddress,
-  geocodeByPlaceId,
 } from "react-google-places-autocomplete";
 
 interface IProps {
@@ -31,7 +29,7 @@ interface IProps {
 export const ActivityForm: React.FC<IProps> = ({
   initialActivity,
   travelPlanId,
-  isReadOnly
+  isReadOnly,
 }) => {
   const dispatch = useAppDispatch();
   const { formSubmitting } = useAppSelector(
@@ -68,9 +66,8 @@ export const ActivityForm: React.FC<IProps> = ({
       });
     }
   }
-  function handleFormClose()
-  {
-    dispatch(closeModal())
+  function handleFormClose() {
+    dispatch(closeModal());
   }
   useEffect(() => {
     if (initialActivity) {

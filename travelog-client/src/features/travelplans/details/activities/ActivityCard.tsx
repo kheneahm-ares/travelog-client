@@ -1,12 +1,8 @@
-import React, { Fragment, SyntheticEvent, useState } from "react";
-import { act } from "react-dom/test-utils";
+import React, { Fragment, useState } from "react";
 import {
   Button,
   Card,
   Confirm,
-  Container,
-  Item,
-  Segment,
 } from "semantic-ui-react";
 import { ITravelPlanActivity } from "../../../../app/common/interfaces/ITravelPlanActivity";
 import { useAppDispatch, useAppSelector } from "../../../../app/customHooks";

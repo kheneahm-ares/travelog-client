@@ -1,4 +1,3 @@
-import axios from "axios";
 import Oidc, { UserManager } from "oidc-client"
 import { history } from "../..";
 import { IUser } from "../common/interfaces/IUser";
