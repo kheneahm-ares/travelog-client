@@ -27,6 +27,7 @@ export const ActivityCard: React.FC<IProps> = ({ activity, travelPlanId }) => {
   const { deletingActivity, activityTarget } = useAppSelector(
     (state: RootState) => state.activityReducer
   );
+  const { user } = useAppSelector((state: RootState) => state.authReducer);
   const dispatch = useAppDispatch();
   const [confirmDelete, setConfirmDelete] = useState({
     open: false,
@@ -75,6 +76,7 @@ export const ActivityCard: React.FC<IProps> = ({ activity, travelPlanId }) => {
               onClick={openConfirmDelete}
               loading={deletingActivity && activityTarget === activity.id}
               name={activity.id}
+              disabled = {user?.userId !== activity.hostId}
             >
               Delete
             </Button>

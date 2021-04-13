@@ -32,7 +32,7 @@ export const TravelPlanDetailSidebar: React.FC<IProps> = ({
         </span>
         <Button
           floated="right"
-          standard
+          standard = "true"
           icon="plus"
           size="mini"
           onClick={handleInviteUser}

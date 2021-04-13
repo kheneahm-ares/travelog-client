@@ -25,11 +25,13 @@ import {
 interface IProps {
   initialActivity: ITravelPlanActivity | null;
   travelPlanId: string;
+  isReadOnly: boolean;
 }
 
 export const ActivityForm: React.FC<IProps> = ({
   initialActivity,
   travelPlanId,
+  isReadOnly
 }) => {
   const dispatch = useAppDispatch();
   const { formSubmitting } = useAppSelector(
@@ -98,18 +100,21 @@ export const ActivityForm: React.FC<IProps> = ({
                 placeholder="Name"
                 component={TextInput}
                 subscription={{ touched: true, error: true, value: true }}
+                readOnly={isReadOnly}
               />
               <FinalField
                 name="category"
                 placeholder="Category"
                 component={TextInput}
                 subscription={{ touched: true, error: true, value: true }}
+                readOnly={isReadOnly}
               />
               <FinalField
                 name="location.address"
                 placeholder="Location"
                 component={LocationInput}
                 subscription={{ touched: true, error: true, value: true }}
+                isDisabled={isReadOnly}
               />
               <FinalField
                 name="startTime"
@@ -118,6 +123,7 @@ export const ActivityForm: React.FC<IProps> = ({
                 time={true}
                 date={true}
                 label="Start Time"
+                readOnly={isReadOnly}
               />
               <FinalField
                 name="endTime"
@@ -126,6 +132,7 @@ export const ActivityForm: React.FC<IProps> = ({
                 time={true}
                 date={true}
                 label="End Time"
+                readOnly={isReadOnly}
               />
               <Button
                 content="Close"

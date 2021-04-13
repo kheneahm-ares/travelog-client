@@ -30,7 +30,6 @@ export const DateInput: React.FC<IProps> = ({
         date={date}
         time={time}
         {...rest}
-        {...rest}
       />
       {meta.touched && meta.error && (
         <Label basic color="red">

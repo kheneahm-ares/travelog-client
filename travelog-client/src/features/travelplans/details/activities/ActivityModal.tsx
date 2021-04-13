@@ -13,12 +13,16 @@ export const ActivityModal: React.FC<IProps> = ({travelPlanId}) => {
   const { isModalOpen, selectedActivity } = useSelector(
     (state: RootState) => state.activityReducer
   );
+  const { user } = useSelector(
+    (state: RootState) => state.authReducer
+  );
   return (
     <Modal open={isModalOpen} size="mini">
       <Modal.Content>
         <ActivityForm
           initialActivity={selectedActivity!}
           travelPlanId={travelPlanId}
+          isReadOnly = {user?.userId !== selectedActivity?.hostId}
         />
       </Modal.Content>
     </Modal>

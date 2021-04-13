@@ -121,6 +121,7 @@ const signInUserCallback = async (): Promise<IUser> =>
     {
         const user = await callbackManager.signinCallback();
         const appUser: IUser = {
+            userId: user!.profile.sub,
             userName: user.profile.name!,
             token: user.access_token
         }
@@ -130,6 +131,7 @@ const signInUserCallback = async (): Promise<IUser> =>
     {
         console.log(e);
         return {
+            userId: '',
             userName: '',
             token: ''
         }
@@ -169,6 +171,7 @@ const signInSilentCallback = async () =>
     {
         const user = await userManager.getUser();
         const appUser: IUser = {
+            userId: user!.profile.sub,
             userName: user!.profile.name!,
             token: user!.access_token
         }
@@ -178,9 +181,10 @@ const signInSilentCallback = async () =>
     {
         console.log('problem getting user from storage');
         return {
+            userId: '',
             userName: '',
             token: ''
-        }
+        } 
     }
 
 }

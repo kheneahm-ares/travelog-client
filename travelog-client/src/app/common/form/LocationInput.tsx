@@ -15,6 +15,7 @@ export const LocationInput: React.FC<IProps> = ({
   width,
   type,
   meta,
+  isDisabled
 }) => {
   const [inputValue, setInputValue] = useState(input.value); //initial value of location input
   const [location, setLocation] = useState(null); //googleplaces lib needs the whole location obj
@@ -34,6 +35,7 @@ export const LocationInput: React.FC<IProps> = ({
           inputValue: inputValue,
           onInputChange: setInputValue,
           onChange: (e: any) => handleOnChange(e),
+          isDisabled: {isDisabled}
         }}
       />
       {meta.touched && meta.error && (
