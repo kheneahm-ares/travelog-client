@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { request } from "http";
 import { AuthService } from "../../auth/AuthServices";
+import { IInvitation } from "../../common/interfaces/IInvitation";
 import { ITravelPlan } from "../../common/interfaces/ITravelPlan";
 import { ITravelPlanActivity } from "../../common/interfaces/ITravelPlanActivity";
 
@@ -59,9 +60,14 @@ const TravelPlanActivityService = {
     create: (activity: ITravelPlanActivity): Promise<ITravelPlanActivity> => requests.post('/TravelPlanActivity/Create', activity)
 }
 
+const InvitationService = {
+    list: (): Promise<IInvitation[]> => requests.get<IInvitation[]>('/Invite/List')
+}
+
 export const APIServices = {
     TravelPlanService,
-    TravelPlanActivityService
+    TravelPlanActivityService,
+    InvitationService
 }
 
 

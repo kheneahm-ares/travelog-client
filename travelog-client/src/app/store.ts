@@ -5,6 +5,7 @@ import detailReducer from '../features/travelplans/details/detailSlice';
 import manageReducer from '../features/travelplans/manage/manageSlice';
 import activityReducer from '../features/travelplans/details/activities/activitySlice';
 import mapReducer from '../features/travelplans/map/mapSlice';
+import invitationReducer from '../features/profile/invitations/InvitationSlice';
 import
 {
   persistStore,
@@ -23,10 +24,10 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  blacklist: ['dashboardReducer', 'detailReducer', 'manageReducer', 'activityReducer', 'mapReducer']
+  blacklist: ['dashboardReducer', 'detailReducer', 'manageReducer', 'activityReducer', 'mapReducer', 'invitationReducer']
 };
 
-const rootReducer = combineReducers({ authReducer, dashboardReducer, detailReducer, manageReducer, activityReducer, mapReducer });
+const rootReducer = combineReducers({ authReducer, dashboardReducer, detailReducer, manageReducer, activityReducer, mapReducer, invitationReducer });
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 const store = configureStore({

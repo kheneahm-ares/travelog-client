@@ -12,6 +12,7 @@ import { SignInCallBack } from "./features/auth/SignInCallBack";
 import { SignInSilentCallback } from "./features/auth/SignInSilentCallback";
 import { HomePage } from "./features/home/HomePage";
 import { NavBar } from "./features/nav/NavBar";
+import { TravelPlanInvitations } from "./features/profile/invitations/TravelPlanInvitations";
 import { TravelPlanDashboard } from "./features/travelplans/dashboard/TravelPlanDashboard";
 import { TravelPlanDetails } from "./features/travelplans/details/TravelPlanDetails";
 import { TravelPlanManage } from "./features/travelplans/manage/TravelPlanManage";
@@ -22,7 +23,11 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
     <Fragment>
       <Route exact path="/" component={HomePage} />
       <Route exact path="/auth/signin-oidc" component={SignInCallBack} />
-      <Route exact path="/auth/signin-silent-oidc" component={SignInSilentCallback} />
+      <Route
+        exact
+        path="/auth/signin-silent-oidc"
+        component={SignInSilentCallback}
+      />
       <Route
         path={"/(.+)"}
         render={() => {
@@ -50,6 +55,11 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                     exact
                     path="/travelplans/map/:id"
                     component={TravelPlanMap}
+                  />
+                  <PrivateRoute
+                    exact
+                    path="/profile/invitations/"
+                    component={TravelPlanInvitations}
                   />
                 </Switch>
               </Container>
