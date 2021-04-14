@@ -13,14 +13,19 @@ import {
 } from "semantic-ui-react";
 import { history } from "../../..";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
+import { IUser } from "../../../app/common/interfaces/IUser";
 import { useAppDispatch } from "../../../app/customHooks";
 import { deleteTravelPlan } from "./detailSlice";
 
 interface IProps {
   travelPlan: ITravelPlan;
+  isHost: boolean;
 }
 
-export const TravelPlanDetailHeader: React.FC<IProps> = ({ travelPlan }) => {
+export const TravelPlanDetailHeader: React.FC<IProps> = ({
+  travelPlan,
+  isHost,
+}) => {
   const dispatch = useAppDispatch();
   const [confirmDelete, setConfirmDelete] = useState({
     open: false,
@@ -57,31 +62,33 @@ export const TravelPlanDetailHeader: React.FC<IProps> = ({ travelPlan }) => {
           size="huge"
           content={travelPlan.name}
         />
-        <Dropdown
-          icon="bars"
-          style={{
-            display: "inline-block",
-            verticalAlign: "center",
-            position: "relative",
-            float: "right",
-            top: "10px",
-          }}
-          // options={dropdownOptions}
-        >
-          <Dropdown.Menu>
-            <DropdownItem
-              icon="edit"
-              as={Link}
-              text="Edit"
-              to={`/travelplans/edit/${travelPlan.id}`}
-            />
-            <DropdownItem
-              icon="trash"
-              text="Delete"
-              onClick={openConfirmDelete}
-            />
-          </Dropdown.Menu>
-        </Dropdown>
+        {isHost && (
+          <Dropdown
+            icon="bars"
+            style={{
+              display: "inline-block",
+              verticalAlign: "center",
+              position: "relative",
+              float: "right",
+              top: "10px",
+            }}
+            // options={dropdownOptions}
+          >
+            <Dropdown.Menu>
+              <DropdownItem
+                icon="edit"
+                as={Link}
+                text="Edit"
+                to={`/travelplans/edit/${travelPlan.id}`}
+              />
+              <DropdownItem
+                icon="trash"
+                text="Delete"
+                onClick={openConfirmDelete}
+              />
+            </Dropdown.Menu>
+          </Dropdown>
+        )}
       </Segment>
     </Fragment>
   );

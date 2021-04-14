@@ -29,9 +29,10 @@ export const InviteForm: React.FC<IProps> = ({ travelPlanId }) => {
       dispatch(closeModal());
 
       //toast here?
-
     } catch (exc) {
+      console.log(exc.response);
       setErrorMessage(exc.response.data.message);
+      setLoading(false);
     }
   }
   return (

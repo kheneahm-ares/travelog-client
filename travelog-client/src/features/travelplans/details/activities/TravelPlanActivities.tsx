@@ -9,9 +9,10 @@ import { getActivitiesByDate, loadTravelPlanActivities } from "./activitySlice";
 
 interface IProps {
   travelPlanId: string;
+  isHost: boolean;
 }
 
-export const TravelPlanActivities: React.FC<IProps> = ({ travelPlanId }) => {
+export const TravelPlanActivities: React.FC<IProps> = ({ travelPlanId, isHost}) => {
   const dispatch = useAppDispatch();
   const groupedActivities = useSelector(getActivitiesByDate());
   const { loadingActivities } = useSelector(
@@ -47,6 +48,7 @@ export const TravelPlanActivities: React.FC<IProps> = ({ travelPlanId }) => {
                   key={a.id}
                   activity={a}
                   travelPlanId={travelPlanId}
+                  isHost={isHost}
                 />
               ))}
             </Container>

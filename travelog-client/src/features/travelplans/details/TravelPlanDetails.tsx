@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { Button, Container, Grid, Segment } from "semantic-ui-react";
-import { useAppDispatch } from "../../../app/customHooks";
+import { useAppDispatch, useAppSelector } from "../../../app/customHooks";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { RootState } from "../../../app/store";
 import { ActivityModal } from "./activities/ActivityModal";
@@ -22,12 +22,16 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
   const { travelPlan, loadingPlan, deletingTravelPlan } = useSelector(
     (state: RootState) => state.detailReducer
   );
+  const { user } = useAppSelector((state: RootState) => state.authReducer);
+
+  const [isHost, setIsHost] = useState(false);
   const [loading, setLoading] = useState(true);
   const travelPlanId = match.params.id;
 
   useEffect(() => {
     dispatch(loadTravelPlan(travelPlanId)).then(() => {
       setLoading(false);
+      setIsHost(travelPlan!.createdById === user!.userId);
     });
 
     return () => {
@@ -35,10 +39,8 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
     };
   }, [dispatch, travelPlanId]);
 
-
-  function handleAdd()
-  {
-    dispatch(openModal(null))
+  function handleAdd() {
+    dispatch(openModal(null));
   }
 
   if (loadingPlan || loading) {
@@ -52,11 +54,12 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
         <InviteModal travelPlanId={travelPlan?.id!} />
         <Grid.Row>
           <Grid.Column width={10}>
-            <TravelPlanDetailHeader travelPlan={travelPlan!} />
+            <TravelPlanDetailHeader isHost={isHost} travelPlan={travelPlan!} />
             <TravelPlanDetailInfo travelPlan={travelPlan!} />
           </Grid.Column>
           <Grid.Column width={6}>
             <TravelPlanDetailSidebar
+              isHost={isHost}
               travelers={travelPlan?.travelers!}
               creatorId={travelPlan?.createdById!}
             />
@@ -68,13 +71,16 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
             <h1 style={{ display: "inline", verticalAlign: "middle" }}>
               Activities
             </h1>
-            <Button
-              floated="right"
-              positive
-              style={{ display: "inline" }}
-              icon="plus"
-              onClick={handleAdd}
-            />
+            {isHost && (
+              <Button
+                floated="right"
+                positive
+                style={{ display: "inline" }}
+                icon="plus"
+                onClick={handleAdd}
+              />
+            )}
+
             <Button
               as={Link}
               to={`/travelplans/map/${travelPlanId}`}
@@ -94,7 +100,7 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
               paddingBottom: "10px",
             }}
           >
-            <TravelPlanActivities travelPlanId={travelPlan?.id!} />
+            <TravelPlanActivities isHost={isHost} travelPlanId={travelPlan?.id!} />
           </Container>
         </Grid.Column>
       </Grid>

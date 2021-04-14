@@ -1,18 +1,22 @@
 import React, { Fragment } from "react";
 import { Segment, List, Item, Label, Image, Button } from "semantic-ui-react";
 import { ITravelPlanTraveler } from "../../../app/common/interfaces/ITravelPlanTraveler";
+import { IUser } from "../../../app/common/interfaces/IUser";
 import { useAppDispatch } from "../../../app/customHooks";
 import { openModal } from "./detailSlice";
 
 interface IProps {
   travelers: ITravelPlanTraveler[];
   creatorId: string;
+  isHost: boolean;
 }
 export const TravelPlanDetailSidebar: React.FC<IProps> = ({
   travelers,
   creatorId,
+  isHost,
 }) => {
   const dispatch = useAppDispatch();
+
   function handleInviteUser() {
     dispatch(openModal());
   }
@@ -30,13 +34,15 @@ export const TravelPlanDetailSidebar: React.FC<IProps> = ({
           {travelers.length} {travelers.length === 1 ? "Person" : "People"}{" "}
           going
         </span>
-        <Button
-          floated="right"
-          standard = "true"
-          icon="plus"
-          size="mini"
-          onClick={handleInviteUser}
-        />
+        {isHost && (
+          <Button
+            floated="right"
+            standard="true"
+            icon="plus"
+            size="mini"
+            onClick={handleInviteUser}
+          />
+        )}
       </Segment>
       <Segment
         attached

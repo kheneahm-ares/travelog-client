@@ -1,9 +1,5 @@
 import React, { Fragment, useState } from "react";
-import {
-  Button,
-  Card,
-  Confirm,
-} from "semantic-ui-react";
+import { Button, Card, Confirm } from "semantic-ui-react";
 import { ITravelPlanActivity } from "../../../../app/common/interfaces/ITravelPlanActivity";
 import { useAppDispatch, useAppSelector } from "../../../../app/customHooks";
 import {
@@ -17,13 +13,17 @@ import { RootState } from "../../../../app/store";
 interface IProps {
   activity: ITravelPlanActivity;
   travelPlanId: string;
+  isHost: boolean;
 }
 
-export const ActivityCard: React.FC<IProps> = ({ activity, travelPlanId }) => {
+export const ActivityCard: React.FC<IProps> = ({
+  activity,
+  travelPlanId,
+  isHost,
+}) => {
   const { deletingActivity, activityTarget } = useAppSelector(
     (state: RootState) => state.activityReducer
   );
-  const { user } = useAppSelector((state: RootState) => state.authReducer);
   const dispatch = useAppDispatch();
   const [confirmDelete, setConfirmDelete] = useState({
     open: false,
@@ -51,9 +51,8 @@ export const ActivityCard: React.FC<IProps> = ({ activity, travelPlanId }) => {
   function openConfirmDelete() {
     setConfirmDelete({ open: true, confirmed: false });
   }
-  function handleView()
-  {
-    dispatch(openModal(activity))
+  function handleView() {
+    dispatch(openModal(activity));
   }
 
   return (
@@ -66,21 +65,19 @@ export const ActivityCard: React.FC<IProps> = ({ activity, travelPlanId }) => {
         </Card.Content>
         <Card.Content extra textAlign="center">
           <Button.Group widths="8">
-            <Button
-              basic
-              negative
-              onClick={openConfirmDelete}
-              loading={deletingActivity && activityTarget === activity.id}
-              name={activity.id}
-              disabled = {user?.userId !== activity.hostId}
-            >
-              Delete
-            </Button>
-            <Button
-              basic
-              positive
-              onClick={handleView}
-            >
+            {isHost && (
+              <Button
+                basic
+                negative
+                onClick={openConfirmDelete}
+                loading={deletingActivity && activityTarget === activity.id}
+                name={activity.id}
+              >
+                Delete
+              </Button>
+            )}
+
+            <Button basic positive onClick={handleView}>
               View
             </Button>
           </Button.Group>
