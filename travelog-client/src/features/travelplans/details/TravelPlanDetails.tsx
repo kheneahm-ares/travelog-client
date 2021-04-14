@@ -13,7 +13,7 @@ import { TravelPlanDetailInfo } from "./TravelPlanDetailInfo";
 import { TravelPlanDetailSidebar } from "./TravelPlanDetailSidebar";
 import { openModal } from "./activities/activitySlice";
 import { Link } from "react-router-dom";
-import { InviteModal } from "./InviteModal";
+import { InviteModal } from "./invite/InviteModal";
 
 interface IProps extends RouteComponentProps<{ id: string }> {}
 
@@ -49,7 +49,7 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
     return (
       <Grid>
         <ActivityModal travelPlanId={travelPlan?.id!} />
-        <InviteModal />
+        <InviteModal travelPlanId={travelPlan?.id!} />
         <Grid.Row>
           <Grid.Column width={10}>
             <TravelPlanDetailHeader travelPlan={travelPlan!} />

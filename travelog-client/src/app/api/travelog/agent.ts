@@ -46,7 +46,9 @@ const TravelPlanService = {
         requests.put<ITravelPlan>(`/TravelPlan/Edit`, travelPlan),
     details: (id: string): Promise<ITravelPlan> => requests.get<ITravelPlan>(`/TravelPlan/Details?id=${id}`),
     create: (travelPlan: ITravelPlan): Promise<number> => requests.post('/TravelPlan/Create', travelPlan),
-    delete: (id: string): Promise<number> => requests.delete(`/TravelPlan/Delete?id=${id}`)
+    delete: (id: string): Promise<number> => requests.delete(`/TravelPlan/Delete?id=${id}`),
+    invite: (inviteeId: string, travelPlanId: string): Promise<number> =>
+        requests.post(`/TravelPlan/CreateInvitation?inviteeUsername=${inviteeId}&travelPlanId=${travelPlanId}`, {})
 }
 
 const TravelPlanActivityService = {

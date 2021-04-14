@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { APIServices } from "../../../app/api/travelog/agent";
+import { AuthService } from "../../../app/auth/AuthServices";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 
 //async thunks
@@ -76,6 +77,6 @@ const detailSlice = createSlice(
 
 
 //etc
-export const {openModal, closeModal} = detailSlice.actions;
+export const { openModal, closeModal } = detailSlice.actions;
 
 export default detailSlice.reducer;

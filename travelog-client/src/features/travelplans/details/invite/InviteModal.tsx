@@ -1,10 +1,17 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
 import { Modal } from 'semantic-ui-react';
-import { RootState } from '../../../app/store';
+import { RootState } from '../../../../app/store';
 import { InviteForm } from './InviteForm';
 
-export const InviteModal = () => {
+interface IProps
+{
+  travelPlanId: string
+}
+
+export const InviteModal: React.FC<IProps> = ({
+  travelPlanId
+}) => {
     const { isModalOpen } = useSelector(
         (state: RootState) => state.detailReducer
       );
@@ -12,6 +19,7 @@ export const InviteModal = () => {
         <Modal open={isModalOpen} size="mini">
           <Modal.Content>
             <InviteForm
+              travelPlanId={travelPlanId}
             />
           </Modal.Content>
         </Modal>
