@@ -31,13 +31,13 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
   useEffect(() => {
     dispatch(loadTravelPlan(travelPlanId)).then(() => {
       setLoading(false);
-      setIsHost(travelPlan!.createdById === user!.userId);
+      setIsHost(travelPlan?.createdById === user!.userId);
     });
 
     return () => {
       setLoading(true);
     };
-  }, [dispatch, travelPlanId]);
+  }, [dispatch, travelPlan?.createdById, travelPlanId, user]);
 
   function handleAdd() {
     dispatch(openModal(null));
