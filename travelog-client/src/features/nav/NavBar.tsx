@@ -1,7 +1,14 @@
 import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
-import { Button, Container, Dropdown, Icon, Menu, Image} from "semantic-ui-react";
+import {
+  Button,
+  Container,
+  Dropdown,
+  Icon,
+  Menu,
+  Image,
+} from "semantic-ui-react";
 import { AuthService } from "../../app/auth/AuthServices";
 import { useAppDispatch } from "../../app/customHooks";
 import { RootState } from "../../app/store";
@@ -12,21 +19,19 @@ export const NavBar = () => {
   const user = useSelector((state: RootState) => state.authReducer.user);
   const doesAppHaveToken = AuthService.hasToken();
 
-  function handleSignOut()
-  {
+  function handleSignOut() {
     //signoutredirect handles redirecting to our logout page
-    //signoutuser handles setting user state 
+    //signoutuser handles setting user state
     dispatch(signOutRedirectAsync()).then(() => {
-        dispatch(signOutUser());
-    })
-
+      dispatch(signOutUser());
+    });
   }
   return (
     <Menu fixed="top" inverted>
       <Container>
         <Menu.Item header exact as={NavLink} to="/">
-            <Icon size='large' name='travel'/>
-            Travelog
+          <Icon size="large" name="travel" />
+          Travelog
         </Menu.Item>
         {user && doesAppHaveToken && (
           <Fragment>
@@ -41,21 +46,23 @@ export const NavBar = () => {
               />
             </Menu.Item>
             <Menu.Item position="right">
-            <Image
-              avatar
-              spaced="right"
-              src={'/Assets/Images/user.png'}
-            />
-            <Dropdown pointing="top left" text={user.userName}>
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  onClick={handleSignOut}
-                  text="Logout"
-                  icon="power"
-                />
-              </Dropdown.Menu>
-            </Dropdown>
-          </Menu.Item>
+              <Image avatar spaced="right" src={"/Assets/Images/user.png"} />
+              <Dropdown pointing="top left" text={user.userName}>
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    as={Link}
+                    to={`/profile/invitations`}
+                    text="Invitations"
+                    icon="envelope open outline"
+                  />
+                  <Dropdown.Item
+                    onClick={handleSignOut}
+                    text="Logout"
+                    icon="power"
+                  />
+                </Dropdown.Menu>
+              </Dropdown>
+            </Menu.Item>
           </Fragment>
         )}
       </Container>

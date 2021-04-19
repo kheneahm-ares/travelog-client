@@ -1,5 +1,6 @@
 export interface IInvitation
 {
+    id: string;
     travelPlanName: string;
     inviterUsername: string;
     inviteeId: string;
