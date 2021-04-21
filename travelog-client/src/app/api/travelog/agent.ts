@@ -61,7 +61,9 @@ const TravelPlanActivityService = {
 }
 
 const InvitationService = {
-    list: (): Promise<IInvitation[]> => requests.get<IInvitation[]>('/Invite/List')
+    list: (): Promise<IInvitation[]> => requests.get<IInvitation[]>('/Invite/List'),
+    accept: (id: number): Promise<IInvitation[]> => requests.get<IInvitation[]>(`/Invite/Accept?inviteId=${id}`),
+    decline: (id: number): Promise<IInvitation[]> => requests.get<IInvitation[]>(`/Invite/Decline?inviteId=${id}`),
 }
 
 export const APIServices = {

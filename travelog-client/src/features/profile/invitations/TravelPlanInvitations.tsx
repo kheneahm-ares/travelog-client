@@ -29,7 +29,12 @@ export const TravelPlanInvitations = () => {
       {invitations.length === 0 ? (
         <p>No Invitations</p>
       ) : (
-        <InvitationDetails invitations={invitations!} />
+        <List>
+          {invitations.map((inv) => (
+            <InvitationDetails key={inv.id} invitation={inv!} />
+          ))}
+
+        </List>
       )}
     </Fragment>
   );
