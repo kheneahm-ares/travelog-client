@@ -20,7 +20,7 @@ export const ActivityModal: React.FC<IProps> = ({travelPlanId}) => {
         <ActivityForm
           initialActivity={selectedActivity!}
           travelPlanId={travelPlanId}
-          isReadOnly = {user?.userId !== selectedActivity?.hostId}
+          isReadOnly = {selectedActivity! && user?.userId !== selectedActivity?.hostId }
         />
       </Modal.Content>
     </Modal>
