@@ -10,7 +10,7 @@ import { loadTravelPlan } from "./detailSlice";
 import { TravelPlanActivities } from "./activities/TravelPlanActivities";
 import { TravelPlanDetailHeader } from "./TravelPlanDetailHeader";
 import { TravelPlanDetailInfo } from "./TravelPlanDetailInfo";
-import { TravelPlanDetailSidebar } from "./TravelPlanDetailSidebar";
+import { TravelPlanDetailSidebar } from "./sidebar/TravelPlanDetailSidebar";
 import { openModal } from "./activities/activitySlice";
 import { Link } from "react-router-dom";
 import { InviteModal } from "./invite/InviteModal";
@@ -62,6 +62,7 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
               isHost={isHost}
               travelers={travelPlan?.travelers!}
               creatorId={travelPlan?.createdById!}
+              travelPlanId={travelPlan?.id!}
             />
           </Grid.Column>
         </Grid.Row>
