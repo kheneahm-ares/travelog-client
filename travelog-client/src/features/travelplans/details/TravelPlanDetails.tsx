@@ -63,6 +63,7 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
               travelers={travelPlan?.travelers!}
               creatorId={travelPlan?.createdById!}
               travelPlanId={travelPlan?.id!}
+              loggedInUserId={user?.userId!}
             />
           </Grid.Column>
         </Grid.Row>

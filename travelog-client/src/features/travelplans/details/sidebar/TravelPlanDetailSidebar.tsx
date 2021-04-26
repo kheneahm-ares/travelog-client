@@ -10,14 +10,16 @@ import {
   Popup,
 } from "semantic-ui-react";
 import { ITravelPlanTraveler } from "../../../../app/common/interfaces/ITravelPlanTraveler";
-import { useAppDispatch } from "../../../../app/customHooks";
+import { useAppDispatch, useAppSelector } from "../../../../app/customHooks";
 import { openModal } from "../detailSlice";
 import { removeTraveler } from "./sidebarSlice";
+import { SidebarTraveler } from "./SidebarTraveler";
 
 interface IProps {
   travelers: ITravelPlanTraveler[];
   creatorId: string;
   travelPlanId: string;
+  loggedInUserId: string;
   isHost: boolean;
 }
 export const TravelPlanDetailSidebar: React.FC<IProps> = ({
@@ -25,12 +27,12 @@ export const TravelPlanDetailSidebar: React.FC<IProps> = ({
   creatorId,
   isHost,
   travelPlanId,
+  loggedInUserId,
 }) => {
   const dispatch = useAppDispatch();
   const [currTravelers, setCurrTravelers] = useState<ITravelPlanTraveler[]>(
     travelers
   );
-
   function handleRemoveUser(event: React.MouseEvent<HTMLButtonElement>) {
     const username = event.currentTarget.name;
 
@@ -39,8 +41,8 @@ export const TravelPlanDetailSidebar: React.FC<IProps> = ({
     ).then(() => {
       setCurrTravelers(currTravelers.filter((t) => t.userName !== username));
     });
-
   }
+
   function handleInviteUser() {
     dispatch(openModal());
   }
@@ -74,42 +76,14 @@ export const TravelPlanDetailSidebar: React.FC<IProps> = ({
       >
         <List relaxed divided>
           {currTravelers.map((traveler) => (
-            <Item key={traveler.userName} style={{ position: "relative" }}>
-              {traveler.id === creatorId && (
-                <Fragment>
-                  <Label
-                    style={{ position: "absolute" }}
-                    color="orange"
-                    ribbon="right"
-                  >
-                    Host
-                  </Label>
-                </Fragment>
-              )}
-              <Image size="tiny" src={"/Assets/Images/user.png"} />
-              <Item.Content verticalAlign="middle">
-                <Item.Header style={{ display: "inline" }} as="h2">
-                  {traveler.displayName}
-                </Item.Header>
-                {isHost && traveler.id !== creatorId && (
-                  <Popup
-                    style={{ display: "inline" }}
-                    content="Remove user"
-                    trigger={
-                      <Button
-                        name={traveler.userName}
-                        size="mini"
-                        circular
-                        icon="remove user"
-                        floated="right"
-                        onClick={handleRemoveUser}
-                      />
-                    }
-                    size="tiny"
-                  />
-                )}
-              </Item.Content>
-            </Item>
+            <SidebarTraveler
+              traveler={traveler}
+              loggedInUserId={loggedInUserId}
+              isHost={isHost}
+              creatorId={creatorId}
+              travelPlanId={travelPlanId}
+              handleRemoveUser={handleRemoveUser}
+            />
           ))}
         </List>
       </Segment>
