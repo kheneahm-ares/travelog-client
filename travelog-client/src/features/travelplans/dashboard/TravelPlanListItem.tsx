@@ -8,6 +8,12 @@ interface IProps {
   travelPlan: ITravelPlan;
 }
 export const TravelPlanListItem: React.FC<IProps> = ({ travelPlan }) => {
+  const currDate = new Date();
+  const difference = moment(travelPlan.startDate).diff(
+    moment(currDate),
+    "days"
+  );
+
   return (
     <Segment.Group>
       <Segment>
@@ -17,10 +23,16 @@ export const TravelPlanListItem: React.FC<IProps> = ({ travelPlan }) => {
             <Item.Content>
               <Item.Header>{travelPlan.name}</Item.Header>
               <Item.Meta>
-                {moment(travelPlan.startDate).format("MMM Do YYYY")} - 
+                {moment(travelPlan.startDate).format("MMM Do YYYY")} -
                 {moment(travelPlan.endDate).format("MMM Do YYYY")}
               </Item.Meta>
               <Item.Description>{travelPlan.description}</Item.Description>
+
+              {difference < 20 && (
+                <Item.Description style={{color: "red"}}>
+                  Coming up soon in {difference} days!
+                </Item.Description>
+              )}
             </Item.Content>
           </Item>
         </Item.Group>

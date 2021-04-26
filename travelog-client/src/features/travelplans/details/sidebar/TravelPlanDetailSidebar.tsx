@@ -77,6 +77,7 @@ export const TravelPlanDetailSidebar: React.FC<IProps> = ({
         <List relaxed divided>
           {currTravelers.map((traveler) => (
             <SidebarTraveler
+            key={traveler.id}
               traveler={traveler}
               loggedInUserId={loggedInUserId}
               isHost={isHost}
