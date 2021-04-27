@@ -19,7 +19,7 @@ interface IProps {
   loggedInUserId: string;
   creatorId: string;
   travelPlanId: string;
-  removeUser: (username: string) => void;
+  filterOutTraveler: (username: string) => void;
 }
 export const SidebarTraveler: React.FC<IProps> = ({
   traveler,
@@ -27,7 +27,7 @@ export const SidebarTraveler: React.FC<IProps> = ({
   creatorId,
   loggedInUserId,
   travelPlanId,
-  removeUser,
+  filterOutTraveler,
 }) => {
   const isTraveler = traveler.id === loggedInUserId;
   const isTravelHost = traveler.id === creatorId;
@@ -60,7 +60,7 @@ export const SidebarTraveler: React.FC<IProps> = ({
         if (!isHost) {
           history.push("/travelplans");
         } else {
-          removeUser(username);
+          filterOutTraveler(username);
         }
       })
       .catch(() => {
@@ -108,7 +108,8 @@ export const SidebarTraveler: React.FC<IProps> = ({
           <Popup
             content={traveler.userName}
             trigger={
-              <Label size="mini" style={{ display: "block", width: "50%" }}>
+              <Label basic pointing size="mini" style={{ display: "block" }}>
+                Username: {" "}
                 {traveler.userName.length < 10
                   ? traveler.userName
                   : traveler.userName.substring(0, 9) + "..."}

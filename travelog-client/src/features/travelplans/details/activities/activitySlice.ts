@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import moment from "moment";
-import { APIServices } from "../../../../app/api/travelog/agent";
+import { TravelPlanActivityService } from "../../../../app/api/travelog/TravelPlanActivityService";
 import { ActivityHelper } from "../../../../app/common/helpers/ActivityHelper";
 import { ITravelPlanActivity } from "../../../../app/common/interfaces/ITravelPlanActivity";
 import { RootState } from "../../../../app/store";
@@ -9,7 +8,7 @@ export const loadTravelPlanActivities = createAsyncThunk(
     'detail/loadActivities',
     async (id: string, thunkAPI) =>
     {
-        const activities = await APIServices.TravelPlanActivityService.list(id);
+        const activities = await TravelPlanActivityService.list(id);
         return activities;
     }
 )
@@ -25,7 +24,7 @@ export const submitActivityEdit = createAsyncThunk(
     'detail/editActivity',
     async (formActivity: ITravelPlanActivity, thunkAPI) =>
     {
-        const editedActivity = await APIServices.TravelPlanActivityService.update(formActivity);
+        const editedActivity = await TravelPlanActivityService.update(formActivity);
         //always return so that the promise resolves expectedly
         return editedActivity;
     }
@@ -35,14 +34,14 @@ export const deleteActivity = createAsyncThunk(
     'detail/deleteActivity',
     async (activityId: string, thunkAPI) =>
     {
-        const responseStatus = await APIServices.TravelPlanActivityService.delete(activityId);
-        if (responseStatus === 200)
+        try
         {
-            return true;
+            await TravelPlanActivityService.delete(activityId);
+
         }
-        else
+        catch (err)
         {
-            return false;
+            throw err;
         }
     }
 )
@@ -51,7 +50,7 @@ export const createActivity = createAsyncThunk(
     'detail/createActivity',
     async (newActivity: ITravelPlanActivity, thunkAPI) =>
     {
-        const createdActivity = await APIServices.TravelPlanActivityService.create(newActivity);
+        const createdActivity = await TravelPlanActivityService.create(newActivity);
         return createdActivity;
     }
 )
@@ -145,6 +144,6 @@ export const getActivitiesByDate = () => (state: RootState) =>
 
     return mapGroupedActivities;
 }
-export const { closeModal, openModal} = activitySlice.actions;
+export const { closeModal, openModal } = activitySlice.actions;
 
 export default activitySlice.reducer;

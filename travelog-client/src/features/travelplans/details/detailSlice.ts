@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { APIServices } from "../../../app/api/travelog/agent";
-import { AuthService } from "../../../app/auth/AuthServices";
+import { TravelPlanService } from "../../../app/api/travelog/TravelPlanService";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 
 //async thunks
@@ -8,7 +7,7 @@ export const loadTravelPlan = createAsyncThunk(
     'detail/loadTravelPlan',
     async (id: string) =>
     {
-        const travelPlan = await APIServices.TravelPlanService.details(id);
+        const travelPlan = await TravelPlanService.details(id);
         return travelPlan;
     }
 )
@@ -17,7 +16,7 @@ export const deleteTravelPlan = createAsyncThunk(
     'detail/deleteTravelPlan',
     async (id: string) =>
     {
-        const response = await APIServices.TravelPlanService.delete(id);
+        const response = await TravelPlanService.delete(id);
         return response;
     }
 )

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { APIServices } from "../../../app/api/travelog/agent";
+import { TravelPlanService } from "../../../app/api/travelog/TravelPlanService";
 import { AuthService } from "../../../app/auth/AuthServices";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 
@@ -8,7 +8,7 @@ export const loadTravelPlan = createAsyncThunk(
     'manage/loadTravelPlan',
     async (id: string, thunkAPI) =>
     {
-        const travelPlan = await APIServices.TravelPlanService.details(id);
+        const travelPlan = await TravelPlanService.details(id);
         return travelPlan;
     }
 )
@@ -17,7 +17,7 @@ export const submitTravelPlanEdit = createAsyncThunk(
     'manage/editTravelPlan',
     async (travelPlanForm: ITravelPlan) =>
     {
-        var editedTravelPlan = await APIServices.TravelPlanService.update(travelPlanForm);
+        var editedTravelPlan = await TravelPlanService.update(travelPlanForm);
         return editedTravelPlan;
     }
 )
@@ -28,7 +28,7 @@ export const createTravelPlan = createAsyncThunk(
     {
         const oidcUser = await AuthService.getOidcUser();
         travelPlanForm.createdById = oidcUser?.profile.sub!;
-        var newTravelPlan = await APIServices.TravelPlanService.create(travelPlanForm);
+        var newTravelPlan = await TravelPlanService.create(travelPlanForm);
         return newTravelPlan;
     }
 )

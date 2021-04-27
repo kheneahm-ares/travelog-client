@@ -28,7 +28,7 @@ export const TravelPlanDetailSidebar: React.FC<IProps> = ({
     travelers
   );
 
-  function removeUser(username: string) {
+  function filterOutTraveler(username: string) {
     setCurrTravelers(currTravelers.filter((t) => t.userName !== username));
   }
 
@@ -72,7 +72,7 @@ export const TravelPlanDetailSidebar: React.FC<IProps> = ({
               isHost={isHost}
               creatorId={creatorId}
               travelPlanId={travelPlanId}
-              removeUser={removeUser}
+              filterOutTraveler={filterOutTraveler}
             />
           ))}
         </List>

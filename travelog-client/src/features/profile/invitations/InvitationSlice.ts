@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { APIServices } from "../../../app/api/travelog/agent";
+import { InvitationService } from "../../../app/api/travelog/InvitationService";
 import { ManageInviteEnum } from "../../../app/common/enums/ManageInvEnum";
 import { IInvitation } from "../../../app/common/interfaces/IInvitation";
 
 export const loadInvitationsAsync = createAsyncThunk(
     'invitations/loadInvitations',
     async () => {
-        const invitations = await APIServices.InvitationService.list();
+        const invitations = await InvitationService.list();
         return invitations;
     }
 )
@@ -16,12 +16,12 @@ export const manageInvite = createAsyncThunk(
     async ({inviteId, type}: {inviteId: number, type: ManageInviteEnum}) => {
         if(type === ManageInviteEnum.Accept)
         {
-            await APIServices.InvitationService.accept(inviteId);
+            await InvitationService.accept(inviteId);
 
         }
         else if(type === ManageInviteEnum.Decline)
         {
-            await APIServices.InvitationService.decline(inviteId);
+            await InvitationService.decline(inviteId);
         }
     }
 )

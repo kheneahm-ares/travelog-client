@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { APIServices } from "../../../app/api/travelog/agent";
+import { TravelPlanService } from "../../../app/api/travelog/TravelPlanService";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 
 export const loadUserTravelPlansAsync = createAsyncThunk(
     'dashboard/userTravelPlans',
     async (args, thunkAPI) => 
     {
-        var travelPlans = await APIServices.TravelPlanService.list();
+        var travelPlans = await TravelPlanService.list();
 
         return travelPlans;
 

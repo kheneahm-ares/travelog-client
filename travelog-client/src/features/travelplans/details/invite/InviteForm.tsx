@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { Button, Form } from "semantic-ui-react";
-import { APIServices } from "../../../../app/api/travelog/agent";
+import { TravelPlanService } from "../../../../app/api/travelog/TravelPlanService";
 import { useAppDispatch } from "../../../../app/customHooks";
 import { closeModal } from "../detailSlice";
 
@@ -22,15 +22,13 @@ export const InviteForm: React.FC<IProps> = ({ travelPlanId }) => {
     setLoading(true);
 
     try {
-      const response = await APIServices.TravelPlanService.invite(
+      await TravelPlanService.invite(
         username,
         travelPlanId
       );
       dispatch(closeModal());
 
-      //toast here?
     } catch (exc) {
-      console.log(exc.response);
       setErrorMessage(exc.response.data.message);
       setLoading(false);
     }

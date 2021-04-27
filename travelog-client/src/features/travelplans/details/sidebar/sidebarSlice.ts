@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { APIServices } from "../../../../app/api/travelog/agent";
+import { TravelPlanService } from "../../../../app/api/travelog/TravelPlanService";
 
 
 export const removeTraveler = createAsyncThunk(
@@ -7,7 +7,7 @@ export const removeTraveler = createAsyncThunk(
     async ({ username, travelPlanId }: { username: string, travelPlanId: string }) =>
     {
 
-        await APIServices.TravelPlanService.removeTraveler(username, travelPlanId);
+        await TravelPlanService.removeTraveler(username, travelPlanId);
         return username;
 
     }

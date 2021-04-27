@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { APIServices } from "../../../app/api/travelog/agent";
+import { TravelPlanActivityService } from "../../../app/api/travelog/TravelPlanActivityService";
 import { ActivityHelper } from "../../../app/common/helpers/ActivityHelper";
 import { ITravelPlanActivity } from "../../../app/common/interfaces/ITravelPlanActivity";
 import { RootState } from "../../../app/store";
@@ -8,7 +8,7 @@ export const loadTravelPlanActivities = createAsyncThunk(
     'map/loadActivities',
     async (id: string, thunkAPI) =>
     {
-        const activities = await APIServices.TravelPlanActivityService.list(id);
+        const activities = await TravelPlanActivityService.list(id);
         return activities;
     }
 )
@@ -76,5 +76,5 @@ export const getActivitiesMappedById = () => (state: RootState) =>
 
     return activitiesMap;
 }
-export const { centerMap, resetState} = mapSlice.actions;
+export const { centerMap, resetState } = mapSlice.actions;
 export default mapSlice.reducer;
