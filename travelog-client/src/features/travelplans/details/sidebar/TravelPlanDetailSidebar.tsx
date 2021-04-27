@@ -1,18 +1,12 @@
-import { stringify } from "node:querystring";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import {
   Segment,
   List,
-  Item,
-  Label,
-  Image,
   Button,
-  Popup,
 } from "semantic-ui-react";
 import { ITravelPlanTraveler } from "../../../../app/common/interfaces/ITravelPlanTraveler";
-import { useAppDispatch, useAppSelector } from "../../../../app/customHooks";
+import { useAppDispatch } from "../../../../app/customHooks";
 import { openModal } from "../detailSlice";
-import { removeTraveler } from "./sidebarSlice";
 import { SidebarTraveler } from "./SidebarTraveler";
 
 interface IProps {
@@ -33,14 +27,9 @@ export const TravelPlanDetailSidebar: React.FC<IProps> = ({
   const [currTravelers, setCurrTravelers] = useState<ITravelPlanTraveler[]>(
     travelers
   );
-  function handleRemoveUser(event: React.MouseEvent<HTMLButtonElement>) {
-    const username = event.currentTarget.name;
 
-    dispatch(
-      removeTraveler({ username: username, travelPlanId: travelPlanId })
-    ).then(() => {
-      setCurrTravelers(currTravelers.filter((t) => t.userName !== username));
-    });
+  function removeUser(username: string) {
+    setCurrTravelers(currTravelers.filter((t) => t.userName !== username));
   }
 
   function handleInviteUser() {
@@ -77,13 +66,13 @@ export const TravelPlanDetailSidebar: React.FC<IProps> = ({
         <List relaxed divided>
           {currTravelers.map((traveler) => (
             <SidebarTraveler
-            key={traveler.id}
+              key={traveler.id}
               traveler={traveler}
               loggedInUserId={loggedInUserId}
               isHost={isHost}
               creatorId={creatorId}
               travelPlanId={travelPlanId}
-              handleRemoveUser={handleRemoveUser}
+              removeUser={removeUser}
             />
           ))}
         </List>

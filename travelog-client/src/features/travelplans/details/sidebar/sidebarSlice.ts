@@ -1,6 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { APIServices } from "../../../../app/api/travelog/agent";
-import { ITravelPlanTraveler } from "../../../../app/common/interfaces/ITravelPlanTraveler";
 
 
 export const removeTraveler = createAsyncThunk(
@@ -37,9 +36,17 @@ const sidebarSlice = createSlice({
         [removeTraveler.fulfilled as any]: (state, action) =>
         {
             state.loading = false;
+        },
+        [removeTraveler.rejected as any]: (state, action) =>
+        {
+            state.loading = false;
+
+            throw new Error('Could not remove traveler');
+
         }
     }
 });
 
 
-export default sidebarSlice;
+
+export default sidebarSlice.reducer;

@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import { Button, Form, Label } from "semantic-ui-react";
+import { Button, Form } from "semantic-ui-react";
 import { APIServices } from "../../../../app/api/travelog/agent";
 import { useAppDispatch } from "../../../../app/customHooks";
 import { closeModal } from "../detailSlice";

@@ -41,16 +41,6 @@ export const TravelPlanDetailInfo: React.FC<IProps> = ({ travelPlan }) => {
           </Grid.Column>
         </Grid>
       </Segment>
-      <Segment attached>
-        <Grid>
-          <Grid.Column width={1}>
-            <Icon size="large" color="teal" name="marker" />
-          </Grid.Column>
-          <Grid.Column width={15}>
-            <p>{travelPlan.description}</p>
-          </Grid.Column>
-        </Grid>
-      </Segment>
     </Segment.Group>
   );
 };
