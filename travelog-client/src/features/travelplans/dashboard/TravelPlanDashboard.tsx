@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Grid } from "semantic-ui-react";
+import { Divider, Grid, Header } from "semantic-ui-react";
 import { useAppDispatch } from "../../../app/customHooks";
 import { RootState } from "../../../app/store";
 import { loadUserTravelPlansAsync } from "./dashboardSlice";
@@ -19,6 +19,10 @@ export const TravelPlanDashboard = () => {
 
   return (
     <Grid>
+      <Grid.Column width={10}>
+        <Header size='huge' textAlign='center' >Travel Plans</Header>
+        <Divider />
+      </Grid.Column>
       <Grid.Column width={10}>
         {isTravelPlansLoading ? (
           <TravelPlanListPlaceholder />
