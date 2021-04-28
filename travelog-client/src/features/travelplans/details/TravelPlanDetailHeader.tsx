@@ -1,6 +1,7 @@
 import moment from "moment";
 import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   Button,
   Confirm,
@@ -14,7 +15,7 @@ import {
 import { history } from "../../..";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 import { IUser } from "../../../app/common/interfaces/IUser";
-import { useAppDispatch } from "../../../app/customHooks";
+import { useAppDispatch, useAppSelector } from "../../../app/customHooks";
 import { deleteTravelPlan } from "./detailSlice";
 
 interface IProps {
@@ -33,10 +34,15 @@ export const TravelPlanDetailHeader: React.FC<IProps> = ({
   });
 
   function handleDelete() {
-    dispatch(deleteTravelPlan(travelPlan.id)).then(() => {
-      //go back to dashboard
-      history.push("/travelplans");
-    });
+    try {
+      const actionResult: any = dispatch(deleteTravelPlan(travelPlan.id));
+
+      if (actionResult.error) {
+        toast.error(actionResult.error.message);
+      } else {
+        history.push("/travelplans");
+      }
+    } catch (err) {}
   }
 
   function handleCancel() {

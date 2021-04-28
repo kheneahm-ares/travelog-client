@@ -5,6 +5,7 @@ import {
   Switch,
   withRouter,
 } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import { Container } from "semantic-ui-react";
 
 import { PrivateRoute } from "./app/layout/PrivateRoute";
@@ -18,9 +19,14 @@ import { TravelPlanDetails } from "./features/travelplans/details/TravelPlanDeta
 import { TravelPlanManage } from "./features/travelplans/manage/TravelPlanManage";
 import { TravelPlanMap } from "./features/travelplans/map/TravelPlanMap";
 
+
+import 'react-toastify/dist/ReactToastify.css';
+
 const App: React.FC<RouteComponentProps> = ({ location }) => {
   return (
     <Fragment>
+      <ToastContainer position='bottom-right'/>
+
       <Route exact path="/" component={HomePage} />
       <Route exact path="/auth/signin-oidc" component={SignInCallBack} />
       <Route

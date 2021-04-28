@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import { TravelPlanActivityService } from "../../../../app/api/travelog/TravelPlanActivityService";
 import { ActivityHelper } from "../../../../app/common/helpers/ActivityHelper";
 import { ITravelPlanActivity } from "../../../../app/common/interfaces/ITravelPlanActivity";
@@ -8,25 +9,32 @@ export const loadTravelPlanActivities = createAsyncThunk(
     'detail/loadActivities',
     async (id: string, thunkAPI) =>
     {
-        const activities = await TravelPlanActivityService.list(id);
-        return activities;
+        try
+        {
+            const activities = await TravelPlanActivityService.list(id);
+            return activities;
+        }
+        catch (err)
+        {
+            throw new Error('Error occurred loading activities');
+        }
     }
 )
-
-// export const loadTravelPlanDispatch = (id: string): ThunkAction<void, RootState, null, Action<string>> =>
-//     async (dispatch): Promise<void> =>
-//     {
-//         console.log()
-//         dispatch(loadTravelPlanActivities(id));
-//     }
 
 export const submitActivityEdit = createAsyncThunk(
     'detail/editActivity',
     async (formActivity: ITravelPlanActivity, thunkAPI) =>
     {
-        const editedActivity = await TravelPlanActivityService.update(formActivity);
-        //always return so that the promise resolves expectedly
-        return editedActivity;
+        try
+        {
+            const editedActivity = await TravelPlanActivityService.update(formActivity);
+
+            return editedActivity;
+        } catch (err)
+        {
+            throw new Error('Error occurred deleting activity');
+
+        }
     }
 )
 
@@ -37,11 +45,10 @@ export const deleteActivity = createAsyncThunk(
         try
         {
             await TravelPlanActivityService.delete(activityId);
-
         }
         catch (err)
         {
-            throw err;
+            throw new Error('Error occurred deleting activity');
         }
     }
 )
@@ -50,8 +57,14 @@ export const createActivity = createAsyncThunk(
     'detail/createActivity',
     async (newActivity: ITravelPlanActivity, thunkAPI) =>
     {
-        const createdActivity = await TravelPlanActivityService.create(newActivity);
-        return createdActivity;
+        try
+        {
+            const createdActivity = await TravelPlanActivityService.create(newActivity);
+            return createdActivity;
+        } catch (err)
+        {
+            throw new Error('Error occurred creating activity');
+        }
     }
 )
 
@@ -101,6 +114,14 @@ const activitySlice = createSlice({
             state.travelPlanActivities = action.payload;
             state.loadingActivities = false;
         },
+        [loadTravelPlanActivities.rejected as any]: (state, action) =>
+        {
+            state.travelPlanActivities = [];
+            state.loadingActivities = false;
+
+            toast.error(action.error.message);
+        },
+
         [submitActivityEdit.pending as any]: (state, action) =>
         {
             state.formSubmitting = true;
@@ -110,6 +131,13 @@ const activitySlice = createSlice({
             state.formSubmitting = false;
             state.selectedActivity = null;
             state.isModalOpen = false;
+        },
+        [submitActivityEdit.rejected as any]: (state, action) =>
+        {
+            state.formSubmitting = false;
+
+            toast.error(action.error.message);
+
         },
         [deleteActivity.pending as any]: (state, action) =>
         {
@@ -122,6 +150,12 @@ const activitySlice = createSlice({
             state.selectedActivity = null;
             state.isModalOpen = false;
         },
+        [deleteActivity.rejected as any]: (state, action) =>
+        {
+            state.deletingActivity = false;
+
+            toast.error(action.error.message);
+        },
         [createActivity.pending as any]: (state, action) => 
         {
             state.formSubmitting = true;
@@ -130,6 +164,13 @@ const activitySlice = createSlice({
         {
             state.formSubmitting = false;
             state.isModalOpen = false;
+        },
+        [createActivity.rejected as any]: (state, action) => 
+        {
+            state.formSubmitting = false;
+
+            toast.error(action.error.message);
+
         }
     }
 })

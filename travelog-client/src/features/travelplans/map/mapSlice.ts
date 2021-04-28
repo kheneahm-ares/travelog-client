@@ -8,8 +8,15 @@ export const loadTravelPlanActivities = createAsyncThunk(
     'map/loadActivities',
     async (id: string, thunkAPI) =>
     {
-        const activities = await TravelPlanActivityService.list(id);
-        return activities;
+        try
+        {
+            const activities = await TravelPlanActivityService.list(id);
+            return activities;
+        } catch (err)
+        {
+            throw new Error("Error loading activities");
+
+        }
     }
 )
 interface IMapSliceState
@@ -44,12 +51,15 @@ const mapSlice = createSlice({
     extraReducers: {
         [loadTravelPlanActivities.pending as any]: (state) =>
         {
-            console.log('pending');
             state.loadingActivities = true;
         },
         [loadTravelPlanActivities.fulfilled as any]: (state, action: PayloadAction<ITravelPlanActivity[]>) =>
         {
             state.travelPlanActivities = action.payload;
+            state.loadingActivities = false;
+        },
+        [loadTravelPlanActivities.rejected as any]: (state, action) =>
+        {
             state.loadingActivities = false;
         },
     }

@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import { TravelPlanService } from "../../../../app/api/travelog/TravelPlanService";
 
 
@@ -7,8 +8,14 @@ export const removeTraveler = createAsyncThunk(
     async ({ username, travelPlanId }: { username: string, travelPlanId: string }) =>
     {
 
-        await TravelPlanService.removeTraveler(username, travelPlanId);
-        return username;
+        try
+        {
+            await TravelPlanService.removeTraveler(username, travelPlanId);
+            return username;
+        } catch (err)
+        {
+            throw new Error('Error occurred removing traveler');
+        }
 
     }
 )
@@ -41,8 +48,7 @@ const sidebarSlice = createSlice({
         {
             state.loading = false;
 
-            throw new Error('Could not remove traveler');
-
+            toast.error(action.error.message);
         }
     }
 });

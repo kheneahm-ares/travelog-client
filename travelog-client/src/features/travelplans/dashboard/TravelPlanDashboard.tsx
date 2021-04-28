@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import { Divider, Grid, Header } from "semantic-ui-react";
 import { useAppDispatch } from "../../../app/customHooks";
 import { RootState } from "../../../app/store";
@@ -8,7 +9,7 @@ import { TravelPlanList } from "./TravelPlanList";
 import { TravelPlanListPlaceholder } from "./TravelPlanListPlaceholder";
 
 export const TravelPlanDashboard = () => {
-  const { isTravelPlansLoading, travelPlans } = useSelector(
+  const { isTravelPlansLoading } = useSelector(
     (state: RootState) => state.dashboardReducer
   );
   const dispatch = useAppDispatch();

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import { Button, Grid, Segment } from "semantic-ui-react";
 import { useAppDispatch } from "../../../app/customHooks";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
@@ -28,7 +29,11 @@ export const TravelPlanMap: React.FC<IProps> = ({ match }) => {
     (state: RootState) => state.mapReducer
   );
   useEffect(() => {
-    dispatch(loadTravelPlanActivities(match.params.id));
+    dispatch(loadTravelPlanActivities(match.params.id)).then((result: any) => {
+      if (result.error) {
+        toast.error(result.error.message);
+      }
+    });
     return function cleanup() {
       dispatch(resetState());
     };

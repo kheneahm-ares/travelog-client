@@ -12,6 +12,7 @@ import { RootState } from "../../../app/store";
 import { history } from "../../../";
 import { createTravelPlan, submitTravelPlanEdit } from "./manageSlice";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface IProps {
   initialTravelPlan: ITravelPlan | null;
@@ -28,22 +29,37 @@ export const TravelPlanForm: React.FC<IProps> = ({ initialTravelPlan }) => {
     new TravelPlanFormValues()
   );
 
-  function handleTravelPlanSubmit(formPlan: any) {
-    console.log('submitting');
+  async function handleTravelPlanSubmit(formPlan: any) {
+    console.log("submitting");
     //change dates back to isos
     formPlan.startDate = new Date(formPlan.startDate).toISOString();
     formPlan.endDate = new Date(formPlan.endDate).toISOString();
 
     //create/edit then go to travelplan page
-    if (initialTravelPlan) {
-      dispatch(submitTravelPlanEdit(formPlan)).then(() => {
-        history.push(`/travelplans/${travelPlan?.id}`);
-      });
-    } else {
-      dispatch(createTravelPlan(formPlan)).then((val) => {
-        const newPlan: ITravelPlan = val.payload as ITravelPlan;
-        history.push(`/travelplans/${newPlan.id}`);
-      });
+    try {
+      if (initialTravelPlan) {
+        const actionResult: any = await dispatch(
+          submitTravelPlanEdit(formPlan)
+        );
+
+        if (actionResult.error) {
+          toast.error(actionResult.error.message);
+        } else {
+          history.push(`/travelplans/${travelPlan?.id}`);
+        }
+      } else {
+        const actionResult: any = await dispatch(createTravelPlan(formPlan));
+
+        if (actionResult.error) {
+          toast.error(actionResult.error.message);
+        } else {
+          const newPlan: ITravelPlan = actionResult.payload as ITravelPlan;
+          history.push(`/travelplans/${newPlan.id}`);
+        }
+      }
+    } catch (err) {
+      // console.log(err);
+      
     }
   }
 
@@ -99,7 +115,9 @@ export const TravelPlanForm: React.FC<IProps> = ({ initialTravelPlan }) => {
                   disabled={isSubmitting}
                   as={Link}
                   to={
-                    initialTravelPlan ? `/travelplans/${travelPlan?.id}` : '/travelplans'
+                    initialTravelPlan
+                      ? `/travelplans/${travelPlan?.id}`
+                      : "/travelplans"
                   }
                 />
                 <Button
