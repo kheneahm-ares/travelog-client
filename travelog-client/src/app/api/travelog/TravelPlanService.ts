@@ -63,7 +63,7 @@ async function getTravelPlan(id: string): Promise<ITravelPlan>
     }
 }
 
-async function createTravelPlan(travelPlan: ITravelPlan): Promise<void>
+async function createTravelPlan(travelPlan: ITravelPlan): Promise<ITravelPlan>
 {
     try
     {
@@ -72,6 +72,7 @@ async function createTravelPlan(travelPlan: ITravelPlan): Promise<void>
         {
             throw new Error(`${response.status}: Error creating travel plan`);
         }
+        return response.data;
     }
     catch (err)
     {
