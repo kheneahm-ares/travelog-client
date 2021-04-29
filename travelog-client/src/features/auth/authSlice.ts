@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import { AuthService } from "../../app/auth/AuthServices";
 import { IUser } from "../../app/common/interfaces/IUser";
 import { RootState } from "../../app/store";
@@ -8,8 +9,14 @@ export const signInUserAsync = createAsyncThunk(
     'auth/signIn',
     async (args, thunkAPI) =>
     {
-        const appUser = await AuthService.signInUserCallback();
-        return appUser;
+        try
+        {
+            const appUser = await AuthService.signInUserCallback();
+            return appUser
+        } catch (err)
+        {
+            throw new Error("Error occurred singing in");
+        };
     }
 )
 
@@ -17,8 +24,15 @@ export const signInSilentAsync = createAsyncThunk(
     'auth/signInSilent',
     async (args, thunkAPI) =>
     {
-        const appUser = await AuthService.signInSilentCallback();
-        return appUser;
+        try
+        {
+            const appUser = await AuthService.signInSilentCallback();
+            return appUser;
+        } catch (err)
+        {
+            throw new Error('Error occurred silently singing in');
+
+        }
     }
 )
 
@@ -26,8 +40,14 @@ export const signOutRedirectAsync = createAsyncThunk(
     'auth/signOutRedirect',
     async (args, thunkAPI) =>
     {
-        await AuthService.signOut();
-        return true;
+        try
+        {
+            await AuthService.signOut();
+            return true;
+        } catch (err)
+        {
+            throw new Error('Error occurred signing out');
+        }
     }
 )
 interface IAuthInitialState
@@ -69,6 +89,12 @@ const authSlice = createSlice({
             state.loading = false;
             state.isUserAuthenticated = true;
         },
+        [signInUserAsync.rejected as any]: (state, action) =>
+        {
+            state.loading = false;
+
+            toast.error(action.error.message);
+        },
         [signInSilentAsync.pending as any]: (state, action) =>
         {
             state.loading = true;
@@ -87,7 +113,11 @@ const authSlice = createSlice({
         [signOutRedirectAsync.fulfilled as any]: (state) =>
         {
             state.loading = false;
-
+        },
+        [signOutRedirectAsync.rejected as any]: (state) =>
+        {
+            //don't do anything just exit
+            state.loading = false;
         },
     }
 })

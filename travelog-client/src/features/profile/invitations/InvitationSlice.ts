@@ -1,27 +1,44 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import { InvitationService } from "../../../app/api/travelog/InvitationService";
 import { ManageInviteEnum } from "../../../app/common/enums/ManageInvEnum";
 import { IInvitation } from "../../../app/common/interfaces/IInvitation";
 
 export const loadInvitationsAsync = createAsyncThunk(
     'invitations/loadInvitations',
-    async () => {
-        const invitations = await InvitationService.list();
-        return invitations;
+    async () =>
+    {
+        try
+        {
+            const invitations = await InvitationService.list();
+            return invitations;
+        } catch (err)
+        {
+            throw new Error('Error occurred loading invitations');
+
+        }
     }
 )
 
 export const manageInvite = createAsyncThunk(
     'invitations/manage',
-    async ({inviteId, type}: {inviteId: number, type: ManageInviteEnum}) => {
-        if(type === ManageInviteEnum.Accept)
+    async ({ inviteId, type }: { inviteId: number, type: ManageInviteEnum }) =>
+    {
+        try
         {
-            await InvitationService.accept(inviteId);
+            if (type === ManageInviteEnum.Accept)
+            {
+                await InvitationService.accept(inviteId);
 
-        }
-        else if(type === ManageInviteEnum.Decline)
+            }
+            else if (type === ManageInviteEnum.Decline)
+            {
+                await InvitationService.decline(inviteId);
+            }
+        } catch (err)
         {
-            await InvitationService.decline(inviteId);
+            throw new Error(`Error occurred ${type === ManageInviteEnum.Accept ? 'accepting' : 'declining'} invitation`);
+
         }
     }
 )
@@ -30,7 +47,7 @@ export const manageInvite = createAsyncThunk(
 interface IInvitationState
 {
     loading: boolean;
-    invitations: IInvitation[];
+    invitations: IInvitation[] | null;
 }
 const initialState: IInvitationState =
 {
@@ -55,6 +72,12 @@ const invitationSlice = createSlice(
                 state.loading = false;
 
             },
+            [loadInvitationsAsync.rejected as any]: (state, action) => 
+            {
+                state.loading = true;
+                state.invitations = null;
+                toast.error(action.error.message);
+            },
             [manageInvite.pending as any]: (state) => 
             {
                 state.loading = true;
@@ -62,6 +85,11 @@ const invitationSlice = createSlice(
             [manageInvite.fulfilled as any]: (state) => 
             {
                 state.loading = false;
+            },
+            [manageInvite.rejected as any]: (state, action) => 
+            {
+                state.loading = false;
+                toast.error(action.error.message);
             },
         }
     }
