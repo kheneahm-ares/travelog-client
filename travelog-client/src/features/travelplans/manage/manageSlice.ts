@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { TravelPlanService } from "../../../app/api/travelog/TravelPlanService";
 import { AuthService } from "../../../app/auth/AuthServices";
+import { TravelogConstants } from "../../../app/common/constants/Constants";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 
 
@@ -15,9 +16,17 @@ export const loadTravelPlan = createAsyncThunk(
             return travelPlan;
         } catch (err)
         {
-            throw new Error('Error occurred loading travel plan');
-
+            const status = err.response.status;
+            if (status === 403)
+            {
+                throw new Error(TravelogConstants.FORBIDDEN);
+            }
+            else
+            {
+                throw new Error("Error occurred loading travel plan");
+            }
         }
+
     }
 )
 

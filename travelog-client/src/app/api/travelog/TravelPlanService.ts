@@ -1,3 +1,5 @@
+import { AxiosResponse } from "axios";
+import { history } from "../../..";
 import { ITravelPlan } from "../../common/interfaces/ITravelPlan";
 import { travelogAgent } from "./agent";
 
@@ -59,6 +61,11 @@ async function getTravelPlan(id: string): Promise<ITravelPlan>
     }
     catch (err)
     {
+        const status = err.response.status;
+        if (status === 403)
+        {
+            history.push('/forbidden');
+        }
         throw err;
     }
 }

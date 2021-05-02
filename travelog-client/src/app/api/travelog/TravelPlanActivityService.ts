@@ -1,5 +1,6 @@
 import { ITravelPlanActivity } from "../../common/interfaces/ITravelPlanActivity";
 import { travelogAgent } from "./agent";
+import { history } from "../../..";
 
 export const TravelPlanActivityService = {
     list: getTPActivities,
@@ -17,6 +18,11 @@ async function getTPActivities(tpID: string): Promise<ITravelPlanActivity[]>
     }
     catch (err)
     {
+        const status = err.response.status;
+        if (status === 403)
+        {
+            history.push('/forbidden');
+        }
         throw err;
     }
 }

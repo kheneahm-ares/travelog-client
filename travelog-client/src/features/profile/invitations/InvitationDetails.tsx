@@ -11,26 +11,17 @@ export const InvitationDetails: React.FC<{ invitation: IInvitation }> = ({
 }) => {
   const dispatch = useAppDispatch();
 
-  function handleDeclineInvite(e: any) {
-    dispatch(
+  async function manageInvitation(manageType: ManageInviteEnum) {
+    const actionResult: any = await dispatch(
       manageInvite({
         inviteId: parseInt(invitation.id),
-        type: ManageInviteEnum.Decline,
+        type: manageType,
       })
-    ).then(() => {
-      dispatch(loadInvitationsAsync());
-    });
-  }
-  function handleAcceptInvite() {
-    dispatch(
-      manageInvite({
-        inviteId: parseInt(invitation.id),
-        type: ManageInviteEnum.Accept,
-      })
-    ).then(() => {
+    );
+    if (manageType === ManageInviteEnum.Accept && !actionResult.error) {
       //after accepting, bring them to the activity
-      history.push(`/travelplans/${invitation.travelPlanId}`)
-    });
+      history.push(`/travelplans/${invitation.travelPlanId}`);
+    }
   }
   return (
     <Segment>
@@ -47,11 +38,13 @@ export const InvitationDetails: React.FC<{ invitation: IInvitation }> = ({
         </Grid.Column>
         <Grid.Column width={4}>
           <Button.Group floated="right">
-            <Button negative onClick={handleDeclineInvite}>
+            <Button negative onClick={() => manageInvitation(ManageInviteEnum.Decline)}>
               Decline
             </Button>
             <Button.Or />
-            <Button positive onClick={handleAcceptInvite}>Accept </Button>
+            <Button positive onClick={() => manageInvitation(ManageInviteEnum.Accept)}>
+              Accept{" "}
+            </Button>
           </Button.Group>
         </Grid.Column>
       </Grid>

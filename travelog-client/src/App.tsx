@@ -19,13 +19,14 @@ import { TravelPlanDetails } from "./features/travelplans/details/TravelPlanDeta
 import { TravelPlanManage } from "./features/travelplans/manage/TravelPlanManage";
 import { TravelPlanMap } from "./features/travelplans/map/TravelPlanMap";
 
-
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
+import NotFound from "./app/layout/NotFound";
+import Forbidden from "./app/layout/Forbidden";
 
 const App: React.FC<RouteComponentProps> = ({ location }) => {
   return (
     <Fragment>
-      <ToastContainer position='bottom-right'/>
+      <ToastContainer position="bottom-right" />
 
       <Route exact path="/" component={HomePage} />
       <Route exact path="/auth/signin-oidc" component={SignInCallBack} />
@@ -67,6 +68,9 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                     path="/profile/invitations/"
                     component={TravelPlanInvitations}
                   />
+                  <Route exact path="/forbidden" component={Forbidden} />
+
+                  <Route component={NotFound} />
                 </Switch>
               </Container>
             </Fragment>

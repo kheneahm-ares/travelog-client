@@ -14,6 +14,8 @@ import { TravelPlanDetailSidebar } from "./sidebar/TravelPlanDetailSidebar";
 import { openModal } from "./activities/activitySlice";
 import { Link } from "react-router-dom";
 import { InviteModal } from "./invite/InviteModal";
+import { TravelogConstants } from "../../../app/common/constants/Constants";
+import { history } from "../../..";
 
 interface IProps extends RouteComponentProps<{ id: string }> {}
 
@@ -29,7 +31,8 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
   const travelPlanId = match.params.id;
 
   useEffect(() => {
-    dispatch(loadTravelPlan(travelPlanId)).then(() => {
+    dispatch(loadTravelPlan(travelPlanId)).then((actionResult: any) => {
+
       setLoading(false);
       setIsHost(travelPlan?.createdById === user!.userId);
     });

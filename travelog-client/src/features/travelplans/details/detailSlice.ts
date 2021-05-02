@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { TravelPlanService } from "../../../app/api/travelog/TravelPlanService";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 import { history } from "../../..";
+import { TravelogConstants } from "../../../app/common/constants/Constants";
 
 //async thunks
 export const loadTravelPlan = createAsyncThunk(
@@ -15,8 +16,15 @@ export const loadTravelPlan = createAsyncThunk(
             return travelPlan;
         } catch (err)
         {
-            throw new Error('Error occurred loading travel plan');
-
+            const status = err.response.status;
+            if (status === 403)
+            {
+                throw new Error(TravelogConstants.FORBIDDEN);
+            }
+            else
+            {
+                throw new Error("Error occurred loading travel plan");
+            }
         }
     }
 )
@@ -43,7 +51,6 @@ interface IDetailSliceState
     loadingPlan: boolean;
     deletingTravelPlan: boolean;
     isModalOpen: boolean;
-
 }
 
 const initialState: IDetailSliceState = {

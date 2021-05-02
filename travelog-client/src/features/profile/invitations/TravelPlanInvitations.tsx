@@ -1,5 +1,12 @@
 import React, { Fragment, useEffect } from "react";
-import { Divider, Header, List } from "semantic-ui-react";
+import {
+  Dimmer,
+  Divider,
+  Header,
+  List,
+  Loader,
+  Segment,
+} from "semantic-ui-react";
 import { useAppDispatch, useAppSelector } from "../../../app/customHooks";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { InvitationDetails } from "./InvitationDetails";
@@ -16,24 +23,23 @@ export const TravelPlanInvitations = () => {
     dispatch(loadInvitationsAsync());
   }, [dispatch]);
 
-  if (loading && !invitations) {
-    return <LoadingComponent content="Loading Invitations" />;
-  }
-
   return (
     <Fragment>
       <Header as="h1" textAlign="center">
         Travel Plan Invitations
       </Header>
       <Divider />
-      {invitations.length === 0 ? (
+      {loading && !invitations ? (
+        <Dimmer.Dimmable as={Segment}>
+          <LoadingComponent content="Loading Invitations" />
+        </Dimmer.Dimmable>
+      ) : invitations!.length === 0 ? (
         <p>No Invitations</p>
       ) : (
         <List>
-          {invitations.map((inv) => (
+          {invitations!.map((inv) => (
             <InvitationDetails key={inv.id} invitation={inv!} />
           ))}
-
         </List>
       )}
     </Fragment>
