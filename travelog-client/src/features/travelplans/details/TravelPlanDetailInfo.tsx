@@ -14,7 +14,7 @@ export const TravelPlanDetailInfo: React.FC<IProps> = ({ travelPlan }) => {
             <Icon size="large" color="teal" name="info" />
           </Grid.Column>
           <Grid.Column width={15}>
-            <p>{travelPlan.description}</p>
+            <p>{travelPlan.description.length < 100 ? travelPlan.description : travelPlan.description.substring(0, 99) + "..."}</p>
           </Grid.Column>
         </Grid>
       </Segment>
@@ -24,18 +24,18 @@ export const TravelPlanDetailInfo: React.FC<IProps> = ({ travelPlan }) => {
             <Icon size="large" color="teal" name="calendar" />
           </Grid.Column>
           <Grid.Column width={15}>
-            <Grid>
-              <Grid.Column width={8}>
+            <Grid columns={2} divided>
+              <Grid.Column>
                 <p>
-                  Start Date:{" "}
-                  {moment(travelPlan.startDate).format("MMM Do YYYY")}
-                </p>
-              </Grid.Column>
-              <Grid.Column floated='right' width={6}>
-                <p>
-                  End Date:{" "}
+                  {moment(travelPlan.startDate).format("MMM Do YYYY")}-
                   {moment(travelPlan.endDate).format("MMM Do YYYY")}
                 </p>
+              </Grid.Column>
+              <Grid.Column >
+                <Icon size='large' color='teal' name='heartbeat'/>
+                <span>
+                  {travelPlan.travelPlanStatus.description}
+                </span>
               </Grid.Column>
             </Grid>
           </Grid.Column>

@@ -9,6 +9,7 @@ import {
   DropdownItem,
   Header,
   Item,
+  Label,
   Menu,
   Segment,
 } from "semantic-ui-react";

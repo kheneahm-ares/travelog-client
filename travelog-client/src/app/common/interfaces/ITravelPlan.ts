@@ -1,3 +1,4 @@
+import { ITravelPlanStatus } from "./ITravelPlanStatus";
 import { ITravelPlanTraveler } from "./ITravelPlanTraveler";
 
 export interface ITravelPlan
@@ -9,4 +10,5 @@ export interface ITravelPlan
     description: string;
     createdById: string;
     travelers: ITravelPlanTraveler[];
+    travelPlanStatus: ITravelPlanStatus;
 }

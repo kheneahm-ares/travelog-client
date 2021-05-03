@@ -27,12 +27,12 @@ export const TravelPlanListItem: React.FC<IProps> = ({ travelPlan }) => {
                 {moment(travelPlan.endDate).format("MMM Do YYYY")}
               </Item.Meta>
               <Item.Description>{travelPlan.description}</Item.Description>
-
               {difference < 20 && (
                 <Item.Description style={{color: "red"}}>
                   Coming up soon in {difference} days!
                 </Item.Description>
               )}
+              <Item.Extra>{travelPlan.travelPlanStatus.description}</Item.Extra>
             </Item.Content>
           </Item>
         </Item.Group>
