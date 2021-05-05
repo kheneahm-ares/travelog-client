@@ -1,10 +1,12 @@
 import { AxiosResponse } from "axios";
 import { history } from "../../..";
 import { ITravelPlan } from "../../common/interfaces/ITravelPlan";
+import { ITravelPlanStatus } from "../../common/interfaces/ITravelPlanStatus";
 import { travelogAgent } from "./agent";
 
 export const TravelPlanService = {
     list: getTravelPlans,
+    statuses: getTravelPlanStatuses,
     update: updateTravelPlan,
     details: getTravelPlan,
     create: createTravelPlan,
@@ -13,11 +15,33 @@ export const TravelPlanService = {
     invite: inviteTraveler
 }
 
-async function getTravelPlans(): Promise<ITravelPlan[]> 
+async function getTravelPlans(status: number): Promise<ITravelPlan[]> 
 {
     try
     {
-        var response = await travelogAgent.get<ITravelPlan[]>('/TravelPlan/List');
+        var response: AxiosResponse<ITravelPlan[]>;
+        if(status === -1)
+        {
+            response = await travelogAgent.get<ITravelPlan[]>('/TravelPlan/List');
+
+        }
+        else
+        {
+            response = await travelogAgent.get<ITravelPlan[]>(`/TravelPlan/List?status=${status}`);
+        }
+        return response.data;
+    }
+    catch (err)
+    {
+        throw err;
+    }
+}
+
+async function getTravelPlanStatuses(): Promise<ITravelPlanStatus[]> 
+{
+    try
+    {
+        var response = await travelogAgent.get<ITravelPlanStatus[]>('/TravelPlanStatus/List');
         return response.data;
     }
     catch (err)

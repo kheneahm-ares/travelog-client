@@ -5,31 +5,20 @@ import { Divider, Grid, Header } from "semantic-ui-react";
 import { useAppDispatch } from "../../../app/customHooks";
 import { RootState } from "../../../app/store";
 import { loadUserTravelPlansAsync } from "./dashboardSlice";
-import { TravelPlanList } from "./TravelPlanList";
-import { TravelPlanListPlaceholder } from "./TravelPlanListPlaceholder";
+import { TravelPlanBody } from "./TravelPlanBody";
+import { TravelPlanStatusFilter } from "./TravelPlanStatusFilter";
 
 export const TravelPlanDashboard = () => {
-  const { isTravelPlansLoading } = useSelector(
-    (state: RootState) => state.dashboardReducer
-  );
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(loadUserTravelPlansAsync());
-  }, [dispatch]);
-
+  console.log('dash');
   return (
     <Grid>
       <Grid.Column width={10}>
         <Header size='huge' textAlign='center' >Travel Plans</Header>
+        <TravelPlanStatusFilter/>
         <Divider />
       </Grid.Column>
       <Grid.Column width={10}>
-        {isTravelPlansLoading ? (
-          <TravelPlanListPlaceholder />
-        ) : (
-          <TravelPlanList />
-        )}
+        <TravelPlanBody/>
       </Grid.Column>
     </Grid>
   );

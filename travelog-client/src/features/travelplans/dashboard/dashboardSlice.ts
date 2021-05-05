@@ -1,16 +1,34 @@
 import { createAsyncThunk, createSlice, isRejectedWithValue, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { TravelPlanService } from "../../../app/api/travelog/TravelPlanService";
+import { TravelPlanStatusEnum } from "../../../app/common/enums/TravelPlanStatusEnum";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 
 export const loadUserTravelPlansAsync = createAsyncThunk(
     'dashboard/userTravelPlans',
+    async (tpStatus: number, thunkAPI) => 
+    {
+        try
+        {
+            var travelPlans = await TravelPlanService.list(tpStatus);
+            return travelPlans;
+        }
+        catch(err)
+        {
+            //log?
+            throw new Error('Error occurred loading Travel Plans');
+        }
+    }
+)
+
+export const loadTravelPlanStatusesAsync = createAsyncThunk(
+    'dashboard/travelPlanStatuses',
     async (args, thunkAPI) => 
     {
         try
         {
-            var travelPlans = await TravelPlanService.list();
-            return travelPlans;
+            var tpStatuses = await TravelPlanService.statuses();
+            return tpStatuses;
         }
         catch(err)
         {
