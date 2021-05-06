@@ -53,6 +53,7 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                     path={["/travelplans/edit/:id", "/create/travelplan"]}
                     component={TravelPlanManage}
                   />
+
                   <PrivateRoute
                     exact
                     path="/travelplans/:id"
