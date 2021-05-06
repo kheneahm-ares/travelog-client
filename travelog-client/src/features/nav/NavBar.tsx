@@ -16,7 +16,7 @@ import { signOutRedirectAsync, signOutUser } from "../auth/authSlice";
 
 export const NavBar = () => {
   const dispatch = useAppDispatch();
-  const user = useSelector((state: RootState) => state.authReducer.user);
+  const user = AuthService.getAppUser();
   const doesAppHaveToken = AuthService.hasToken();
 
   function handleSignOut() {

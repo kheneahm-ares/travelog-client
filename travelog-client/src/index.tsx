@@ -7,21 +7,18 @@ import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { Provider } from "react-redux";
 import storeConfigs from "./app/store";
-import { PersistGate } from "redux-persist/integration/react";
-import 'semantic-ui-css/semantic.min.css'
-import 'react-widgets/dist/css/react-widgets.css';
-import dateFnsLocalizer from 'react-widgets-date-fns';
+import "semantic-ui-css/semantic.min.css";
+import "react-widgets/dist/css/react-widgets.css";
+import dateFnsLocalizer from "react-widgets-date-fns";
 
-dateFnsLocalizer()
+dateFnsLocalizer();
 export const history = createBrowserHistory();
 
 ReactDOM.render(
   <Provider store={storeConfigs().store}>
-    <PersistGate loading={null} persistor={storeConfigs().persistor}>
-      <Router history={history}>
-        <App />
-      </Router>
-    </PersistGate>
+    <Router history={history}>
+      <App />
+    </Router>
   </Provider>,
   document.getElementById("root")
 );

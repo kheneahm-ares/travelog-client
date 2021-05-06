@@ -122,7 +122,6 @@ const signInUserCallback = async (): Promise<IUser> =>
         const appUser: IUser = {
             userId: user!.profile.sub,
             userName: user.profile.name!,
-            token: user.access_token
         }
         return appUser;
     }
@@ -131,8 +130,7 @@ const signInUserCallback = async (): Promise<IUser> =>
         console.log(e);
         return {
             userId: '',
-            userName: '',
-            token: ''
+            userName: ''
         }
     }
     finally
@@ -172,7 +170,6 @@ const signInSilentCallback = async () =>
         const appUser: IUser = {
             userId: user!.profile.sub,
             userName: user!.profile.name!,
-            token: user!.access_token
         }
         return appUser;
     }
@@ -181,9 +178,8 @@ const signInSilentCallback = async () =>
         console.log('problem getting user from storage');
         return {
             userId: '',
-            userName: '',
-            token: ''
-        } 
+            userName: ''
+        }
     }
 
 }
@@ -192,9 +188,29 @@ const getOidcUser = async (): Promise<Oidc.User | null> =>
     return await userManager.getUser();
 }
 
+const getAppUser = (): IUser | null => 
+{
+    const token = JSON.parse(window.localStorage.getItem(`oidc.user:${process.env.REACT_APP_AUTH_URL}:${process.env.REACT_APP_IDENTITY_CLIENT_ID}`)!);
+
+    if (token)
+    {
+        const appUser: IUser = {
+            userId: token.profile.sub,
+            userName: token.profile.name!
+        }
+        return appUser;
+
+    }
+    else
+    {
+        return null;
+    }
+}
+
 const hasToken = (): boolean => 
 {
-    const token = window.localStorage.getItem(`oidc.user:${process.env.REACT_APP_AUTH_URL}:${process.env.REACT_APP_IDENTITY_CLIENT_ID}`);
+
+    const token = JSON.parse(window.localStorage.getItem(`oidc.user:${process.env.REACT_APP_AUTH_URL}:${process.env.REACT_APP_IDENTITY_CLIENT_ID}`)!);
     if (token == null) return false;
 
     return true;
@@ -213,6 +229,7 @@ export const AuthService = {
     signInRedirect,
     registerUser,
     getOidcUser,
+    getAppUser,
     signOut,
     hasToken,
     signInSilentCallback

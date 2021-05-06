@@ -1,14 +1,10 @@
-import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { AuthService } from "../../app/auth/AuthServices";
-import { RootState } from "../../app/store";
 import React, { Fragment, useState } from "react";
 import { Button, Container, Header, Segment, Image } from "semantic-ui-react";
-import { openModal } from "../travelplans/details/activities/activitySlice";
 
 export const HomePage = () => {
-  const user = useSelector((state: RootState) => state.authReducer.user);
-  const doesAppHaveToken = AuthService.hasToken();
+  const user = AuthService.getAppUser();
   const [loading, setLoading] = useState({
     signingIn: false,
     registering: false,
@@ -28,7 +24,7 @@ export const HomePage = () => {
         <Header as="h1" inverted>
           Travelog
         </Header>
-        {user != null && doesAppHaveToken ? (
+        {user != null ? (
           <Fragment>
             <Header
               as="h2"

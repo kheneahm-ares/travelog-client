@@ -7,50 +7,21 @@ import activityReducer from '../features/travelplans/details/activities/activity
 import mapReducer from '../features/travelplans/map/mapSlice';
 import invitationReducer from '../features/profile/invitations/InvitationSlice';
 import sidebarReducer from '../features/travelplans/details/sidebar/sidebarSlice';
-import
-{
-  persistStore,
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER
-} from 'redux-persist'
-import storage from 'redux-persist/lib/storage';
-
-
-const persistConfig = {
-  key: 'root',
-  version: 1,
-  storage,
-  blacklist: ['dashboardReducer', 'detailReducer',
-    'manageReducer', 'activityReducer', 'mapReducer', 'invitationReducer', 'sidebarReducer']
-};
 
 const rootReducer = combineReducers({
   authReducer, dashboardReducer, detailReducer,
   manageReducer, activityReducer, mapReducer, invitationReducer, sidebarReducer
 });
-const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 const store = configureStore({
-  reducer: persistedReducer,
-  middleware: getDefaultMiddleware({
-    serializableCheck: {
-      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
-    }
-  })
+  reducer: rootReducer
 })
 
-const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 
 const configures = () => ({
-  store,
-  persistor
+  store
 })
 export default configures

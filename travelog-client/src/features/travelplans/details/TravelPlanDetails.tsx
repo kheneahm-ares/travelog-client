@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import { InviteModal } from "./invite/InviteModal";
 import { TravelogConstants } from "../../../app/common/constants/Constants";
 import { history } from "../../..";
+import { AuthService } from "../../../app/auth/AuthServices";
 
 interface IProps extends RouteComponentProps<{ id: string }> {}
 
@@ -24,7 +25,7 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
   const { travelPlan, loadingPlan, deletingTravelPlan } = useSelector(
     (state: RootState) => state.detailReducer
   );
-  const { user } = useAppSelector((state: RootState) => state.authReducer);
+  const userId  = AuthService.getAppUser()?.userId;
 
   const [isHost, setIsHost] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -34,13 +35,13 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
     dispatch(loadTravelPlan(travelPlanId)).then((actionResult: any) => {
 
       setLoading(false);
-      setIsHost(travelPlan?.createdById === user!.userId);
+      setIsHost(travelPlan?.createdById === userId);
     });
 
     return () => {
       setLoading(true);
     };
-  }, [dispatch, travelPlan?.createdById, travelPlanId, user]);
+  }, [dispatch, travelPlan?.createdById, travelPlanId,userId]);
 
   function handleAdd() {
     dispatch(openModal(null));
@@ -66,7 +67,7 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
               travelers={travelPlan?.travelers!}
               creatorId={travelPlan?.createdById!}
               travelPlanId={travelPlan?.id!}
-              loggedInUserId={user?.userId!}
+              loggedInUserId={userId!}
             />
           </Grid.Column>
         </Grid.Row>

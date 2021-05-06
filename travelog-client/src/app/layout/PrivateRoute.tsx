@@ -13,14 +13,13 @@ export const PrivateRoute: React.FC<IProps> = ({
   component: Component,
   ...rest
 }) => {
-  const user = useSelector(getUser);
-  const doesAppHaveToken = AuthService.hasToken();
+  const user = AuthService.getAppUser();
 
   return (
     <Route
       {...rest}
       render={(props: any) => {
-        if (user && doesAppHaveToken) {
+        if (user) {
           return <Component {...props} />;
         } else {
           return <Redirect to={"/"} />;
