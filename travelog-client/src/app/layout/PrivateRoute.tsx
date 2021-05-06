@@ -1,7 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { Redirect, Route, RouteComponentProps, RouteProps } from "react-router";
-import { getUser } from "../../features/auth/authSlice";
 import { AuthService } from "../auth/AuthServices";
 
 interface IProps extends RouteProps {

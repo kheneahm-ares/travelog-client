@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { Button, Container, Grid, Segment } from "semantic-ui-react";
-import { useAppDispatch, useAppSelector } from "../../../app/customHooks";
+import { useAppDispatch } from "../../../app/customHooks";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { RootState } from "../../../app/store";
 import { ActivityModal } from "./activities/ActivityModal";
@@ -14,8 +14,6 @@ import { TravelPlanDetailSidebar } from "./sidebar/TravelPlanDetailSidebar";
 import { openModal } from "./activities/activitySlice";
 import { Link } from "react-router-dom";
 import { InviteModal } from "./invite/InviteModal";
-import { TravelogConstants } from "../../../app/common/constants/Constants";
-import { history } from "../../..";
 import { AuthService } from "../../../app/auth/AuthServices";
 
 interface IProps extends RouteComponentProps<{ id: string }> {}

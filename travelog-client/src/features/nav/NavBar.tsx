@@ -1,5 +1,4 @@
-import React, { Fragment } from "react";
-import { useSelector } from "react-redux";
+import { Fragment } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
   Button,
@@ -11,7 +10,6 @@ import {
 } from "semantic-ui-react";
 import { AuthService } from "../../app/auth/AuthServices";
 import { useAppDispatch } from "../../app/customHooks";
-import { RootState } from "../../app/store";
 import { signOutRedirectAsync, signOutUser } from "../auth/authSlice";
 
 export const NavBar = () => {
