@@ -1,8 +1,9 @@
-import { createAsyncThunk, createSlice, isRejectedWithValue, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { TravelPlanService } from "../../../app/api/travelog/TravelPlanService";
-import { TravelPlanStatusEnum } from "../../../app/common/enums/TravelPlanStatusEnum";
+import { TravelPlanHelper } from "../../../app/common/helpers/TravelPlanHelper";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
+import { RootState } from "../../../app/store";
 
 export const loadUserTravelPlansAsync = createAsyncThunk(
     'dashboard/userTravelPlans',
@@ -13,7 +14,7 @@ export const loadUserTravelPlansAsync = createAsyncThunk(
             var travelPlans = await TravelPlanService.list(tpStatus);
             return travelPlans;
         }
-        catch(err)
+        catch (err)
         {
             //log?
             throw new Error('Error occurred loading Travel Plans');
@@ -30,7 +31,7 @@ export const loadTravelPlanStatusesAsync = createAsyncThunk(
             var tpStatuses = await TravelPlanService.statuses();
             return tpStatuses;
         }
-        catch(err)
+        catch (err)
         {
             //log?
             throw new Error('Error occurred loading Travel Plans');
@@ -38,14 +39,17 @@ export const loadTravelPlanStatusesAsync = createAsyncThunk(
     }
 )
 
-interface IDashboardInitialState {
-    travelPlans: ITravelPlan[]
+interface IDashboardInitialState
+{
+    travelPlans: ITravelPlan[];
+    searchedTravelPlans: ITravelPlan[]
     isTravelPlansLoading: boolean
 }
 
 const initialState: IDashboardInitialState =
 {
     travelPlans: [],
+    searchedTravelPlans: [],
     isTravelPlansLoading: true
 }
 
@@ -53,7 +57,13 @@ const dashboardSlice = createSlice({
     name: 'dashboard',
     initialState: initialState,
     reducers: {
-
+        filterTravelPlans: (state, action: PayloadAction<string>) =>
+        {
+            state.searchedTravelPlans = state.travelPlans.filter((s) =>
+            {
+                return s.name.toLowerCase().includes(action.payload)
+            });
+        }
     },
     extraReducers: {
         [loadUserTravelPlansAsync.pending as any]: (state) => 
@@ -63,15 +73,28 @@ const dashboardSlice = createSlice({
         [loadUserTravelPlansAsync.fulfilled as any]: (state, action: PayloadAction<ITravelPlan[]>) => 
         {
             state.travelPlans = action.payload;
+            state.searchedTravelPlans = action.payload;
             state.isTravelPlansLoading = false;
         },
         [loadUserTravelPlansAsync.rejected as any]: (state, action) => 
         {
             state.travelPlans = [];
+            state.searchedTravelPlans = [];
             state.isTravelPlansLoading = true;
             toast.error(action.error.message);
         }
     }
 });
+
+
+export const getTravelPlansByDate = () => (state: RootState) =>
+{
+
+    const groupedTravelPlansByDate = TravelPlanHelper.getTravelPlanByDate(state.dashboardReducer.searchedTravelPlans);
+
+    return groupedTravelPlansByDate;
+}
+
+export const { filterTravelPlans } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;
