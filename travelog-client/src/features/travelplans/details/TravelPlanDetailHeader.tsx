@@ -14,10 +14,11 @@ import {
   Segment,
 } from "semantic-ui-react";
 import { history } from "../../..";
+import { TravelPlanStatusEnum } from "../../../app/common/enums/TravelPlanStatusEnum";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 import { IUser } from "../../../app/common/interfaces/IUser";
 import { useAppDispatch, useAppSelector } from "../../../app/customHooks";
-import { deleteTravelPlan } from "./detailSlice";
+import { deleteTravelPlan, setTravelPlanStatus } from "./detailSlice";
 
 interface IProps {
   travelPlan: ITravelPlan;
@@ -54,6 +55,34 @@ export const TravelPlanDetailHeader: React.FC<IProps> = ({
     setConfirmDelete({ open: true, confirmed: false });
   }
 
+  async function handleChangeStatus(uniqStatus: number) {
+    const actionResult: any = await dispatch(
+      setTravelPlanStatus({
+        travelPlanId: travelPlan.id,
+        uniqStatus: uniqStatus,
+      })
+    );
+    console.log(actionResult);
+
+    if (actionResult.error) {
+      toast.error(actionResult.error.message);
+    } else {
+      switch (uniqStatus) {
+        case TravelPlanStatusEnum.Archived:
+          toast.success(`Successfully Archived Travel Plan Status`);
+          break;
+        case TravelPlanStatusEnum.Completed:
+          toast.success(`Successfully Completed Travel Plan Status. Congrats!!!`);
+          break;
+        case TravelPlanStatusEnum.OnGoing:
+          toast.success(`Successfully Started Travel Plan Status`);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
   return (
     <Fragment>
       <Confirm
@@ -79,9 +108,61 @@ export const TravelPlanDetailHeader: React.FC<IProps> = ({
               float: "right",
               top: "10px",
             }}
-            // options={dropdownOptions}
           >
             <Dropdown.Menu>
+              {travelPlan.travelPlanStatus.uniqStatus ===
+                TravelPlanStatusEnum.Created && (
+                <Fragment>
+                  <DropdownItem
+                    text="Start"
+                    icon="play"
+                    onClick={() =>
+                      handleChangeStatus(TravelPlanStatusEnum.OnGoing)
+                    }
+                  />
+                  <DropdownItem
+                    text="Archive"
+                    icon="save"
+                    onClick={() =>
+                      handleChangeStatus(TravelPlanStatusEnum.Archived)
+                    }
+                  />
+                </Fragment>
+              )}
+              {travelPlan.travelPlanStatus.uniqStatus ===
+                TravelPlanStatusEnum.OnGoing && (
+                <Fragment>
+                  <DropdownItem
+                    text="Archive"
+                    icon="save"
+                    onClick={() =>
+                      handleChangeStatus(TravelPlanStatusEnum.Archived)
+                    }
+                  />
+                  <DropdownItem
+                    text="Complete"
+                    icon="clipboard check"
+                    onClick={() =>
+                      handleChangeStatus(TravelPlanStatusEnum.Completed)
+                    }
+                  />
+                </Fragment>
+              )}
+              {(travelPlan.travelPlanStatus.uniqStatus ===
+                TravelPlanStatusEnum.Archived ||
+                travelPlan.travelPlanStatus.uniqStatus ===
+                  TravelPlanStatusEnum.Completed) && (
+                <Fragment>
+                  <DropdownItem
+                    text="Start"
+                    icon="play"
+                    onClick={() =>
+                      handleChangeStatus(TravelPlanStatusEnum.OnGoing)
+                    }
+                  />
+                </Fragment>
+              )}
+
               <DropdownItem
                 icon="edit"
                 as={Link}

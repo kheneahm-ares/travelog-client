@@ -12,7 +12,8 @@ export const TravelPlanService = {
     create: createTravelPlan,
     removeTraveler: removeTraveler,
     delete: deleteTravelPlan,
-    invite: inviteTraveler
+    invite: inviteTraveler,
+    setStatus: updateTravelPlanStatus
 }
 
 async function getTravelPlans(status: number): Promise<ITravelPlan[]> 
@@ -20,7 +21,7 @@ async function getTravelPlans(status: number): Promise<ITravelPlan[]>
     try
     {
         var response: AxiosResponse<ITravelPlan[]>;
-        if(status === -1)
+        if (status === -1)
         {
             response = await travelogAgent.get<ITravelPlan[]>('/TravelPlan/List');
 
@@ -54,6 +55,18 @@ async function updateTravelPlan(travelPlan: ITravelPlan): Promise<ITravelPlan>
     try
     {
         var response = await travelogAgent.put<ITravelPlan>(`/TravelPlan/Edit`, travelPlan);
+        return response.data;
+    }
+    catch (err)
+    {
+        throw err;
+    }
+}
+async function updateTravelPlanStatus(travelPlanId: string, uniqStatus: number): Promise<any> 
+{
+    try
+    {
+        var response = await travelogAgent.post<any>(`/TravelPlan/SetStatus?id=${travelPlanId}&status=${uniqStatus}`, {});
         return response.data;
     }
     catch (err)

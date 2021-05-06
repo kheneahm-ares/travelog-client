@@ -4,6 +4,8 @@ import { TravelPlanService } from "../../../app/api/travelog/TravelPlanService";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
 import { history } from "../../..";
 import { TravelogConstants } from "../../../app/common/constants/Constants";
+import { TravelPlanStatusEnum } from "../../../app/common/enums/TravelPlanStatusEnum";
+import { ITravelPlanStatus } from "../../../app/common/interfaces/ITravelPlanStatus";
 
 //async thunks
 export const loadTravelPlan = createAsyncThunk(
@@ -41,6 +43,30 @@ export const deleteTravelPlan = createAsyncThunk(
         {
             throw new Error('Error occurred deleting travel plan');
 
+        }
+    }
+)
+
+export const setTravelPlanStatus = createAsyncThunk(
+    'detail/setTravelPlanStatus',
+    async ({ travelPlanId, uniqStatus }: { travelPlanId: string, uniqStatus: number }) =>
+    {
+        try
+        {
+            const response = await TravelPlanService.setStatus(travelPlanId, uniqStatus);
+
+            return response[travelPlanId];
+        } catch (err)
+        {
+            const status = err.response.status;
+            if (status === 403)
+            {
+                throw new Error(TravelogConstants.FORBIDDEN);
+            }
+            else
+            {
+                throw new Error("Error occurred loading travel plan");
+            }
         }
     }
 )
@@ -103,7 +129,23 @@ const detailSlice = createSlice(
             [deleteTravelPlan.rejected as any]: (state, action) =>
             {
                 state.deletingTravelPlan = false;
-            }
+            },
+            [setTravelPlanStatus.pending as any]: (state) =>
+            {
+                state.loadingPlan = true;
+            },
+            [setTravelPlanStatus.fulfilled as any]: (state, action: PayloadAction<ITravelPlanStatus>) =>
+            {
+                state.travelPlan!.travelPlanStatus = action.payload;
+                state.loadingPlan = false;
+            },
+            [setTravelPlanStatus.rejected as any]: (state, action) =>
+            {
+                state.travelPlan = null;
+                state.loadingPlan = true;
+
+                toast.error(action.error.message);
+            },
         }
     }
 )

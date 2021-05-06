@@ -41,7 +41,7 @@ export const loadTravelPlanStatusesAsync = createAsyncThunk(
 
 interface IDashboardInitialState
 {
-    travelPlans: ITravelPlan[];
+    travelPlans: ITravelPlan[]; //the original travel plan registry
     searchedTravelPlans: ITravelPlan[]
     isTravelPlansLoading: boolean
 }
@@ -59,9 +59,9 @@ const dashboardSlice = createSlice({
     reducers: {
         filterTravelPlans: (state, action: PayloadAction<string>) =>
         {
-            state.searchedTravelPlans = state.travelPlans.filter((s) =>
+            state.searchedTravelPlans = state.travelPlans.filter((tp) =>
             {
-                return s.name.toLowerCase().includes(action.payload)
+                return tp.name.toLowerCase().includes(action.payload)
             });
         }
     },
