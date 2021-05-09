@@ -1,13 +1,17 @@
 import React from "react";
 import { Button } from "semantic-ui-react";
+import { AnnouncementList } from "./AnnouncementList";
 
-export const TravelPlanAnnouncements: React.FC<{ isHost: boolean }> = ({
-  isHost,
-}) => {
+interface IProps {
+  isHost: boolean;
+  travelPlanID: string;
+}
+
+export const TravelPlanAnnouncements: React.FC<IProps> = ({ isHost, travelPlanID}) => {
   return (
     <div>
-      {isHost && <Button>Create Announcement</Button>}
-      Announcements
+      {isHost && <Button floated="right" color="orange">Create Announcement</Button>}
+      <AnnouncementList travelPlanID={travelPlanID}/>
     </div>
   );
 };

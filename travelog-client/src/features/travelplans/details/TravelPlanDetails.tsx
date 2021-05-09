@@ -81,7 +81,7 @@ export const TravelPlanDetails: React.FC<IProps> = ({ match }) => {
             <TravelPlanDetailsHome isHost={isHost} />
           )}
           {view === DetailViewsEnum.Announcements && (
-            <TravelPlanAnnouncements isHost={isHost} />
+            <TravelPlanAnnouncements isHost={isHost} travelPlanID={travelPlanId}/>
           )}
           {view === DetailViewsEnum.News && <TravenPlanNews />}
         </Container>

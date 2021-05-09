@@ -7,10 +7,12 @@ import activityReducer from '../features/travelplans/details/activities/activity
 import mapReducer from '../features/travelplans/map/mapSlice';
 import invitationReducer from '../features/profile/invitations/InvitationSlice';
 import sidebarReducer from '../features/travelplans/details/sidebar/sidebarSlice';
+import announcementReducer from '../features/travelplans/details/announcements/announcementSlice';
 
 const rootReducer = combineReducers({
   authReducer, dashboardReducer, detailReducer,
-  manageReducer, activityReducer, mapReducer, invitationReducer, sidebarReducer
+  manageReducer, activityReducer, mapReducer, invitationReducer, sidebarReducer,
+  announcementReducer
 });
 
 const store = configureStore({
