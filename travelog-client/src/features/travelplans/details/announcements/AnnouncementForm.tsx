@@ -12,6 +12,7 @@ import {
   submitAnnouncementCreate,
   submitAnnouncementEdit,
 } from "./announcementSlice";
+import { announcementValidator } from "../../../../app/common/form/validators/announcementValidator";
 
 interface IProps {
   initialAnnouncement: ITPAnnouncement | null;
@@ -43,7 +44,7 @@ export const AnnouncementForm: React.FC<IProps> = ({
       values.travelPlanId = travelPlanID;
       actionResult = await dispatch(
         submitAnnouncementCreate({
-          announcement: values
+          announcement: values,
         })
       );
     }
@@ -53,7 +54,7 @@ export const AnnouncementForm: React.FC<IProps> = ({
     }
 
     setFormSubmitting(false);
-    dispatch(manageFormShow({showForm: false, announcementTargetID: null}));
+    dispatch(manageFormShow({ showForm: false, announcementTargetID: null }));
   }
 
   function handleCancelEdit() {
@@ -73,6 +74,7 @@ export const AnnouncementForm: React.FC<IProps> = ({
   return (
     <Fragment>
       <FinalForm
+        validate={announcementValidator}
         subscription={{ submitting: true, pristine: true }}
         initialValues={announcement}
         onSubmit={(values) => handleAnnouncementSubmit(values)}

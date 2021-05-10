@@ -13,6 +13,8 @@ import { history } from "../../../";
 import { createTravelPlan, submitTravelPlanEdit } from "./manageSlice";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { travelPlanValidator } from "../../../app/common/form/validators/travelPlanValidator";
+import moment from "moment";
 
 interface IProps {
   initialTravelPlan: ITravelPlan | null;
@@ -30,36 +32,44 @@ export const TravelPlanForm: React.FC<IProps> = ({ initialTravelPlan }) => {
   );
 
   async function handleTravelPlanSubmit(formPlan: any) {
-    console.log("submitting");
-    //change dates back to isos
-    formPlan.startDate = new Date(formPlan.startDate).toISOString();
-    formPlan.endDate = new Date(formPlan.endDate).toISOString();
+    const endStartDiff = moment(formPlan.endDate).diff(
+      moment(formPlan.startDate),
+      "days"
+    );
 
-    //create/edit then go to travelplan page
-    try {
-      if (initialTravelPlan) {
-        const actionResult: any = await dispatch(
-          submitTravelPlanEdit(formPlan)
-        );
+    //start should at least be equal or ahead
+    if (endStartDiff < 0) {
+      toast.error("Invalid Start and End Dates");
+    } else {
+      //change dates back to isos
+      formPlan.startDate = new Date(formPlan.startDate).toISOString();
+      formPlan.endDate = new Date(formPlan.endDate).toISOString();
 
-        if (actionResult.error) {
-          toast.error(actionResult.error.message);
+      //create/edit then go to travelplan page
+      try {
+        if (initialTravelPlan) {
+          const actionResult: any = await dispatch(
+            submitTravelPlanEdit(formPlan)
+          );
+
+          if (actionResult.error) {
+            toast.error(actionResult.error.message);
+          } else {
+            history.push(`/travelplans/${travelPlan?.id}`);
+          }
         } else {
-          history.push(`/travelplans/${travelPlan?.id}`);
-        }
-      } else {
-        const actionResult: any = await dispatch(createTravelPlan(formPlan));
+          const actionResult: any = await dispatch(createTravelPlan(formPlan));
 
-        if (actionResult.error) {
-          toast.error(actionResult.error.message);
-        } else {
-          const newPlan: ITravelPlan = actionResult.payload as ITravelPlan;
-          history.push(`/travelplans/${newPlan.id}`);
+          if (actionResult.error) {
+            toast.error(actionResult.error.message);
+          } else {
+            const newPlan: ITravelPlan = actionResult.payload as ITravelPlan;
+            history.push(`/travelplans/${newPlan.id}`);
+          }
         }
+      } catch (err) {
+        // console.log(err);
       }
-    } catch (err) {
-      // console.log(err);
-      
     }
   }
 
@@ -80,9 +90,10 @@ export const TravelPlanForm: React.FC<IProps> = ({ initialTravelPlan }) => {
       <Grid.Column width={12}>
         <Segment>
           <FinalForm
+            validate={travelPlanValidator}
             initialValues={formTravelPlan}
             onSubmit={(values) => handleTravelPlanSubmit(values)}
-            render={({ handleSubmit, pristine }) => (
+            render={({ handleSubmit, pristine, values }) => (
               <Form onSubmit={handleSubmit}>
                 <FinalField
                   name="name"
@@ -96,6 +107,11 @@ export const TravelPlanForm: React.FC<IProps> = ({ initialTravelPlan }) => {
                     component={DateInput}
                     date={true}
                     label="Start Date"
+                    onCurrentDateChange={(newStartDate: any) => {
+                      if (newStartDate > values.endDate) {
+                        values.endDate = newStartDate;
+                      }
+                    }}
                   />
                   <FinalField
                     name="endDate"
@@ -103,6 +119,7 @@ export const TravelPlanForm: React.FC<IProps> = ({ initialTravelPlan }) => {
                     component={DateInput}
                     date={true}
                     label="End Date"
+                    min={values.startDate}
                   />
                 </Form.Group>
                 <FinalField

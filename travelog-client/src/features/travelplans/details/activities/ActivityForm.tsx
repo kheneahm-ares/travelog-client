@@ -16,9 +16,10 @@ import { ITravelPlanActivityForm } from "../../../../app/common/interfaces/ITrav
 import { ActivityFormValues } from "../../../../app/common/classes/ActivityFormValues";
 import { LocationInput } from "../../../../app/common/form/LocationInput";
 import LoadingComponent from "../../../../app/layout/LoadingComponent";
-import {
-  geocodeByAddress,
-} from "react-google-places-autocomplete";
+import { geocodeByAddress } from "react-google-places-autocomplete";
+import { activityValidator } from "../../../../app/common/form/validators/activityValidator";
+import moment from "moment";
+import { toast } from "react-toastify";
 
 interface IProps {
   initialActivity: ITravelPlanActivity | null;
@@ -42,28 +43,39 @@ export const ActivityForm: React.FC<IProps> = ({
   const [formLoading, setFormLoading] = useState(true);
 
   async function handleActivitySubmit(formActivity: any) {
-    //before sending to API, turn the dates back to ISO strings as we expect it from the API
-    //since they were transformed on the UI to show localized date
-    formActivity.startTime = new Date(formActivity.startTime).toISOString();
-    formActivity.endTime = new Date(formActivity.endTime).toISOString();
+    const endStartDiff = moment(formActivity.endTime).diff(
+      moment(formActivity.startTime),
+      "minutes"
+    );
 
-    var results = await geocodeByAddress(formActivity.location.address);
-    formActivity.location = {
-      ...formActivity.location,
-      latitude: results[0].geometry.location.lat(),
-      longitude: results[0].geometry.location.lng(),
-    };
-
-    //if there was an initial, it was an edit
-    if (initialActivity) {
-      dispatch(submitActivityEdit(formActivity)).then(() => {
-        dispatch(loadTravelPlanActivities(travelPlanId));
-      });
+    if (endStartDiff < 0) {
+      toast.error("Invalid Start and End Times");
+    } else if (formActivity.location.address === "") {
+      toast.error("Invalid Location");
     } else {
-      formActivity.travelPlanId = travelPlanId;
-      dispatch(createActivity(formActivity)).then(() => {
-        dispatch(loadTravelPlanActivities(travelPlanId));
-      });
+      //before sending to API, turn the dates back to ISO strings as we expect it from the API
+      //since they were transformed on the UI to show localized date
+      formActivity.startTime = new Date(formActivity.startTime).toISOString();
+      formActivity.endTime = new Date(formActivity.endTime).toISOString();
+
+      var results = await geocodeByAddress(formActivity.location.address);
+      formActivity.location = {
+        ...formActivity.location,
+        latitude: results[0].geometry.location.lat(),
+        longitude: results[0].geometry.location.lng(),
+      };
+
+      //if there was an initial, it was an edit
+      if (initialActivity) {
+        dispatch(submitActivityEdit(formActivity)).then(() => {
+          dispatch(loadTravelPlanActivities(travelPlanId));
+        });
+      } else {
+        formActivity.travelPlanId = travelPlanId;
+        dispatch(createActivity(formActivity)).then(() => {
+          dispatch(loadTravelPlanActivities(travelPlanId));
+        });
+      }
     }
   }
   function handleFormClose() {
@@ -78,6 +90,7 @@ export const ActivityForm: React.FC<IProps> = ({
       setActivity(new ActivityFormValues());
     };
   }, [initialActivity]);
+
   return (
     <Fragment>
       {formLoading ? (
@@ -85,12 +98,20 @@ export const ActivityForm: React.FC<IProps> = ({
       ) : (
         //using subscription, tell FinalForm to only re-render as a whole if it's submitting
         //or if the pristine value is changed
-        //tell its fields to only render when the field itself has been interacted with
+        //tell its fields to only render when the field itself has been interacted with,
+        //in this case, we HAVE to subscribe to values, so unfortunately, it wil re-render as a whole on any
+        //input change
         <FinalForm
-          subscription={{ submitting: true, pristine: true }}
+          validate={activityValidator}
+          subscription={{
+            submitting: true,
+            pristine: true,
+            values: true,
+            valid: true,
+          }}
           initialValues={activity}
           onSubmit={(values) => handleActivitySubmit(values)}
-          render={({ handleSubmit, pristine }) => (
+          render={({ handleSubmit, pristine, values, valid }) => (
             <Form onSubmit={handleSubmit}>
               <FinalField
                 name="name"
@@ -121,6 +142,13 @@ export const ActivityForm: React.FC<IProps> = ({
                 date={true}
                 label="Start Time"
                 readOnly={isReadOnly}
+                onCurrentDateChange={(newStartTime: any) => {
+                  console.log(valid);
+                  if (newStartTime > values.endTime) {
+                    values.endTime = newStartTime;
+                    console.log(newStartTime);
+                  }
+                }}
               />
               <FinalField
                 name="endTime"
@@ -141,7 +169,7 @@ export const ActivityForm: React.FC<IProps> = ({
                 positive
                 type="submit"
                 content={initialActivity ? "Save" : "Create"}
-                disabled={pristine}
+                disabled={pristine || !valid}
                 loading={formSubmitting}
               />
             </Form>
