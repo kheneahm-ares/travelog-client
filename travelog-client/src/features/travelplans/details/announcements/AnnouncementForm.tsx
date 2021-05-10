@@ -75,10 +75,10 @@ export const AnnouncementForm: React.FC<IProps> = ({
     <Fragment>
       <FinalForm
         validate={announcementValidator}
-        subscription={{ submitting: true, pristine: true }}
+        subscription={{ submitting: true, pristine: true, valid: true }}
         initialValues={announcement}
         onSubmit={(values) => handleAnnouncementSubmit(values)}
-        render={({ handleSubmit, pristine }) => (
+        render={({ handleSubmit, pristine, valid }) => (
           <Form onSubmit={handleSubmit}>
             <Label>Title</Label>
             <FinalField
@@ -101,7 +101,7 @@ export const AnnouncementForm: React.FC<IProps> = ({
               positive
               type="submit"
               content={initialAnnouncement ? "Save" : "Create"}
-              disabled={pristine}
+              disabled={pristine || !valid}
               loading={formSubmitting}
             />
           </Form>

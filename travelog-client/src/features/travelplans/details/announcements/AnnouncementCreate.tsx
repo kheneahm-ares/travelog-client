@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Button } from "semantic-ui-react";
+import { Button, Container } from "semantic-ui-react";
 import { useAppDispatch, useAppSelector } from "../../../../app/customHooks";
 import { RootState } from "../../../../app/store";
 import { AnnouncementForm } from "./AnnouncementForm";
@@ -31,7 +31,7 @@ export const AnnouncementCreate: React.FC<IProps> = ({
     );
   }
   return (
-    <Fragment>
+    <Container>
       {isHost && (!showForm || announcementTargateID !== null) && (
         <Button floated="right" color="orange" onClick={handleCreateClick}>
           Create Announcement
@@ -43,6 +43,6 @@ export const AnnouncementCreate: React.FC<IProps> = ({
           initialAnnouncement={null}
         />
       )}
-    </Fragment>
+    </Container>
   );
 };

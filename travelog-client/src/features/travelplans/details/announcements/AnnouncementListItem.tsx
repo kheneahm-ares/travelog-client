@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, {  } from "react";
+import React, { Fragment } from "react";
 import { Header, Item, Label, Segment } from "semantic-ui-react";
 import { ITPAnnouncement } from "../../../../app/common/interfaces/ITPAnnouncement";
 import { useAppDispatch, useAppSelector } from "../../../../app/customHooks";
@@ -13,7 +13,8 @@ import {
 
 export const AnnouncementListItem: React.FC<{
   announcement: ITPAnnouncement;
-}> = ({ announcement }) => {
+  isHost: boolean;
+}> = ({ announcement, isHost }) => {
   const dispatch = useAppDispatch();
   function openEdit() {
     dispatch(
@@ -61,23 +62,27 @@ export const AnnouncementListItem: React.FC<{
               <span style={{ display: "inline" }}>
                 {moment(announcement.createdDate).format("HH:mm A")}
               </span>
-              <Label
-                as="a"
-                basic
-                color="red"
-                style={{ display: "inline", float: "right" }}
-                onClick={handleDelete}
-              >
-                Delete
-              </Label>
-              <Label
-                as="a"
-                basic
-                style={{ display: "inline", float: "right" }}
-                onClick={openEdit}
-              >
-                Edit
-              </Label>
+              {isHost && (
+                <Fragment>
+                  <Label
+                    as="a"
+                    basic
+                    color="red"
+                    style={{ display: "inline", float: "right" }}
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </Label>
+                  <Label
+                    as="a"
+                    basic
+                    style={{ display: "inline", float: "right" }}
+                    onClick={openEdit}
+                  >
+                    Edit
+                  </Label>
+                </Fragment>
+              )}
             </Item.Extra>
           </Item.Content>
         </Item>

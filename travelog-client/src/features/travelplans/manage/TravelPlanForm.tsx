@@ -93,7 +93,7 @@ export const TravelPlanForm: React.FC<IProps> = ({ initialTravelPlan }) => {
             validate={travelPlanValidator}
             initialValues={formTravelPlan}
             onSubmit={(values) => handleTravelPlanSubmit(values)}
-            render={({ handleSubmit, pristine, values }) => (
+            render={({ handleSubmit, pristine, values, valid }) => (
               <Form onSubmit={handleSubmit}>
                 <FinalField
                   name="name"
@@ -142,7 +142,7 @@ export const TravelPlanForm: React.FC<IProps> = ({ initialTravelPlan }) => {
                   positive
                   type="submit"
                   content={initialTravelPlan ? "Save" : "Create"}
-                  disabled={pristine}
+                  disabled={pristine || !valid}
                   loading={isSubmitting}
                 />
               </Form>
