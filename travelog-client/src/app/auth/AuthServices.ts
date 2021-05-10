@@ -71,7 +71,10 @@ const signInRedirect = async () =>
 
         await userManager.signinRedirect();
     }
-    history.push('/travelplans');
+    else
+    {
+        history.push('/travelplans');
+    }
 }
 const registerUser = async () =>
 {
