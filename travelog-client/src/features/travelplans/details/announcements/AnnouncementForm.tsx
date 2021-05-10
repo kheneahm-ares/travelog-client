@@ -1,4 +1,4 @@
-import React, { Dispatch, Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { AnnouncementFormValues } from "../../../../app/common/classes/AnnouncementFormValues";
 import { ITPAnnouncement } from "../../../../app/common/interfaces/ITPAnnouncement";
 import { Form as FinalForm, Field as FinalField } from "react-final-form";
@@ -16,18 +16,11 @@ import {
 interface IProps {
   initialAnnouncement: ITPAnnouncement | null;
   travelPlanID: string;
-  setManageAnnouncement: Dispatch<
-    React.SetStateAction<{
-      showForm: boolean;
-      announcementTargetID: string | null;
-    }>
-  >;
 }
 
 export const AnnouncementForm: React.FC<IProps> = ({
   initialAnnouncement,
   travelPlanID,
-  setManageAnnouncement,
 }) => {
   const [announcement, setAnnouncement] = useState<any>(
     new AnnouncementFormValues()
@@ -41,6 +34,7 @@ export const AnnouncementForm: React.FC<IProps> = ({
 
     var actionResult: any = null;
 
+    //if there's an initial announcement, edit else, create
     if (initialAnnouncement) {
       actionResult = await dispatch(
         submitAnnouncementEdit({ announcement: values })
@@ -59,11 +53,11 @@ export const AnnouncementForm: React.FC<IProps> = ({
     }
 
     setFormSubmitting(false);
-    setManageAnnouncement({showForm: false, announcementTargetID: null});
+    dispatch(manageFormShow({showForm: false, announcementTargetID: null}));
   }
 
   function handleCancelEdit() {
-    setManageAnnouncement({ showForm: false, announcementTargetID: null });
+    dispatch(manageFormShow({ showForm: false, announcementTargetID: null }));
   }
 
   useEffect(() => {

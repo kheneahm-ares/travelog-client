@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "semantic-ui-react";
-import { useAppSelector } from "../../../../app/customHooks";
+import { useAppDispatch, useAppSelector } from "../../../../app/customHooks";
 import { RootState } from "../../../../app/store";
 import { AnnouncementForm } from "./AnnouncementForm";
 import { AnnouncementList } from "./AnnouncementList";
+import { manageFormShow } from "./announcementSlice";
 
 interface IProps {
   isHost: boolean;
@@ -14,31 +15,35 @@ export const TravelPlanAnnouncements: React.FC<IProps> = ({
   isHost,
   travelPlanID,
 }) => {
-  const [manageAnnouncement, setManageAnnouncement] = useState<{
-    showForm: boolean;
-    announcementTargetID: string | null;
-  }>({ showForm: false, announcementTargetID: null });
+  const showForm = useAppSelector(
+    (state: RootState) => state.announcementReducer.showForm
+  );
+  const announcementTargateID = useAppSelector(
+    (state: RootState) => state.announcementReducer.announcementTargetID
+  );
+
+  const dispatch = useAppDispatch();
+
+  function handleCreateClick() {
+    dispatch(
+      manageFormShow({
+        showForm: true,
+        announcementTargetID: null,
+      })
+    );
+  }
+
   return (
     <div>
-      {isHost && !manageAnnouncement.showForm && (
-        <Button
-          floated="right"
-          color="orange"
-          onClick={() =>
-            setManageAnnouncement({
-              showForm: true,
-              announcementTargetID: null,
-            })
-          }
-        >
+      {isHost && (!showForm || announcementTargateID !== null) && (
+        <Button floated="right" color="orange" onClick={handleCreateClick}>
           Create Announcement
         </Button>
       )}
-      {manageAnnouncement.showForm && (
+      {showForm && announcementTargateID === null && (
         <AnnouncementForm
           travelPlanID={travelPlanID}
           initialAnnouncement={null}
-          setManageAnnouncement={setManageAnnouncement}
         />
       )}
       <AnnouncementList travelPlanID={travelPlanID} />

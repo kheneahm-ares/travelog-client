@@ -1,6 +1,6 @@
 import moment from "moment";
-import React, { Fragment, useState } from "react";
-import { Button, Grid, Header, Item, Label, Segment } from "semantic-ui-react";
+import React, {  } from "react";
+import { Header, Item, Label, Segment } from "semantic-ui-react";
 import { ITPAnnouncement } from "../../../../app/common/interfaces/ITPAnnouncement";
 import { useAppDispatch, useAppSelector } from "../../../../app/customHooks";
 import { RootState } from "../../../../app/store";
@@ -15,16 +15,21 @@ export const AnnouncementListItem: React.FC<{
   announcement: ITPAnnouncement;
 }> = ({ announcement }) => {
   const dispatch = useAppDispatch();
-  const [manageAnnouncement, setManageAnnouncement] = useState<{
-    showForm: boolean;
-    announcementTargetID: string | null;
-  }>({ showForm: false, announcementTargetID: announcement.id });
   function openEdit() {
-    setManageAnnouncement({
-      showForm: true,
-      announcementTargetID: announcement.id,
-    });
+    dispatch(
+      manageFormShow({
+        showForm: true,
+        announcementTargetID: announcement.id,
+      })
+    );
   }
+
+  const showForm = useAppSelector(
+    (state: RootState) => state.announcementReducer.showForm
+  );
+  const announcementTargateID = useAppSelector(
+    (state: RootState) => state.announcementReducer.announcementTargetID
+  );
 
   async function handleDelete() {
     const actionResult: any = await dispatch(
@@ -35,11 +40,10 @@ export const AnnouncementListItem: React.FC<{
       dispatch(loadAnnouncements({ travelPlanID: announcement.travelPlanId }));
     }
   }
-  return manageAnnouncement.showForm ? (
+  return showForm && announcementTargateID === announcement.id ? (
     <AnnouncementForm
       initialAnnouncement={announcement}
       travelPlanID={announcement.travelPlanId}
-      setManageAnnouncement={setManageAnnouncement}
     />
   ) : (
     <Segment>
