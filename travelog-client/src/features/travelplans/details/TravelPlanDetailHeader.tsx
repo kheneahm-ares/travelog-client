@@ -35,9 +35,9 @@ export const TravelPlanDetailHeader: React.FC<IProps> = ({
     confirmed: false,
   });
 
-  function handleDelete() {
+  async function handleDelete() {
     try {
-      const actionResult: any = dispatch(deleteTravelPlan(travelPlan.id));
+      const actionResult: any = await dispatch(deleteTravelPlan(travelPlan.id));
 
       if (actionResult.error) {
         toast.error(actionResult.error.message);
