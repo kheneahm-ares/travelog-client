@@ -38,7 +38,7 @@ export const AnnouncementListItem: React.FC<{
     );
 
     if (!actionResult.error) {
-      dispatch(loadAnnouncements({ travelPlanID: announcement.travelPlanId }));
+      dispatch(loadAnnouncements({ travelPlanID: announcement.travelPlanId, limit: 5, offset: 0}));
     }
   }
   return showForm && announcementTargateID === announcement.id ? (

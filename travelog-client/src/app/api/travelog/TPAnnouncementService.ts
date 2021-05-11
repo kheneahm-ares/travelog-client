@@ -1,4 +1,5 @@
 import { ITPAnnouncement } from "../../common/interfaces/ITPAnnouncement"
+import { ITPAnnouncementEnvelope } from "../../common/interfaces/ITPAnnouncementEnvelope";
 import { travelogAgent } from "./agent"
 
 export const TPAnnouncementService = {
@@ -10,11 +11,12 @@ export const TPAnnouncementService = {
 }
 
 
-async function getTPAnnouncements(travelPlanID: string): Promise<ITPAnnouncement[]>
+async function getTPAnnouncements(travelPlanID: string, limit: number, offset: number): Promise<ITPAnnouncementEnvelope>
 {
     try
     {
-        const announcements = await travelogAgent.get<ITPAnnouncement[]>(`/TravelPlan/Announcement/List?travelPlanId=${travelPlanID}`);
+        const announcements = await travelogAgent.get<ITPAnnouncementEnvelope>
+                                                (`/TravelPlan/Announcement/List?travelPlanId=${travelPlanID}&limit=${limit}&offset=${offset}`);
         return announcements.data;
     }
     catch (exc)

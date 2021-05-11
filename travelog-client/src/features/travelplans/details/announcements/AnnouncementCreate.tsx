@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Button, Container } from "semantic-ui-react";
+import { Button, Container, Divider } from "semantic-ui-react";
 import { useAppDispatch, useAppSelector } from "../../../../app/customHooks";
 import { RootState } from "../../../../app/store";
 import { AnnouncementForm } from "./AnnouncementForm";
@@ -38,10 +38,13 @@ export const AnnouncementCreate: React.FC<IProps> = ({
         </Button>
       )}
       {showForm && announcementTargateID === null && (
-        <AnnouncementForm
-          travelPlanID={travelPlanID}
-          initialAnnouncement={null}
-        />
+        <Fragment>
+          <AnnouncementForm
+            travelPlanID={travelPlanID}
+            initialAnnouncement={null}
+          />
+          <Divider/>
+        </Fragment>
       )}
     </Container>
   );

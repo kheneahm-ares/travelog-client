@@ -50,7 +50,7 @@ export const AnnouncementForm: React.FC<IProps> = ({
     }
 
     if (!actionResult?.error) {
-      dispatch(loadAnnouncements({ travelPlanID }));
+      dispatch(loadAnnouncements({ travelPlanID, limit: 5, offset: 0 }));
     }
 
     setFormSubmitting(false);

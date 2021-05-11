@@ -1,10 +1,18 @@
 import moment from "moment";
-import React, { Fragment, useEffect } from "react";
-import { Container, Dimmer, Header, Label, Segment } from "semantic-ui-react";
+import React, { Fragment, useEffect, useState } from "react";
+import {
+  Container,
+  Dimmer,
+  Header,
+  Label,
+  Pagination,
+  Segment,
+} from "semantic-ui-react";
 import { useAppDispatch, useAppSelector } from "../../../../app/customHooks";
 import LoadingComponent from "../../../../app/layout/LoadingComponent";
 import { RootState } from "../../../../app/store";
 import { AnnouncementListItem } from "./AnnouncementListItem";
+import { AnnouncementListPag } from "./AnnouncementListPag";
 import { getAnnouncementsByDate, loadAnnouncements } from "./announcementSlice";
 
 interface IProps {
@@ -17,14 +25,27 @@ export const AnnouncementList: React.FC<IProps> = ({
   isHost,
 }) => {
   const dispatch = useAppDispatch();
+
   const announcementMap = useAppSelector(getAnnouncementsByDate());
-  const { loading } = useAppSelector(
+  const { loading, announcementCount } = useAppSelector(
     (state: RootState) => state.announcementReducer
   );
 
+  const LIMIT: number = 5;
+
+  const offset = useAppSelector(
+    (state: RootState) => state.announcementReducer.offset
+  );
+
   useEffect(() => {
-    dispatch(loadAnnouncements({ travelPlanID }));
-  }, [dispatch, travelPlanID]);
+    dispatch(
+      loadAnnouncements({
+        travelPlanID: travelPlanID,
+        limit: LIMIT,
+        offset: offset,
+      })
+    );
+  }, [dispatch, travelPlanID, offset]);
 
   if (loading) {
     return (
@@ -40,20 +61,22 @@ export const AnnouncementList: React.FC<IProps> = ({
             <Header>No Announcements</Header>
           </Fragment>
         ) : (
-          Array.from(announcementMap).map(([key, announcements]) => {
-            return (
-              <Container key={key}>
-                <Label size="huge">{moment(key).format("MMM Do, ddd")}</Label>
-                {announcements.map((a) => (
-                  <AnnouncementListItem
-                    key={a.id}
-                    announcement={a}
-                    isHost={isHost}
-                  />
-                ))}
-              </Container>
-            );
-          })
+          <Fragment>
+            {Array.from(announcementMap).map(([key, announcements]) => {
+              return (
+                <Container key={key}>
+                  <Label size="huge">{moment(key).format("MMM Do, ddd")}</Label>
+                  {announcements.map((a) => (
+                    <AnnouncementListItem
+                      key={a.id}
+                      announcement={a}
+                      isHost={isHost}
+                    />
+                  ))}
+                </Container>
+              );
+            })}
+          </Fragment>
         )}
       </Fragment>
     );

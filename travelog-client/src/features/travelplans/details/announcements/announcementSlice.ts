@@ -3,18 +3,19 @@ import { toast } from "react-toastify";
 import { TPAnnouncementService } from "../../../../app/api/travelog/TPAnnouncementService";
 import { AnnouncementHelper } from "../../../../app/common/helpers/AnnouncementHelper";
 import { ITPAnnouncement } from "../../../../app/common/interfaces/ITPAnnouncement";
+import { ITPAnnouncementEnvelope } from "../../../../app/common/interfaces/ITPAnnouncementEnvelope";
 import { RootState } from "../../../../app/store";
 
 
 export const loadAnnouncements = createAsyncThunk(
     'announcement/list',
-    async ({ travelPlanID }: { travelPlanID: string }) =>
+    async ({ travelPlanID, limit, offset }: { travelPlanID: string, limit: number, offset: number }) =>
     {
 
         try
         {
-            const announcements = await TPAnnouncementService.list(travelPlanID);
-            return announcements;
+            const announcementEnv = await TPAnnouncementService.list(travelPlanID, limit, offset);
+            return announcementEnv;
         }
         catch (err)
         {
@@ -75,6 +76,9 @@ interface IAnnouncementState
     loading: boolean;
     formSubmitting: boolean;
     announcements: ITPAnnouncement[];
+    announcementCount: number;
+    limit: 5;
+    offset: number;
 }
 
 const initialState: IAnnouncementState =
@@ -83,7 +87,10 @@ const initialState: IAnnouncementState =
     showForm: false,
     loading: false,
     announcements: [],
-    formSubmitting: false
+    formSubmitting: false,
+    announcementCount: 0,
+    offset: 0,
+    limit: 5
 }
 
 const announcementSlice = createSlice({
@@ -94,6 +101,10 @@ const announcementSlice = createSlice({
         {
             state.showForm = action.payload.showForm;
             state.announcementTargetID = action.payload.announcementTargetID;
+        },
+        managePageChange: (state, action: PayloadAction<number>) =>
+        {
+            state.offset = (action.payload - 1) * state.limit;;
         }
 
     },
@@ -102,15 +113,17 @@ const announcementSlice = createSlice({
         {
             state.loading = true;
         },
-        [loadAnnouncements.fulfilled as any]: (state, action: PayloadAction<ITPAnnouncement[]>) =>
+        [loadAnnouncements.fulfilled as any]: (state, action: PayloadAction<ITPAnnouncementEnvelope>) =>
         {
-            state.announcements = action.payload;
+            state.announcements = action.payload.announcementDtos;
+            state.announcementCount = action.payload.announcementCount;
             state.loading = false
         },
         [loadAnnouncements.rejected as any]: (state, action) =>
         {
             state.loading = false;
             state.announcements = [];
+            state.announcementCount = 0;
 
             toast.error(action.error.message);
         },
@@ -171,11 +184,10 @@ const announcementSlice = createSlice({
 
 export const getAnnouncementsByDate = () => (state: RootState) =>
 {
-
     const announcements = AnnouncementHelper.getAnnouncementsByDate(state.announcementReducer.announcements);
     return announcements;
 }
 
-export const { manageFormShow } = announcementSlice.actions;
+export const { manageFormShow, managePageChange } = announcementSlice.actions;
 
 export default announcementSlice.reducer;
