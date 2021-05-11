@@ -5,7 +5,7 @@ export const activityValidator = combineValidators({
     name: isRequired("Name"),
     startTime: (startDateVal: Date, allValues: any) =>
     {
-        const endDate: Date = allValues.endDate;
+        const endDate: Date = allValues.endTime;
 
         const startEndDiff = moment(startDateVal).diff(moment(endDate), 'minutes');
 
@@ -16,7 +16,7 @@ export const activityValidator = combineValidators({
     },
     endTime: (endDateVal: Date, allValues: any) =>
     {
-        const startDate: Date = allValues.startDate;
+        const startDate: Date = allValues.startTime;
 
         const endStartDiff = moment(endDateVal).diff(moment(startDate), 'minutes');
 

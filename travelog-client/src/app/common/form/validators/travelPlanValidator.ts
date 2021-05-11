@@ -7,9 +7,9 @@ export const travelPlanValidator = combineValidators({
     {
         const endDate: Date = allValues.endDate;
 
-        const endStartDiff = moment(startDateVal).diff(moment(endDate), 'days');
+        const startEndDiff = moment(startDateVal).diff(moment(endDate), 'days');
 
-        if (endStartDiff > 0)
+        if (startEndDiff > 0)
         {
             return 'Invalid Start Date';
         }
