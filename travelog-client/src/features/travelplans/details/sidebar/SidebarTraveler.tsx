@@ -12,6 +12,7 @@ import { ITravelPlanTraveler } from "../../../../app/common/interfaces/ITravelPl
 import { useAppDispatch } from "../../../../app/customHooks";
 import { removeTraveler } from "./sidebarSlice";
 import { history } from "../../../..";
+import { toast } from "react-toastify";
 
 interface IProps {
   traveler: ITravelPlanTraveler;
@@ -59,13 +60,16 @@ export const SidebarTraveler: React.FC<IProps> = ({
       .then(() => {
         if (!isHost) {
           history.push("/travelplans");
+          toast.success(`You have been removed from travel plan`);
+
         } else {
           filterOutTraveler(username);
+          toast.success(`Successfully removed ${username}`);
         }
       })
       .catch(() => {
         setConfirmOpen(false);
-        console.log("exception");
+        toast.error(`Error removing ${username}`);
       });
   }
 
@@ -109,7 +113,7 @@ export const SidebarTraveler: React.FC<IProps> = ({
             content={traveler.userName}
             trigger={
               <Label basic pointing size="mini" style={{ display: "block" }}>
-                Username: {" "}
+                Username:{" "}
                 {traveler.userName.length < 10
                   ? traveler.userName
                   : traveler.userName.substring(0, 9) + "..."}

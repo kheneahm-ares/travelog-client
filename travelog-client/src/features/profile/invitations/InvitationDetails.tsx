@@ -18,9 +18,14 @@ export const InvitationDetails: React.FC<{ invitation: IInvitation }> = ({
         type: manageType,
       })
     );
-    if (manageType === ManageInviteEnum.Accept && !actionResult.error) {
-      //after accepting, bring them to the activity
-      history.push(`/travelplans/${invitation.travelPlanId}`);
+    if (!actionResult.error) {
+      if (manageType === ManageInviteEnum.Accept) {
+        //after accepting, bring them to the activity
+        history.push(`/travelplans/${invitation.travelPlanId}`);
+      } else {
+        //get travel plan invitations for user
+        dispatch(loadInvitationsAsync());
+      }
     }
   }
   return (
@@ -38,11 +43,17 @@ export const InvitationDetails: React.FC<{ invitation: IInvitation }> = ({
         </Grid.Column>
         <Grid.Column width={4}>
           <Button.Group floated="right">
-            <Button negative onClick={() => manageInvitation(ManageInviteEnum.Decline)}>
+            <Button
+              negative
+              onClick={() => manageInvitation(ManageInviteEnum.Decline)}
+            >
               Decline
             </Button>
             <Button.Or />
-            <Button positive onClick={() => manageInvitation(ManageInviteEnum.Accept)}>
+            <Button
+              positive
+              onClick={() => manageInvitation(ManageInviteEnum.Accept)}
+            >
               Accept{" "}
             </Button>
           </Button.Group>

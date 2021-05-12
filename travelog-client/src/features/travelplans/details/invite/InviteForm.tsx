@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import { toast } from "react-toastify";
 import { Button, Form } from "semantic-ui-react";
 import { TravelPlanService } from "../../../../app/api/travelog/TravelPlanService";
 import { useAppDispatch } from "../../../../app/customHooks";
@@ -27,6 +28,8 @@ export const InviteForm: React.FC<IProps> = ({ travelPlanId }) => {
         travelPlanId
       );
       dispatch(closeModal());
+
+      toast.success(`Successfully invited ${username}`);
 
     } catch (exc) {
       setErrorMessage(exc.response.data.message);
