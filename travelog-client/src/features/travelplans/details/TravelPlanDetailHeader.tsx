@@ -62,7 +62,6 @@ export const TravelPlanDetailHeader: React.FC<IProps> = ({
         uniqStatus: uniqStatus,
       })
     );
-    console.log(actionResult);
 
     if (actionResult.error) {
       toast.error(actionResult.error.message);

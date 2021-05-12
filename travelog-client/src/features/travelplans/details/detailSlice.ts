@@ -104,6 +104,7 @@ const detailSlice = createSlice(
         extraReducers: {
             [loadTravelPlan.pending as any]: (state) =>
             {
+                state.deletingTravelPlan = false;
                 state.loadingPlan = true;
             },
             [loadTravelPlan.fulfilled as any]: (state, action: PayloadAction<ITravelPlan>) =>
@@ -124,7 +125,11 @@ const detailSlice = createSlice(
             },
             [deleteTravelPlan.fulfilled as any]: (state) =>
             {
-                state.deletingTravelPlan = false;
+                //we don't want to toggle it false BC we are re-routing to dashboard
+                //also if we set it to false, it would re-render the comp and cause 
+                //other comps to reload which will cause errors but also unecessary
+                // state.deletingTravelPlan = false;
+                toast.success("Successfully deleted Travel Plan");
             },
             [deleteTravelPlan.rejected as any]: (state, action) =>
             {

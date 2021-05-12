@@ -5,6 +5,7 @@ import { useAppDispatch } from "../../../app/customHooks";
 import { loadInvitationsAsync, manageInvite } from "./InvitationSlice";
 import { ManageInviteEnum } from "../../../app/common/enums/ManageInvEnum";
 import { history } from "../../..";
+import { toast } from "react-toastify";
 
 export const InvitationDetails: React.FC<{ invitation: IInvitation }> = ({
   invitation,
@@ -22,9 +23,12 @@ export const InvitationDetails: React.FC<{ invitation: IInvitation }> = ({
       if (manageType === ManageInviteEnum.Accept) {
         //after accepting, bring them to the activity
         history.push(`/travelplans/${invitation.travelPlanId}`);
+        toast.success("Welcome to Travel Plan!");
       } else {
         //get travel plan invitations for user
         dispatch(loadInvitationsAsync());
+        toast.success("Successfully Declined Invitation");
+
       }
     }
   }

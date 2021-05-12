@@ -27,6 +27,7 @@ export const TravelPlanDetailsHome: React.FC<{ isHost: boolean }> = ({
     dispatch(openModal(null));
   }
   if (deletingTravelPlan) {
+    console.log('deleting');
     return <LoadingComponent content="Deleting Travel Plan" />;
   } else {
     return (
