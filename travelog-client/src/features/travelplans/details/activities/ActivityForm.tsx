@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { RootState } from "../../../../app/store";
 import { Form as FinalForm, Field as FinalField } from "react-final-form";
-import { Button, Form } from "semantic-ui-react";
+import { Button, Form, Modal } from "semantic-ui-react";
 import { TextInput } from "../../../../app/common/form/TextInput";
 import { DateInput } from "../../../../app/common/form/DateInput";
 import { useAppDispatch, useAppSelector } from "../../../../app/customHooks";
@@ -20,17 +20,25 @@ import { geocodeByAddress } from "react-google-places-autocomplete";
 import { activityValidator } from "../../../../app/common/form/validators/activityValidator";
 import moment from "moment";
 import { toast } from "react-toastify";
+import { ActivityHelper } from "../../../../app/common/helpers/ActivityHelper";
 
 interface IProps {
   initialActivity: ITravelPlanActivity | null;
   travelPlanId: string;
   isReadOnly: boolean;
+  groupedActivities: Map<string, ITravelPlanActivity[]>;
+}
+
+enum WarningModal {
+  Accept,
+  Decline,
 }
 
 export const ActivityForm: React.FC<IProps> = ({
   initialActivity,
   travelPlanId,
   isReadOnly,
+  groupedActivities,
 }) => {
   const dispatch = useAppDispatch();
   const { formSubmitting } = useAppSelector(
@@ -41,6 +49,8 @@ export const ActivityForm: React.FC<IProps> = ({
     new ActivityFormValues()
   );
   const [formLoading, setFormLoading] = useState(true);
+  const [warningModalOpen, setWarningModalOpen] = useState(false);
+  const [acceptedWarning, setAcceptedWarning] = useState(false);
 
   async function handleActivitySubmit(formActivity: any) {
     const endStartDiff = moment(formActivity.endTime).diff(
@@ -53,6 +63,23 @@ export const ActivityForm: React.FC<IProps> = ({
     } else if (formActivity.location.address === "") {
       toast.error("Invalid Location");
     } else {
+
+      console.log(acceptedWarning);
+      if (acceptedWarning) {
+        if (initialActivity) {
+          //if there was an initial, it was an edit
+          dispatch(
+            submitActivityEdit({ formActivity, groupedActivities })
+          ).then(() => {
+            dispatch(loadTravelPlanActivities(travelPlanId));
+          });
+        } else {
+          formActivity.travelPlanId = travelPlanId;
+          dispatch(createActivity(formActivity)).then(() => {
+            dispatch(loadTravelPlanActivities(travelPlanId));
+          });
+        }
+      }
       //before sending to API, turn the dates back to ISO strings as we expect it from the API
       //since they were transformed on the UI to show localized date
       formActivity.startTime = new Date(formActivity.startTime).toISOString();
@@ -65,19 +92,42 @@ export const ActivityForm: React.FC<IProps> = ({
         longitude: results[0].geometry.location.lng(),
       };
 
-      //if there was an initial, it was an edit
-      if (initialActivity) {
-        dispatch(submitActivityEdit(formActivity)).then(() => {
-          dispatch(loadTravelPlanActivities(travelPlanId));
-        });
-      } else {
-        formActivity.travelPlanId = travelPlanId;
-        dispatch(createActivity(formActivity)).then(() => {
-          dispatch(loadTravelPlanActivities(travelPlanId));
-        });
+      const groupKey = moment(formActivity.startTime).format("yyyy-MM-DD");
+      const activitiesRegistry = groupedActivities.get(groupKey);
+
+      const isValid = ActivityHelper.validateActivityTimes(
+        formActivity,
+        activitiesRegistry!
+      );
+
+      if (isValid) {
+        if (initialActivity) {
+          //if there was an initial, it was an edit
+          dispatch(
+            submitActivityEdit({ formActivity, groupedActivities })
+          ).then(() => {
+            dispatch(loadTravelPlanActivities(travelPlanId));
+          });
+        } else {
+          formActivity.travelPlanId = travelPlanId;
+          dispatch(createActivity(formActivity)).then(() => {
+            dispatch(loadTravelPlanActivities(travelPlanId));
+          });
+        }
+      }
+      else
+      {
+        setWarningModalOpen(true);
       }
     }
   }
+
+  function handleWarningModal(type: WarningModal) {
+    const didAccept = type === WarningModal.Accept;
+    setAcceptedWarning(didAccept);
+    setWarningModalOpen(false);
+  }
+
   function handleFormClose() {
     dispatch(closeModal());
   }
@@ -96,85 +146,109 @@ export const ActivityForm: React.FC<IProps> = ({
       {formLoading ? (
         <LoadingComponent />
       ) : (
-        //using subscription, tell FinalForm to only re-render as a whole if it's submitting
-        //or if the pristine value is changed
-        //tell its fields to only render when the field itself has been interacted with,
-        //in this case, we HAVE to subscribe to values, so unfortunately, it wil re-render as a whole on any
-        //input change
-        <FinalForm
-          validate={activityValidator}
-          subscription={{
-            submitting: true,
-            pristine: true,
-            values: true,
-            valid: true,
-          }}
-          initialValues={activity}
-          onSubmit={(values) => handleActivitySubmit(values)}
-          render={({ handleSubmit, pristine, values, valid }) => (
-            <Form onSubmit={handleSubmit}>
-              <FinalField
-                name="name"
-                placeholder="Name"
-                component={TextInput}
-                subscription={{ touched: true, error: true, value: true }}
-                readOnly={isReadOnly}
-              />
-              <FinalField
-                name="category"
-                placeholder="Category"
-                component={TextInput}
-                subscription={{ touched: true, error: true, value: true }}
-                readOnly={isReadOnly}
-              />
-              <FinalField
-                name="location.address"
-                placeholder="Location"
-                component={LocationInput}
-                subscription={{ touched: true, error: true, value: true }}
-                isDisabled={isReadOnly}
-              />
-              <FinalField
-                name="startTime"
-                placeholder="Start Time"
-                component={DateInput}
-                time={true}
-                date={true}
-                label="Start Time"
-                readOnly={isReadOnly}
-                onCurrentDateChange={(newStartTime: any) => {
-                  console.log(valid);
-                  if (newStartTime > values.endTime) {
-                    values.endTime = newStartTime;
-                    console.log(newStartTime);
-                  }
-                }}
-              />
-              <FinalField
-                name="endTime"
-                placeholder="End Time"
-                component={DateInput}
-                time={true}
-                date={true}
-                label="End Time"
-                readOnly={isReadOnly}
+        <Fragment>
+          <Modal open={warningModalOpen}>
+            <Modal.Content>
+              Your activity times conflict with an existing activity for that day, do you want to
+              proceed?
+            </Modal.Content>
+            <Modal.Actions>
+              <Button
+                icon="undo"
+                content="Hmm, let me take a look"
+                onClick={() => handleWarningModal(WarningModal.Decline)}
               />
               <Button
-                content="Close"
-                disabled={formSubmitting}
-                onClick={handleFormClose}
-              />
-              <Button
-                floated="right"
+                icon="check"
                 positive
-                type="submit"
-                content={initialActivity ? "Save" : "Create"}
-                disabled={pristine || !valid}
-                loading={formSubmitting}
+                content="Proceed"
+                onClick={() => handleWarningModal(WarningModal.Accept)}
               />
-            </Form>
-          )}
-        ></FinalForm>
+            </Modal.Actions>
+          </Modal>
+
+          {/* //using subscription, tell FinalForm to only re-render as a whole if
+          it's submitting //or if the pristine value is changed //tell its
+          fields to only render when the field itself has been interacted with,
+          //in this case, we HAVE to subscribe to values, so unfortunately, it
+          wil re-render as a whole on any //input change */}
+          <FinalForm
+            validate={activityValidator}
+            subscription={{
+              submitting: true,
+              pristine: true,
+              values: true,
+              valid: true,
+            }}
+            initialValues={activity}
+            onSubmit={(values) => handleActivitySubmit(values)}
+            render={({ handleSubmit, pristine, values, valid }) => (
+              <Form onSubmit={handleSubmit}>
+                <FinalField
+                  name="name"
+                  placeholder="Name"
+                  component={TextInput}
+                  subscription={{ touched: true, error: true, value: true }}
+                  readOnly={isReadOnly}
+                />
+                <FinalField
+                  name="category"
+                  placeholder="Category"
+                  component={TextInput}
+                  subscription={{ touched: true, error: true, value: true }}
+                  readOnly={isReadOnly}
+                />
+                <FinalField
+                  name="location.address"
+                  placeholder="Location"
+                  component={LocationInput}
+                  subscription={{ touched: true, error: true, value: true }}
+                  isDisabled={isReadOnly}
+                />
+                <FinalField
+                  name="startTime"
+                  placeholder="Start Time"
+                  component={DateInput}
+                  time={true}
+                  date={true}
+                  label="Start Time"
+                  readOnly={isReadOnly}
+                  onCurrentDateChange={(newStartTime: any) => {
+                    setAcceptedWarning(false);
+                    if (newStartTime > values.endTime) {
+                      values.endTime = newStartTime;
+                    }
+                  }}
+                />
+                <FinalField
+                  name="endTime"
+                  placeholder="End Time"
+                  component={DateInput}
+                  time={true}
+                  date={true}
+                  label="End Time"
+                  readOnly={isReadOnly}
+                  onCurrentDateChange={() => {
+                    setAcceptedWarning(false);
+                  }}
+                />
+                <Button
+                  content="Close"
+                  disabled={formSubmitting}
+                  onClick={handleFormClose}
+                />
+                <Button
+                  floated="right"
+                  positive
+                  type="submit"
+                  content={initialActivity ? "Save" : "Create"}
+                  disabled={pristine || !valid}
+                  loading={formSubmitting}
+                />
+              </Form>
+            )}
+          ></FinalForm>
+        </Fragment>
       )}
     </Fragment>
   );

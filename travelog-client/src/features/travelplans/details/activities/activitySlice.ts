@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import moment from "moment";
 import { toast } from "react-toastify";
 import { TravelPlanActivityService } from "../../../../app/api/travelog/TravelPlanActivityService";
 import { ActivityHelper } from "../../../../app/common/helpers/ActivityHelper";
@@ -23,16 +24,20 @@ export const loadTravelPlanActivities = createAsyncThunk(
 
 export const submitActivityEdit = createAsyncThunk(
     'detail/editActivity',
-    async (formActivity: ITravelPlanActivity, thunkAPI) =>
+    async ({ formActivity, groupedActivities }: { formActivity: ITravelPlanActivity, groupedActivities: Map<string, ITravelPlanActivity[]> }, thunkAPI) =>
     {
         try
         {
+            const groupKey = moment(formActivity.startTime).format("yyyy-MM-DD");
+            const activitiesRegistry = groupedActivities.get(groupKey);
+
+            await ActivityHelper.validateActivityTimes(formActivity, activitiesRegistry!);
             const editedActivity = await TravelPlanActivityService.update(formActivity);
 
             return editedActivity;
         } catch (err)
         {
-            throw new Error('Error occurred deleting activity');
+            throw new Error('Error occurred editing activity');
 
         }
     }

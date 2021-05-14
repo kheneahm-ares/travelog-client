@@ -68,13 +68,13 @@ export const TravelPlanDetailHeader: React.FC<IProps> = ({
     } else {
       switch (uniqStatus) {
         case TravelPlanStatusEnum.Archived:
-          toast.success(`Successfully Archived Travel Plan Status`);
+          toast.success(`Successfully Archived Travel Plan`);
           break;
         case TravelPlanStatusEnum.Completed:
-          toast.success(`Successfully Completed Travel Plan Status. Congrats!!!`);
+          toast.success(`Successfully Completed Travel Plan. Congrats!!!`);
           break;
         case TravelPlanStatusEnum.OnGoing:
-          toast.success(`Successfully Started Travel Plan Status`);
+          toast.success(`Successfully Started Travel Plan`);
           break;
         default:
           break;

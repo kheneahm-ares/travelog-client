@@ -32,7 +32,6 @@ export const TravelPlanDetailsHome: React.FC<{ isHost: boolean }> = ({
   } else {
     return (
       <Grid>
-        <ActivityModal travelPlanId={travelPlan?.id!} />
         <InviteModal travelPlanId={travelPlan?.id!} />
         <Grid.Row>
           <Grid.Column width={10}>

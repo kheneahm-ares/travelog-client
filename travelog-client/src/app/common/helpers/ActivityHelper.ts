@@ -1,4 +1,5 @@
 import moment from "moment";
+import { exit } from "node:process";
 import { ITravelPlanActivity } from "../interfaces/ITravelPlanActivity";
 
 const getActivitiesByDate = (activities: ITravelPlanActivity[]): Map<string, ITravelPlanActivity[]> =>
@@ -29,7 +30,50 @@ const getActivitiesByDate = (activities: ITravelPlanActivity[]): Map<string, ITr
     return mapGroupedActivities;
 }
 
+function asdf(asdf: number, as: number[]): boolean
+{
+    if (as.length === 0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+const validateActivityTimes = (formActivity: ITravelPlanActivity, activityRegistry: ITravelPlanActivity[]): boolean =>
+{
+
+    var isValid = true;
+    
+    //the activity registry are all the activities for that day, 
+    //a new or updated activity time is INVALID if, there exists an activity
+    //in the registry such that newActivity start and end times overlap
+    if (activityRegistry && activityRegistry.length > 0)
+    {
+        for (let existingAct of activityRegistry)
+        {
+            //if it's by itself, don't compare with itself
+            if (!formActivity.id || formActivity.id !== existingAct.id)
+            {
+                if ((formActivity.startTime <= existingAct.endTime && formActivity.endTime >= existingAct.startTime))
+                {
+                    console.log('invalid bc in between');
+                    isValid = false;
+                    break;
+                }
+            }
+
+        }
+    }
+
+    return isValid;
+
+}
+
 export const ActivityHelper = {
-    getActivitiesByDate
+    getActivitiesByDate,
+    validateActivityTimes
 }
 
