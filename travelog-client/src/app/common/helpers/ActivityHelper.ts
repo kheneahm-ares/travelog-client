@@ -1,5 +1,4 @@
 import moment from "moment";
-import { exit } from "node:process";
 import { ITravelPlanActivity } from "../interfaces/ITravelPlanActivity";
 
 const getActivitiesByDate = (activities: ITravelPlanActivity[]): Map<string, ITravelPlanActivity[]> =>
@@ -28,18 +27,6 @@ const getActivitiesByDate = (activities: ITravelPlanActivity[]): Map<string, ITr
     });
 
     return mapGroupedActivities;
-}
-
-function asdf(asdf: number, as: number[]): boolean
-{
-    if (as.length === 0)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
 }
 
 const validateActivityTimes = (formActivity: ITravelPlanActivity, activityRegistry: ITravelPlanActivity[]): boolean =>
