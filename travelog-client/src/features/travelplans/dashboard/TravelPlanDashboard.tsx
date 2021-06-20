@@ -15,7 +15,8 @@ export const TravelPlanDashboard = () => {
       <Grid.Column width={10}>
         <TravelPlanBody />
       </Grid.Column>
-      <Grid.Column width={6}>
+      <Grid.Column width={1} />
+      <Grid.Column width={5}>
         <TravelPlanCalendar />
       </Grid.Column>
     </Grid>

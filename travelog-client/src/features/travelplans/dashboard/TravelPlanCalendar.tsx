@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useAppSelector } from "../../../app/customHooks";
 import { DateRange, Range } from "react-date-range";
 import { RootState } from "../../../app/store";
+import { Container, Grid, Header } from "semantic-ui-react";
 
 export const TravelPlanCalendar = () => {
   const { filteredTravelPlans } = useAppSelector(
@@ -16,13 +17,14 @@ export const TravelPlanCalendar = () => {
     return newRange;
   });
   return (
-    <div>
+    <Container>
+      <Header content="Calendar" icon="calendar" color="purple"  />
       <DateRange
         showDateDisplay={false}
         //force preview change to not do anything
         onPreviewChange={() => {}}
         ranges={tpRanges}
       />
-    </div>
+    </Container>
   );
 };
