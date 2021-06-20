@@ -13,6 +13,11 @@ export class TravelPlanFormValues implements ITravelPlanForm
     constructor(travelPlan?: ITravelPlan)
     {
         //map and assing props
-        Object.assign(this, travelPlan);
+        this.id = travelPlan?.id;
+        this.name = travelPlan?.name!;
+        this.description = travelPlan?.description!;
+        this.createdById = travelPlan?.createdById!;
+        this.startDate = new Date(travelPlan?.startDate!);
+        this.endDate = new Date(travelPlan?.endDate!);
     }
 }
