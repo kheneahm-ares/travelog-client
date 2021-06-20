@@ -20,6 +20,8 @@ import { TravelPlanManage } from "./features/travelplans/manage/TravelPlanManage
 import { TravelPlanMap } from "./features/travelplans/map/TravelPlanMap";
 
 import "react-toastify/dist/ReactToastify.css";
+import "react-date-range/dist/styles.css"; // main css file
+import "react-date-range/dist/theme/default.css"; // theme css file
 import NotFound from "./app/layout/NotFound";
 import Forbidden from "./app/layout/Forbidden";
 

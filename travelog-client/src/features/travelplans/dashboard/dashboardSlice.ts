@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
+import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 import { TravelPlanService } from "../../../app/api/travelog/TravelPlanService";
 import { TravelPlanHelper } from "../../../app/common/helpers/TravelPlanHelper";
 import { ITravelPlan } from "../../../app/common/interfaces/ITravelPlan";
@@ -42,14 +43,14 @@ export const loadTravelPlanStatusesAsync = createAsyncThunk(
 interface IDashboardInitialState
 {
     travelPlans: ITravelPlan[]; //the original travel plan registry
-    searchedTravelPlans: ITravelPlan[]
+    filteredTravelPlans: ITravelPlan[]
     isTravelPlansLoading: boolean
 }
 
 const initialState: IDashboardInitialState =
 {
     travelPlans: [],
-    searchedTravelPlans: [],
+    filteredTravelPlans: [],
     isTravelPlansLoading: true
 }
 
@@ -59,7 +60,7 @@ const dashboardSlice = createSlice({
     reducers: {
         filterTravelPlans: (state, action: PayloadAction<string>) =>
         {
-            state.searchedTravelPlans = state.travelPlans.filter((tp) =>
+            state.filteredTravelPlans = state.travelPlans.filter((tp) =>
             {
                 return tp.name.toLowerCase().includes(action.payload)
             });
@@ -73,13 +74,13 @@ const dashboardSlice = createSlice({
         [loadUserTravelPlansAsync.fulfilled as any]: (state, action: PayloadAction<ITravelPlan[]>) => 
         {
             state.travelPlans = action.payload;
-            state.searchedTravelPlans = action.payload;
+            state.filteredTravelPlans = action.payload;
             state.isTravelPlansLoading = false;
         },
         [loadUserTravelPlansAsync.rejected as any]: (state, action) => 
         {
             state.travelPlans = [];
-            state.searchedTravelPlans = [];
+            state.filteredTravelPlans = [];
             state.isTravelPlansLoading = true;
             toast.error(action.error.message);
         }
@@ -90,7 +91,7 @@ const dashboardSlice = createSlice({
 export const getTravelPlansByDate = () => (state: RootState) =>
 {
 
-    const groupedTravelPlansByDate = TravelPlanHelper.getTravelPlanByDate(state.dashboardReducer.searchedTravelPlans);
+    const groupedTravelPlansByDate = TravelPlanHelper.getTravelPlanByDate(state.dashboardReducer.filteredTravelPlans);
 
     return groupedTravelPlansByDate;
 }
